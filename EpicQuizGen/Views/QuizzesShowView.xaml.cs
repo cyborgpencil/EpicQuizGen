@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace EpicQuizGen
+namespace EpicQuizGen.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for QuizzesShowView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class QuizzesShowView : UserControl
     {
-        public MainWindow()
+        public QuizzesShowView()
         {
             InitializeComponent();
         }

@@ -1,0 +1,40 @@
+﻿<Window x:Class="EpicQuizGen.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EpicQuizGen"
+        xmlns:v="clr-namespace:EpicQuizGen.Views"
+        xmlns:vm="clr-namespace:EpicQuizGen.ViewModels"
+        xmlns:prism="http://prismlibrary.com/"
+        mc:Ignorable="d"
+        Title="Epic Quiz Generator" Height="350" Width="525">
+
+
+    <Window.DataContext>
+        <vm:MainWindowViewModel></vm:MainWindowViewModel>
+    </Window.DataContext>
+
+    <Window.Resources>
+
+        <DataTemplate DataType="{x:Type vm:QuizQuestionSelectViewModel}">
+            <v:QuizQuestionSelectView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:QuizzesShowViewModel}">
+            <v:QuizzesShowView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:QuestionsShowViewModel}">
+            <v:QuestionsShowView></v:QuestionsShowView>
+        </DataTemplate>
+    </Window.Resources>
+    
+    <DockPanel LastChildFill="True">
+
+        <TextBlock Text="Account: " HorizontalAlignment="Right" DockPanel.Dock="Top"/>
+        <ContentControl prism:RegionManager.RegionName="ContentRegion"/>
+
+        <StatusBar DockPanel.Dock="Bottom" Height="20" VerticalAlignment="Bottom">Test
+        </StatusBar>
+
+    </DockPanel>
+</Window>
