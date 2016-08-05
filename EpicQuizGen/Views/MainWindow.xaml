@@ -8,7 +8,7 @@
         xmlns:vm="clr-namespace:EpicQuizGen.ViewModels"
         xmlns:prism="http://prismlibrary.com/"
         mc:Ignorable="d"
-        Title="Epic Quiz Generator" Height="350" Width="525">
+        Title="Epic Quiz Generator" Height="768" Width="1024" ResizeMode="NoResize">
 
 
     <Window.DataContext>
@@ -27,13 +27,25 @@
             <v:QuestionsShowView></v:QuestionsShowView>
         </DataTemplate>
     </Window.Resources>
-    
-    <DockPanel LastChildFill="True">
 
-        <TextBlock Text="Account: " HorizontalAlignment="Right" DockPanel.Dock="Top"/>
-        <ContentControl prism:RegionManager.RegionName="ContentRegion"/>
+    <DockPanel LastChildFill="False">
+        <StackPanel  Orientation="Horizontal" DockPanel.Dock="Top" Margin="2" HorizontalAlignment="Right">
+            <Button Content="I" Width="20" Height="20" HorizontalAlignment="Right" Margin="2"/>
+            <TextBlock Text="Account: " TextAlignment="Right" Margin="2"/>
+        </StackPanel>
 
-        <StatusBar DockPanel.Dock="Bottom" Height="20" VerticalAlignment="Bottom">Test
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="2" >
+            <Button Content="Take a Quiz" Margin="2" Command="{Binding Path=NavigateCommand}" CommandParameter="QuizTake"/>
+            <Button Content="Edit a Question" Margin="2" Command="{Binding Path=NavigateCommand}" CommandParameter="QuesterionsShowView"/>
+            <Button Content="Edit a Quiz" Margin="2"/>
+
+        </StackPanel>
+
+
+        <ContentControl prism:RegionManager.RegionName="ContentRegion" Width="1020" Height="640" Margin="2" DockPanel.Dock="Top"/>
+
+        <StatusBar DockPanel.Dock="Bottom" Height="20">Test
+            
         </StatusBar>
 
     </DockPanel>

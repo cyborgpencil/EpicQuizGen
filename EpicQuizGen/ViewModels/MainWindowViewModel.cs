@@ -1,4 +1,6 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Commands;
+using Prism.Mvvm;
+using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +11,18 @@ namespace EpicQuizGen.ViewModels
 {
     class MainWindowViewModel : BindableBase
     {
-        private BindableBase _currentView;
-        public BindableBase CurrentView
+        private readonly IRegionManager _regionManager;
+        public DelegateCommand<string> NavigateCommand { get; set; }
+        public MainWindowViewModel(IRegionManager regionManager)
         {
-            get { return _currentView; }
-            set { SetProperty(ref _currentView, value); }
+            _regionManager = regionManager;
+
+            NavigateCommand = new DelegateCommand<string>(Navigate);
         }
 
-        public MainWindowViewModel()
+        private void Navigate(string uri)
         {
-            CurrentView = new QuizQuestionSelectViewModel();
+            _regionManager.RequestNavigate("ContentRegion", uri);
         }
     }
 }
