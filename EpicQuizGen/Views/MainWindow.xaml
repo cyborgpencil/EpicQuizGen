@@ -7,13 +7,9 @@
         xmlns:v="clr-namespace:EpicQuizGen.Views"
         xmlns:vm="clr-namespace:EpicQuizGen.ViewModels"
         xmlns:prism="http://prismlibrary.com/"
+        prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
-        Title="Epic Quiz Generator" Height="768" Width="1024" ResizeMode="NoResize">
-
-
-    <Window.DataContext>
-        <vm:MainWindowViewModel></vm:MainWindowViewModel>
-    </Window.DataContext>
+        Title="Epic Quiz Generator" Height="768" Width="1024" ResizeMode="NoResize" Background="#FF005737">
 
     <Window.Resources>
 
@@ -35,9 +31,9 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="2" >
-            <Button Content="Take a Quiz" Margin="2" Command="{Binding Path=NavigateCommand}" CommandParameter="QuizTake"/>
-            <Button Content="Edit a Question" Margin="2" Command="{Binding Path=NavigateCommand}" CommandParameter="QuesterionsShowView"/>
-            <Button Content="Edit a Quiz" Margin="2"/>
+            <Button Content="Take a Quiz" Margin="2" Command="{Binding Path=NavigateCommand}" CommandParameter="QuizTakeView"/>
+            <Button Content="Edit a Question" Margin="2" Command="{Binding Path=NavigateCommand}" CommandParameter="QuestionsShowView"/>
+            <Button Content="Edit a Quiz" Margin="2" Command="{Binding Path=NavigateCommand}" CommandParameter="QuizzesShowView"/>
 
         </StackPanel>
 
