@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EpicQuizGen.Utils;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -19,6 +20,10 @@ namespace EpicQuizGen
 
             var bs = new Bootstrapper();
             bs.Run();
+
+            // Create Directories
+            
+            DirectoryManager dm = new DirectoryManager();
         }
     }
 }
