@@ -84,7 +84,7 @@ namespace EpicQuizGen.ViewModels
             switch (questionTypes)
             {
                 case QuestionTypes.MULTICHOICE4:
-                    _regionManager.RequestNavigate("AnswerSets", "MultiChoice4");
+                    _regionManager.RequestNavigate("AnswerSets", "MultiChoice4View");
                     break;
                 default:
                     _regionManager.RequestNavigate("AnswerSets", "TrueFalseView");

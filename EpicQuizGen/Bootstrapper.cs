@@ -1,13 +1,7 @@
 ﻿using EpicQuizGen.Views;
 using Prism.Unity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Practices.Unity;
-using EpicQuizGen.Views;
 
 namespace EpicQuizGen
 {
@@ -32,6 +26,7 @@ namespace EpicQuizGen
             Container.RegisterTypeForNavigation<QuizzesShowView>();
             Container.RegisterTypeForNavigation<QuestionView>();
             Container.RegisterTypeForNavigation<TrueFalseView>();
+            Container.RegisterTypeForNavigation<MultiChoice4View>();
         }
     }
 }
