@@ -11,19 +11,6 @@
         mc:Ignorable="d"
         Title="Epic Quiz Generator" Height="768" Width="1024" ResizeMode="NoResize" Background="#FF005737">
 
-    <Window.Resources>
-
-        <DataTemplate DataType="{x:Type vm:QuizQuestionSelectViewModel}">
-            <v:QuizQuestionSelectView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:QuizzesShowViewModel}">
-            <v:QuizzesShowView />
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:QuestionsShowViewModel}">
-            <v:QuestionsShowView></v:QuestionsShowView>
-        </DataTemplate>
-    </Window.Resources>
-
     <DockPanel LastChildFill="False">
         <StackPanel  Orientation="Horizontal" DockPanel.Dock="Top" Margin="2" HorizontalAlignment="Right">
             <Button Content="I" Width="20" Height="20" HorizontalAlignment="Right" Margin="2"/>

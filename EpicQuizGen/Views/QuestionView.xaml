@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="EpicQuizGen.Views.QuestionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:EpicQuizGen.Views"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:m="clr-namespace:EpicQuizGen.Models"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="1020">
+    <StackPanel>
+        <TextBlock Text="Question Name:"/>
+        <TextBox />
+        <TextBlock Text="Question Type:" />
+        <ComboBox ItemsSource="{Binding QuestionTypeList}" SelectedIndex="0" SelectedValue="{Binding Path=QuestionTypes}" />
+        <TextBlock Text="Question Category:" />
+        <ComboBox ItemsSource="{Binding CategoryList}" SelectedIndex="0" SelectedValue="{Binding QuestionCategory}"/>
+
+        <TextBlock Text="Question" />
+        <CheckBox Content="Image?"/>
+        <TextBox Height="100"/>
+        <ContentControl prism:RegionManager.RegionName="AnswerSets" />
+    </StackPanel>
+</UserControl>

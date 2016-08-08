@@ -86,15 +86,20 @@
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Models\Question.cs" />
+    <Compile Include="Models\QuestionCategory.cs" />
     <Compile Include="Models\QuestionTypes.cs" />
     <Compile Include="Models\ViewTypes.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\QuestionsShowViewModel.cs" />
+    <Compile Include="ViewModels\QuestionViewModel.cs" />
     <Compile Include="ViewModels\QuizQuestionSelectViewModel.cs" />
     <Compile Include="ViewModels\QuizTakeViewModel.cs" />
     <Compile Include="ViewModels\QuizzesShowViewModel.cs" />
     <Compile Include="Views\QuestionsShowView.xaml.cs">
       <DependentUpon>QuestionsShowView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\QuestionView.xaml.cs">
+      <DependentUpon>QuestionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\QuizQuestionSelectView.xaml.cs">
       <DependentUpon>QuizQuestionSelectView.xaml</DependentUpon>
@@ -104,6 +109,9 @@
     </Compile>
     <Compile Include="Views\QuizzesShowView.xaml.cs">
       <DependentUpon>QuizzesShowView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TrueFalseView.xaml.cs">
+      <DependentUpon>TrueFalseView.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -121,6 +129,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\QuestionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\QuizQuestionSelectView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -130,6 +142,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\QuizzesShowView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TrueFalseView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

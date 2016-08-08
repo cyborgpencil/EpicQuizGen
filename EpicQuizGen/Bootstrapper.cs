@@ -30,6 +30,8 @@ namespace EpicQuizGen
             Container.RegisterTypeForNavigation<QuestionsShowView>();
             Container.RegisterTypeForNavigation<QuizTakeView>();
             Container.RegisterTypeForNavigation<QuizzesShowView>();
+            Container.RegisterTypeForNavigation<QuestionView>();
+            Container.RegisterTypeForNavigation<TrueFalseView>();
         }
     }
 }

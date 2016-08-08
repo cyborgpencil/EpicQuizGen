@@ -8,13 +8,6 @@ namespace EpicQuizGen.ViewModels
     {
         #region Properties
 
-        private string _question;
-        public string Question
-        {
-            get { return _question; }
-            set { SetProperty(ref _question, value); }
-        }
-
         #endregion
 
         #region RegionManager
@@ -26,13 +19,15 @@ namespace EpicQuizGen.ViewModels
 
             NavigateCommand = new DelegateCommand<string>(Navigate);
         }
+
+        #endregion
+
+        #region Commands
+
         private void Navigate(string uri)
         {
             _regionManager.RequestNavigate("ContentRegion", uri);
         }
-        #endregion
-
-        #region Commands
 
         #endregion
 
