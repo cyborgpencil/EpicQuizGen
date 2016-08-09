@@ -10,6 +10,7 @@
              d:DesignHeight="640" d:DesignWidth="1000">
     <StackPanel>
         <StackPanel Orientation="Horizontal">
+            <Button Content="Save" />
             <Button Content="Update"/>
             <Button Content="New"/>
             <Button Content="Clear"/>

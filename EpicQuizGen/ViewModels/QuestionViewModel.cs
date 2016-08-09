@@ -1,11 +1,14 @@
 ﻿
+using EpicQuizGen.Events;
 using EpicQuizGen.Models;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows;
 /// <summary>
 /// View Model for the Question View
 /// </summary>
@@ -14,11 +17,13 @@ namespace EpicQuizGen.ViewModels
     public class QuestionViewModel :BindableBase
     {
         #region Properties
-        private Question _question;
-        public Question Question
+      
+
+        private string _bindQuestionName;
+        public string BindQuestionName
         {
-            get { return _question; }
-            set { SetProperty(ref _question, value); }
+            get { return _bindQuestionName; }
+            set { SetProperty(ref _bindQuestionName, value); }
         }
 
         /// <summary>
@@ -52,6 +57,14 @@ namespace EpicQuizGen.ViewModels
             set { SetProperty(ref _questionTypeList, value); }
         }
 
+        private string _questionName;
+        public string QuestionName
+        {
+            get { return _questionName; }
+            set { SetProperty(ref _questionName, value); SendQuestionName(); }
+        }
+
+        private readonly IEventAggregator _eventAggregator;
 
         #endregion
 
@@ -59,8 +72,10 @@ namespace EpicQuizGen.ViewModels
         {
         }
 
-        public QuestionViewModel(IRegionManager regionManager)
+        public QuestionViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {
+            _eventAggregator = eventAggregator;
+
             CategoryList = new List<string>(Enum.GetNames(typeof(QuestionCategory)));
             QuestionTypeList = new List<string>(Enum.GetNames(typeof(QuestionTypes)));
 
@@ -73,6 +88,7 @@ namespace EpicQuizGen.ViewModels
 
         #region RegionManager
         private readonly IRegionManager _regionManager;
+        
 
         public DelegateCommand<string> NavigateCommand { get; set; }
 
@@ -93,6 +109,14 @@ namespace EpicQuizGen.ViewModels
             
         }
 
+
+        #endregion
+
+        #region Events
+        public void SendQuestionName()
+        {
+            _eventAggregator.GetEvent<SendQuestionNameEvent>().Publish(QuestionName);
+        }
         #endregion
     }
 }

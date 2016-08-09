@@ -6,14 +6,15 @@
              xmlns:local="clr-namespace:EpicQuizGen.Views"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:m="clr-namespace:EpicQuizGen.Models"
+             xmlns:vm="clr-namespace:EpicQuizGen.ViewModels"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="1020">
     <StackPanel>
         <TextBlock Text="Question Name:"/>
-        <TextBox />
+        <TextBox Text="{Binding Path=QuestionName, Mode=TwoWay}"/>
         <TextBlock Text="Question Type:" />
-        <ComboBox ItemsSource="{Binding QuestionTypeList}" SelectedIndex="0" SelectedValue="{Binding Path=QuestionTypes}" />
+        <ComboBox ItemsSource="{Binding QuestionTypeList}" SelectedIndex="0" SelectedValue="{Binding Path=QuestionTypes, Mode=TwoWay}" />
         <TextBlock Text="Question Category:" />
         <ComboBox ItemsSource="{Binding CategoryList}" SelectedIndex="0" SelectedValue="{Binding QuestionCategory}"/>
 
