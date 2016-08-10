@@ -3,21 +3,33 @@
 /// </summary>
 ///
 
-using System;
 using System.IO;
 namespace EpicQuizGen.Utils
 {
-    public class DirectoryManager
+    public sealed class DirectoryManager
     {
         public string MainDirectory { get; set; }
         public string QuizDirectory { get; set; }
         public string QuestionDirectory { get; set; }
-        public DirectoryManager( string rootName = "EpicQuizGen", string quizDirectory = "QuizDirectory", string questionDirectory = "QuestionDirctory")
-        {
-            MainDirectory = rootName;
-            QuizDirectory = quizDirectory;
-            QuestionDirectory = questionDirectory;
 
+        static readonly DirectoryManager _instance = new DirectoryManager();
+        public static DirectoryManager Instance
+        {
+            get
+            {
+                return _instance;
+            }
+        }
+
+         DirectoryManager()
+        {
+            MainDirectory = "EpicQuizGen";
+            QuizDirectory = "QuizDirectory";
+            QuestionDirectory = "QuestionDirectory";
+        }
+
+        public void CreateDirectory()
+        {
             // Create Root Directory
             Directory.CreateDirectory(MainDirectory);
 
