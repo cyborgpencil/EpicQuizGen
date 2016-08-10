@@ -10,7 +10,7 @@
              d:DesignHeight="640" d:DesignWidth="1000">
     <StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Button Content="Save" />
+            <Button Content="Save" Command="{Binding Path=Parent.DataContext.SaveQuestionCommand, RelativeSource={RelativeSource Self}}"/>
             <Button Content="Update"/>
             <Button Content="New"/>
             <Button Content="Clear"/>

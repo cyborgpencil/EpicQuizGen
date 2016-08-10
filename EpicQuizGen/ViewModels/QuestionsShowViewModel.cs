@@ -34,9 +34,8 @@ namespace EpicQuizGen.ViewModels
 
         public QuestionsShowViewModel(IEventAggregator eventAggregator)
         {
-            
-            Question = new Question();
-            Question.QuestionName = "Test";
+
+            Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE, QuestionCategory = QuestionCategory.MISC, MultiAnswerPositions = new List<bool>() { false, false, false, false, }, MultiAnswerList = new List<string>() { "", "", "", "" }, TrueFalseAnswer = false, CreationDate = DateTime.Now };
             QuestionView = new QuestionView();
             eventAggregator.GetEvent<SendQuestionNameEvent>().Subscribe(SetQuestionName);
             eventAggregator.GetEvent<SendMainQuestionEvent>().Subscribe(SetMainQuestion);
@@ -53,11 +52,18 @@ namespace EpicQuizGen.ViewModels
                 question.CreationDate = DateTime.Now;
                 Questions.Add(question);
             }
+
+            SaveQuestionCommand = new DelegateCommand(SaveQuestion);
         }
 
         #region Commands
 
-        public DelegateCommand<string> SaveCommand { get; set; }
+        public DelegateCommand SaveQuestionCommand { get; set; }
+        public void SaveQuestion()
+        {
+            Question.CreationDate = DateTime.Now;
+            Debug.WriteLine(string.Format("Question Model:\n\nQuesrionName: {0}\nMainQuestion: {1}\nQuestionType: {2}\nQuestionCategory: {3}\nAnswerPosition1: {4}\n AnswerPosition2: {5}\n AnswerPosition3: {6}\nAnswerPosition4: {7}\n TruFalseAnswer: {8}\nCreationDate: {9}\n",Question.QuestionName, Question.MainQuestion, Question.QuestionType, Question.QuestionCategory, Question.MultiAnswerList[0], Question.MultiAnswerList[1], Question.MultiAnswerList[2], Question.MultiAnswerList[3], Question.TrueFalseAnswer, Question.CreationDate.ToString()));
+        }
 
         public void Save()
         {
@@ -71,48 +77,35 @@ namespace EpicQuizGen.ViewModels
         public void SetQuestionName(string obj)
         {
             Question.QuestionName = obj;
-            Debug.WriteLine(Question.QuestionName);
         }
 
         public void SetMainQuestion(string obj)
         {
             Question.MainQuestion = obj;
-            Debug.WriteLine(Question.MainQuestion);
         }
         public void SetQuestionType(QuestionTypes obj)
         {
             Question.QuestionType = obj;
-            Debug.WriteLine(Question.QuestionType);
         }
 
         public void SetQuestionCategory(QuestionCategory obj)
         {
             Question.QuestionCategory = obj;
-            Debug.WriteLine(Question.QuestionCategory);
         }
 
         public void SetTrueFalse(bool obj)
         {
             Question.TrueFalseAnswer = obj;
-            Debug.WriteLine(Question.TrueFalseAnswer);
         }
 
         public void SetMuliAnswerPositions(List<bool> obj)
         {
             Question.MultiAnswerPositions = obj;
-            foreach (var m in Question.MultiAnswerPositions)
-            {
-                Debug.WriteLine(m);
-            }
         }
 
         public void SetMultiAnswerList(List<string> obj)
         {
             Question.MultiAnswerList = obj;
-            foreach (var m in Question.MultiAnswerList)
-            {
-                Debug.WriteLine(m);
-            }
         }
         #endregion
     }
