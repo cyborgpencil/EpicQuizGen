@@ -7,27 +7,36 @@ using System;
 using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
+using EpicQuizGen.Models;
 
 namespace EpicQuizGen.Utils
 {
-    public class QuestionIOManager
+    public sealed class QuestionIOManager
     {
         public XmlSerializer XmlSerializer { get; set; }
-        public StreamWriter writer { get; set; }
+        public StreamWriter StreamWriter { get; set; }
 
-        public object CurrentModel { get; set; }
+        public Question QuestionModel { get; set; }
 
-        public QuestionIOManager(object model, string filename)
+        static readonly QuestionIOManager _instance = new QuestionIOManager();
+        public static QuestionIOManager Instance
         {
-            CurrentModel = model;
-            XmlSerializer = new XmlSerializer(model.GetType());
-            writer = new StreamWriter(filename);
+            get { return _instance; }
+        }
+        QuestionIOManager()
+        {
+            
         }
 
-        public void SaveModel()
+        public void SaveQuestionModel()
         {
-            XmlSerializer.Serialize(writer, CurrentModel);
-            writer.Close();
+            if (QuestionModel != null)
+            {
+                XmlSerializer = new XmlSerializer(typeof(Question));
+                StreamWriter = new StreamWriter(DirectoryManager.Instance.MainDirectory + "\\" + DirectoryManager.Instance.QuestionDirectory + "\\" + QuestionModel.QuestionName + ".xml");
+                XmlSerializer.Serialize(StreamWriter, QuestionModel);
+                StreamWriter.Close();
+            }
         }
     }
 }

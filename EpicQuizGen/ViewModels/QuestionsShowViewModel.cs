@@ -1,5 +1,6 @@
 ﻿using EpicQuizGen.Events;
 using EpicQuizGen.Models;
+using EpicQuizGen.Utils;
 using EpicQuizGen.Views;
 using Prism.Commands;
 using Prism.Events;
@@ -62,12 +63,8 @@ namespace EpicQuizGen.ViewModels
         public void SaveQuestion()
         {
             Question.CreationDate = DateTime.Now;
-            Debug.WriteLine(string.Format("Question Model:\n\nQuesrionName: {0}\nMainQuestion: {1}\nQuestionType: {2}\nQuestionCategory: {3}\nAnswerPosition1: {4}\n AnswerPosition2: {5}\n AnswerPosition3: {6}\nAnswerPosition4: {7}\n TruFalseAnswer: {8}\nCreationDate: {9}\n",Question.QuestionName, Question.MainQuestion, Question.QuestionType, Question.QuestionCategory, Question.MultiAnswerList[0], Question.MultiAnswerList[1], Question.MultiAnswerList[2], Question.MultiAnswerList[3], Question.TrueFalseAnswer, Question.CreationDate.ToString()));
-        }
-
-        public void Save()
-        {
-            Debug.WriteLine(this.Question.QuestionType);
+            QuestionIOManager.Instance.QuestionModel = Question;
+            QuestionIOManager.Instance.SaveQuestionModel();
         }
 
         #endregion
