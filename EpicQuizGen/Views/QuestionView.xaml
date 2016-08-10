@@ -14,13 +14,13 @@
         <TextBlock Text="Question Name:"/>
         <TextBox Text="{Binding Path=QuestionName, Mode=TwoWay}"/>
         <TextBlock Text="Question Type:" />
-        <ComboBox ItemsSource="{Binding QuestionTypeList}" SelectedIndex="0" SelectedValue="{Binding Path=QuestionTypes, Mode=TwoWay}" />
+        <ComboBox ItemsSource="{Binding QuestionTypeList}" SelectedIndex="0" SelectedValue="{Binding Path=QuestionTypes}" />
         <TextBlock Text="Question Category:" />
         <ComboBox ItemsSource="{Binding CategoryList}" SelectedIndex="0" SelectedValue="{Binding QuestionCategory}"/>
 
         <TextBlock Text="Question" />
         <CheckBox Content="Image?"/>
-        <TextBox Height="100"/>
+        <TextBox Height="100" Text="{Binding Path=MainQuestion}"/>
         <ContentControl prism:RegionManager.RegionName="AnswerSets" />
     </StackPanel>
 </UserControl>

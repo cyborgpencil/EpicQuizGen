@@ -7,6 +7,7 @@ using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 /// <summary>
@@ -33,7 +34,7 @@ namespace EpicQuizGen.ViewModels
         public QuestionCategory QuestionCategory
         {
             get { return _questionCategory; }
-            set { SetProperty(ref _questionCategory, value);}
+            set { SetProperty(ref _questionCategory, value); SendCategory(); }
         }
 
         private List<string> _categoryList;
@@ -47,7 +48,7 @@ namespace EpicQuizGen.ViewModels
         public QuestionTypes QuestionTypes
         {
             get { return _questionTypes; }
-            set { SetProperty(ref _questionTypes, value); Navigate(value); }
+            set { SetProperty(ref _questionTypes, value); Navigate(value); SendQuestionTypes(); }
         }
 
         private List<string> _questionTypeList;
@@ -64,13 +65,36 @@ namespace EpicQuizGen.ViewModels
             set { SetProperty(ref _questionName, value); SendQuestionName(); }
         }
 
+        private string _mainQuestion;
+        public string MainQuestion
+        {
+            get { return _mainQuestion; }
+            set { SetProperty(ref _mainQuestion, value); SendMainQuestion(); }
+        }
+
+        private List<string> _answerList;
+        public List<string> AnswerList
+        {
+            get { return _answerList; }
+            set { SetProperty(ref _answerList, value); }
+        }
+
+        private bool _correctToFAnswer;
+        public bool CorrectToFAnswer
+        {
+            get { return _correctToFAnswer; }
+            set { SetProperty(ref _correctToFAnswer, value); SendTrueFalse(); }
+        }
+        private List<bool> _multichoiceAnswersPositions;
+        public List<bool> MultichoiceAnswersPositions
+        {
+            get { return _multichoiceAnswersPositions; }
+            set { SetProperty(ref _multichoiceAnswersPositions, value); }
+        }
+
         private readonly IEventAggregator _eventAggregator;
 
         #endregion
-
-        public QuestionViewModel()
-        {
-        }
 
         public QuestionViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {
@@ -83,7 +107,11 @@ namespace EpicQuizGen.ViewModels
 
             _regionManager.RequestNavigate("AnswerSets", "TrueFalseView");
 
-            // NavigateCommand = new DelegateCommand<string>(Navigate);
+            AnswerList = new List<string>(4);
+
+            MultichoiceAnswersPositions = new List<bool>() { false, false, false, false };
+
+            UpdateMultiAnswerPositionsCommand = new DelegateCommand(UpdateMultiAnswerPosition);
         }
 
         #region RegionManager
@@ -109,7 +137,6 @@ namespace EpicQuizGen.ViewModels
             
         }
 
-
         #endregion
 
         #region Events
@@ -117,6 +144,38 @@ namespace EpicQuizGen.ViewModels
         {
             _eventAggregator.GetEvent<SendQuestionNameEvent>().Publish(QuestionName);
         }
+
+        public void SendMainQuestion()
+        {
+            _eventAggregator.GetEvent<SendMainQuestionEvent>().Publish(MainQuestion);
+        }
+        public void SendQuestionTypes()
+        {
+            _eventAggregator.GetEvent<SendQuestionTypesEvent>().Publish(QuestionTypes);
+        }
+        public void SendCategory()
+        {
+            _eventAggregator.GetEvent<SendCategoryEvent>().Publish(QuestionCategory);
+        }
+
+        public void SendTrueFalse()
+        {
+            _eventAggregator.GetEvent<SendTrueFalseEvent>().Publish(CorrectToFAnswer);
+        }
+
+        public void SendMultiAnswerPositions()
+        {
+            _eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Publish(MultichoiceAnswersPositions);
+        }
+
+        public DelegateCommand UpdateMultiAnswerPositionsCommand { get; set; }
+        public void UpdateMultiAnswerPosition()
+        {
+            _eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Publish(MultichoiceAnswersPositions);
+        }
+        #endregion
+
+        #region DEBUG
         #endregion
     }
 }

@@ -5,12 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EpicQuizGen.Views"
              xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="35" d:DesignWidth="52">
     <StackPanel Margin="0,0,-133,-16">
         <TextBlock Text="Which one is the correct Answer?"/>
-        <RadioButton Content="True" />
+        <RadioButton IsChecked="{Binding Path=Parent.DataContext.CorrectToFAnswer, RelativeSource={RelativeSource Self}, Mode=TwoWay}"  Content="True" />
         <RadioButton Content="False" />
     </StackPanel>
 </UserControl>
