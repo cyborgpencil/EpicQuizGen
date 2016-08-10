@@ -12,7 +12,7 @@ namespace EpicQuizGen.Models
         public DateTime CreationDate { get; set; }
         public QuestionCategory QuestionCategory { get; set; }
         public bool TrueFalseAnswer { get; set; }
-        public List<string> AnswerList { get; set; }
-        public List<bool> MultiAnswerPotions { get; set; }
+        public List<string> MultiAnswerList { get; set; }
+        public List<bool> MultiAnswerPositions { get; set; }
     }
 }

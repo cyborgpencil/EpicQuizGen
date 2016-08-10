@@ -10,4 +10,5 @@ namespace EpicQuizGen.Events
     public class SendCategoryEvent : PubSubEvent<QuestionCategory>{}
     public class SendTrueFalseEvent : PubSubEvent<bool>{}
     public class SendMultiAnswerPositionsEvent : PubSubEvent<List<bool>>{ }
+    public class SendMultiAnswerListEvent : PubSubEvent<List<string>> { }
 }

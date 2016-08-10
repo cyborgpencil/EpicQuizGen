@@ -44,6 +44,7 @@ namespace EpicQuizGen.ViewModels
             eventAggregator.GetEvent<SendCategoryEvent>().Subscribe(SetQuestionCategory);
             eventAggregator.GetEvent<SendTrueFalseEvent>().Subscribe(SetTrueFalse);
             eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Subscribe(SetMuliAnswerPositions);
+            eventAggregator.GetEvent<SendMultiAnswerListEvent>().Subscribe(SetMultiAnswerList);
 
             Questions = new ObservableCollection<Question>();
             for (int i = 0; i < 20; i++)
@@ -98,8 +99,17 @@ namespace EpicQuizGen.ViewModels
 
         public void SetMuliAnswerPositions(List<bool> obj)
         {
-            Question.MultiAnswerPotions = obj;
-            foreach (var m in Question.MultiAnswerPotions)
+            Question.MultiAnswerPositions = obj;
+            foreach (var m in Question.MultiAnswerPositions)
+            {
+                Debug.WriteLine(m);
+            }
+        }
+
+        public void SetMultiAnswerList(List<string> obj)
+        {
+            Question.MultiAnswerList = obj;
+            foreach (var m in Question.MultiAnswerList)
             {
                 Debug.WriteLine(m);
             }

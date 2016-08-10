@@ -91,6 +91,31 @@ namespace EpicQuizGen.ViewModels
             get { return _multichoiceAnswersPositions; }
             set { SetProperty(ref _multichoiceAnswersPositions, value); }
         }
+        private string _answer1;
+        public string Answer1
+        {
+            get { return _answer1; }
+            set { SetProperty(ref _answer1, value); SendMultiAnswerList(); }
+        }
+        private string _answer2;
+        public string Answer2
+        {
+            get { return _answer2; }
+            set { SetProperty(ref _answer2, value); SendMultiAnswerList(); }
+        }
+        private string _answer3;
+        public string Answer3
+        {
+            get { return _answer3; }
+            set { SetProperty(ref _answer3, value); SendMultiAnswerList(); }
+        }
+
+        private string _answer4;
+        public string Answer4
+        {
+            get { return _answer4; }
+            set { SetProperty(ref _answer4, value); SendMultiAnswerList(); }
+        }
 
         private readonly IEventAggregator _eventAggregator;
 
@@ -107,11 +132,15 @@ namespace EpicQuizGen.ViewModels
 
             _regionManager.RequestNavigate("AnswerSets", "TrueFalseView");
 
-            AnswerList = new List<string>(4);
+            AnswerList = new List<string> (){"","","","" };
 
             MultichoiceAnswersPositions = new List<bool>() { false, false, false, false };
 
             UpdateMultiAnswerPositionsCommand = new DelegateCommand(UpdateMultiAnswerPosition);
+
+
+            //DEBUG
+            TestBox_TextChanged = new DelegateCommand(Test);
         }
 
         #region RegionManager
@@ -173,9 +202,28 @@ namespace EpicQuizGen.ViewModels
         {
             _eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Publish(MultichoiceAnswersPositions);
         }
+
+        public void SendMultiAnswerList()
+        {
+            AnswerList[0] = Answer1;
+            AnswerList[1] = Answer2;
+            AnswerList[2] = Answer3;
+            AnswerList[3] = Answer4;
+
+            _eventAggregator.GetEvent<SendMultiAnswerListEvent>().Publish(AnswerList);
+        }
         #endregion
 
         #region DEBUG
+        public DelegateCommand TestBox_TextChanged { get; set; }
+        public void Test()
+        {
+            foreach (var a in AnswerList)
+            {
+                Debug.WriteLine(a);
+            }
+            
+        }
         #endregion
     }
 }
