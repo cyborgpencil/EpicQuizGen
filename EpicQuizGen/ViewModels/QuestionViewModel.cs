@@ -159,9 +159,10 @@ namespace EpicQuizGen.ViewModels
 
             // Build Question Model from parent
             _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Subscribe(SetQuestion);
+            _eventAggregator.GetEvent<SendQuestionFromEditEvent>().Publish(Question);
 
             // Check for null Question
-            if(Question == null)
+            if (Question == null)
             {
                 Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, false, }, MultiAnswerList = new List<string>() { "", "", "", "" }, TrueFalseAnswer = false, CreationDate = DateTime.Now };
             }
@@ -176,6 +177,12 @@ namespace EpicQuizGen.ViewModels
         #region Commands
         private void Navigate(string uri)
         {
+            
+            if(string.IsNullOrWhiteSpace(uri))
+            {
+                uri = "TRUEFALSE";
+            }
+
             QuestionTypes = (QuestionTypes)Enum.Parse(typeof(QuestionTypes), uri);
 
             switch (QuestionTypes)

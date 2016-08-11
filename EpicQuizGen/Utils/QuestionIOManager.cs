@@ -3,7 +3,7 @@
 /// </summary>
 /// 
 
-using System;
+using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
@@ -44,10 +44,20 @@ namespace EpicQuizGen.Utils
             }
         }
 
+        public void DeleteQuestionFromFile(string questionName)
+        {
+            QuestionsFromFile = GetQuestionsFromFile();
+
+            var QuestionToDelete = from question in GetQuestionsFromFile()
+                                   where question.QuestionName.Contains(questionName)
+                                   select questionName;
+
+            File.Delete(DirectoryManager.Instance.QuestionDirectoryPath + "\\" + QuestionToDelete.FirstOrDefault() + ".xml");
+
+        }
+
         public List<Question> GetQuestionsFromFile()
         {
-
-            bool isEmpty = true;
 
             IEnumerable<string> questionNames = Directory.EnumerateFileSystemEntries(DirectoryManager.Instance.QuestionDirectoryPath, "*.xml");
 
@@ -66,6 +76,7 @@ namespace EpicQuizGen.Utils
                     FStream = new FileStream(item, FileMode.Open);
                     var newQuestion = (Question)XmlSerializer.Deserialize(FStream);
                     QuestionsFromFile.Add(newQuestion);
+                    FStream.Close();
                 }
 
                 FStream.Close();

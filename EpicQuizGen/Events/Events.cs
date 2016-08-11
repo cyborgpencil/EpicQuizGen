@@ -12,7 +12,7 @@ namespace EpicQuizGen.Events
     public class SendMultiAnswerPositionsEvent : PubSubEvent<List<bool>>{ }
     public class SendMultiAnswerListEvent : PubSubEvent<List<string>> { }
     public class SendSelectedQuestionEvent : PubSubEvent<Question> { }
-
     public class SendQuestionEvent : PubSubEvent<Question> { }
+    public class SendQuestionFromEditEvent : PubSubEvent<Question> { }
 
 }

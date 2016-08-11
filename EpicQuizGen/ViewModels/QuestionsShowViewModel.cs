@@ -51,9 +51,13 @@ namespace EpicQuizGen.ViewModels
             _eventAggregator.GetEvent<SendTrueFalseEvent>().Subscribe(SetTrueFalse);
             _eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Subscribe(SetMuliAnswerPositions);
             _eventAggregator.GetEvent<SendMultiAnswerListEvent>().Subscribe(SetMultiAnswerList);
-           
+            _eventAggregator.GetEvent<SendQuestionFromEditEvent>().Subscribe(SetQuestion);
 
-             SaveQuestionCommand = new DelegateCommand(SaveQuestion);
+
+            SaveQuestionCommand = new DelegateCommand(SaveQuestion);
+            EditQuestionCommand = new DelegateCommand(EditQuestion);
+            NewQuestionCommand = new DelegateCommand(NewQuestion);
+            DeleteQuestionCommand = new DelegateCommand(DeleteQuestion);
 
             Questions = new ObservableCollection<Question>(QuestionIOManager.Instance.GetQuestionsFromFile());
 
@@ -65,12 +69,40 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand SaveQuestionCommand { get; set; }
         public void SaveQuestion()
         {
+
             Question.CreationDate = DateTime.Now;
             QuestionIOManager.Instance.QuestionModel = Question;
             QuestionIOManager.Instance.SaveQuestionModel();
 
             // Update Question List
             Questions = new ObservableCollection<Question>( QuestionIOManager.Instance.GetQuestionsFromFile());
+
+            // Clear question
+            Question = new Question();
+        }
+
+        public DelegateCommand EditQuestionCommand { get; set; }
+        public void EditQuestion()
+        {
+            _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Publish(Question);
+        }
+
+        public DelegateCommand DeleteQuestionCommand { get; set; }
+        public void DeleteQuestion()
+        {
+            if(!string.IsNullOrWhiteSpace(Question.QuestionName))
+            {
+                QuestionIOManager.Instance.DeleteQuestionFromFile(Question.QuestionName);
+                Questions = new ObservableCollection<Question>(QuestionIOManager.Instance.GetQuestionsFromFile());
+            }
+
+        }
+
+        public DelegateCommand NewQuestionCommand { get; set; }
+        public void NewQuestion()
+        {
+            Question = new Question();
+            EditQuestion();
         }
 
         #endregion
@@ -113,7 +145,11 @@ namespace EpicQuizGen.ViewModels
 
         public void SendQuestion()
         {
-            _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Publish(Question);
+            
+        }
+        public void SetQuestion(Question obj)
+        {
+            Question = obj;
         }
         #endregion
     }

@@ -13,10 +13,10 @@
         <DataGrid ItemsSource="{Binding Path=Questions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   IsSynchronizedWithCurrentItem="True" Margin="5" Width="1000"  Height="150" SelectedItem="{Binding Path=Question, Mode=TwoWay}" AutoGenerateColumns="True"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True"/>
         <StackPanel Orientation="Horizontal">
+            <Button Content="New" Margin="2" Command="{Binding Path=NewQuestionCommand}"/>
             <Button Content="Save" Command="{Binding Path=Parent.DataContext.SaveQuestionCommand, RelativeSource={RelativeSource Self}}" Margin="2"/>
-            <Button Content="Update" Margin="2"/>
-            <Button Content="New" Margin="2"/>
-            <Button Content="Clear" Margin="2"/>
+            <Button Content="Edit" Command="{Binding Path=EditQuestionCommand}" Margin="2"/>
+            <Button Content="Delete" Command="{Binding Path=DeleteQuestionCommand}" Margin="2"/>
         </StackPanel>
         <ContentControl Content="{Binding Path=QuestionView}"/>
     </StackPanel>
