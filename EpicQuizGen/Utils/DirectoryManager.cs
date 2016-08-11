@@ -11,6 +11,8 @@ namespace EpicQuizGen.Utils
         public string MainDirectory { get; set; }
         public string QuizDirectory { get; set; }
         public string QuestionDirectory { get; set; }
+        public string QuestionDirectoryPath { get; set; }
+        public string QuizDirectoryPath { get; set; }
 
         static readonly DirectoryManager _instance = new DirectoryManager();
         public static DirectoryManager Instance
@@ -26,6 +28,8 @@ namespace EpicQuizGen.Utils
             MainDirectory = "EpicQuizGen";
             QuizDirectory = "QuizDirectory";
             QuestionDirectory = "QuestionDirectory";
+            QuestionDirectoryPath = MainDirectory + "\\"+ QuestionDirectory;
+            QuizDirectoryPath = MainDirectory + "\\" + QuizDirectory;
         }
 
         public void CreateDirectory()

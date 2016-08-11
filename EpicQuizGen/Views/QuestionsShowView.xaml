@@ -16,7 +16,7 @@
             <Button Content="Clear"/>
         </StackPanel>
         <TextBlock Text="List of Questrions"></TextBlock>
-        <DataGrid ItemsSource="{Binding Questions}" AutoGenerateColumns="True" Height="100" VerticalScrollBarVisibility="Visible"/>
+        <DataGrid ItemsSource="{Binding Questions, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="True" Height="100" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True"/>
         <ContentControl Content="{Binding Path=QuestionView}"/>
     </StackPanel>
 </UserControl>

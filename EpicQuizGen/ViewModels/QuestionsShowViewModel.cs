@@ -46,15 +46,11 @@ namespace EpicQuizGen.ViewModels
             eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Subscribe(SetMuliAnswerPositions);
             eventAggregator.GetEvent<SendMultiAnswerListEvent>().Subscribe(SetMultiAnswerList);
 
-            Questions = new ObservableCollection<Question>();
-            for (int i = 0; i < 20; i++)
-            {
-                Question question = new Question();   
-                question.CreationDate = DateTime.Now;
-                Questions.Add(question);
-            }
 
-            SaveQuestionCommand = new DelegateCommand(SaveQuestion);
+             SaveQuestionCommand = new DelegateCommand(SaveQuestion);
+
+
+            Questions = new ObservableCollection<Question>(QuestionIOManager.Instance.GetQuestionsFromFile());
         }
 
         #region Commands
@@ -65,6 +61,9 @@ namespace EpicQuizGen.ViewModels
             Question.CreationDate = DateTime.Now;
             QuestionIOManager.Instance.QuestionModel = Question;
             QuestionIOManager.Instance.SaveQuestionModel();
+
+            // Update Question List
+            Questions = new ObservableCollection<Question>( QuestionIOManager.Instance.GetQuestionsFromFile());
         }
 
         #endregion

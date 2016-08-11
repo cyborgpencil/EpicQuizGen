@@ -8,6 +8,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 using EpicQuizGen.Models;
+using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace EpicQuizGen.Utils
 {
@@ -15,8 +17,11 @@ namespace EpicQuizGen.Utils
     {
         public XmlSerializer XmlSerializer { get; set; }
         public StreamWriter StreamWriter { get; set; }
+        public FileStream FStream { get; set; }
 
         public Question QuestionModel { get; set; }
+
+        public List<Question> QuestionsFromFile { get; set; }
 
         static readonly QuestionIOManager _instance = new QuestionIOManager();
         public static QuestionIOManager Instance
@@ -38,5 +43,46 @@ namespace EpicQuizGen.Utils
                 StreamWriter.Close();
             }
         }
+
+        public List<Question> GetQuestionsFromFile()
+        {
+            string[] questionNames = Directory.GetFiles(DirectoryManager.Instance.QuestionDirectoryPath, "*.xml");
+
+            if(questionNames != null)
+            {
+                QuestionsFromFile = new List<Question>();
+
+                // clear out xml object using uknown node and attr events
+                XmlSerializer = new XmlSerializer(typeof(Question));
+                XmlSerializer.UnknownNode += new XmlNodeEventHandler(serializer_UnknownNode);
+                XmlSerializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
+
+                foreach (var item in questionNames)
+                {
+                    FStream = new FileStream(item, FileMode.Open);
+                    var newQuestion = (Question)XmlSerializer.Deserialize(FStream);
+                    QuestionsFromFile.Add(newQuestion);
+                }
+
+                FStream.Close();
+            }
+
+            return QuestionsFromFile;
+        }
+
+         void serializer_UnknownNode
+            (object sender, XmlNodeEventArgs e)
+        {
+            Debug.WriteLine("Unknown Node:" + e.Name + "\t" + e.Text);
+        }
+
+         void serializer_UnknownAttribute
+        (object sender, XmlAttributeEventArgs e)
+        {
+            XmlAttribute attr = e.Attr;
+            Debug.WriteLine("Unknown attribute " +
+            attr.Name + "='" + attr.Value + "'");
+        }
+
     }
 }
