@@ -48,11 +48,11 @@ namespace EpicQuizGen.ViewModels
         public QuestionTypes QuestionTypes
         {
             get { return _questionTypes; }
-            set { SetProperty(ref _questionTypes, value); Navigate(value); SendQuestionTypes(); }
+            set { SetProperty(ref _questionTypes, value); SendQuestionTypes(); }
         }
 
-        private List<string> _questionTypeList;
-        public List<string> QuestionTypeList
+        private ObservableCollection<string> _questionTypeList;
+        public ObservableCollection<string> QuestionTypeList
         {
             get { return _questionTypeList; }
             set { SetProperty(ref _questionTypeList, value); }
@@ -117,20 +117,39 @@ namespace EpicQuizGen.ViewModels
             set { SetProperty(ref _answer4, value); SendMultiAnswerList(); }
         }
 
+        private Question _question;
+        public Question Question
+        {
+            get { return _question; }
+            set { SetProperty(ref _question, value); }
+        }
+
+        private string _selectedType;
+        public string SelectedType
+        {
+            get { return _selectedType; }
+            set { SetProperty(ref _selectedType, value); Question.QuestionType = value; Debug.WriteLine(Question.QuestionType); Navigate(Question.QuestionType); }
+        }
         private readonly IEventAggregator _eventAggregator;
+
+        #endregion
+
+        #region RegionManager
+        private readonly IRegionManager _regionManager;
+        public DelegateCommand<string> NavigateCommand { get; set; }
 
         #endregion
 
         public QuestionViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
+            _regionManager = regionManager;
+            
 
             CategoryList = new List<string>(Enum.GetNames(typeof(QuestionCategory)));
-            QuestionTypeList = new List<string>(Enum.GetNames(typeof(QuestionTypes)));
+            QuestionTypeList = new ObservableCollection<string>(Enum.GetNames(typeof(QuestionTypes)));
+            QuestionTypes = new QuestionTypes();
 
-            _regionManager = regionManager;
-
-            _regionManager.RequestNavigate("AnswerSets", "TrueFalseView");
 
             AnswerList = new List<string> (){"","","","" };
 
@@ -138,23 +157,28 @@ namespace EpicQuizGen.ViewModels
 
             UpdateMultiAnswerPositionsCommand = new DelegateCommand(UpdateMultiAnswerPosition);
 
+            // Build Question Model from parent
+            _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Subscribe(SetQuestion);
 
+            // Check for null Question
+            if(Question == null)
+            {
+                Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, false, }, MultiAnswerList = new List<string>() { "", "", "", "" }, TrueFalseAnswer = false, CreationDate = DateTime.Now };
+            }
+
+            Navigate(Question.QuestionType);
             //DEBUG
             TestBox_TextChanged = new DelegateCommand(Test);
         }
 
-        #region RegionManager
-        private readonly IRegionManager _regionManager;
-        
 
-        public DelegateCommand<string> NavigateCommand { get; set; }
-
-        #endregion
 
         #region Commands
-        private void Navigate(QuestionTypes questionTypes)
+        private void Navigate(string uri)
         {
-            switch (questionTypes)
+            QuestionTypes = (QuestionTypes)Enum.Parse(typeof(QuestionTypes), uri);
+
+            switch (QuestionTypes)
             {
                 case QuestionTypes.MULTICHOICE4:
                     _regionManager.RequestNavigate("AnswerSets", "MultiChoice4View");
@@ -211,6 +235,11 @@ namespace EpicQuizGen.ViewModels
             AnswerList[3] = Answer4;
 
             _eventAggregator.GetEvent<SendMultiAnswerListEvent>().Publish(AnswerList);
+        }
+
+        public void SetQuestion(Question obj)
+        {
+            Question = obj;
         }
         #endregion
 

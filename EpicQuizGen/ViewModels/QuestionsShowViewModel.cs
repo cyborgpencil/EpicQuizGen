@@ -30,27 +30,34 @@ namespace EpicQuizGen.ViewModels
         public Question Question
         {
             get { return _question; }
-            set { SetProperty(ref _question, value);}
+            set { SetProperty(ref _question, value); SendQuestion(); }
         }
+        private readonly IEventAggregator _eventAggregator;
 
         public QuestionsShowViewModel(IEventAggregator eventAggregator)
         {
+            _eventAggregator = eventAggregator;
 
-            Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE, QuestionCategory = QuestionCategory.MISC, MultiAnswerPositions = new List<bool>() { false, false, false, false, }, MultiAnswerList = new List<string>() { "", "", "", "" }, TrueFalseAnswer = false, CreationDate = DateTime.Now };
+            // Check for null Question
+            if (Question == null)
+            {
+                Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, false, }, MultiAnswerList = new List<string>() { "", "", "", "" }, TrueFalseAnswer = false, CreationDate = DateTime.Now };
+            }
             QuestionView = new QuestionView();
-            eventAggregator.GetEvent<SendQuestionNameEvent>().Subscribe(SetQuestionName);
-            eventAggregator.GetEvent<SendMainQuestionEvent>().Subscribe(SetMainQuestion);
-            eventAggregator.GetEvent<SendQuestionTypesEvent>().Subscribe(SetQuestionType);
-            eventAggregator.GetEvent<SendCategoryEvent>().Subscribe(SetQuestionCategory);
-            eventAggregator.GetEvent<SendTrueFalseEvent>().Subscribe(SetTrueFalse);
-            eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Subscribe(SetMuliAnswerPositions);
-            eventAggregator.GetEvent<SendMultiAnswerListEvent>().Subscribe(SetMultiAnswerList);
-
+            _eventAggregator.GetEvent<SendQuestionNameEvent>().Subscribe(SetQuestionName);
+            _eventAggregator.GetEvent<SendMainQuestionEvent>().Subscribe(SetMainQuestion);
+            _eventAggregator.GetEvent<SendQuestionTypesEvent>().Subscribe(SetQuestionType);
+            _eventAggregator.GetEvent<SendCategoryEvent>().Subscribe(SetQuestionCategory);
+            _eventAggregator.GetEvent<SendTrueFalseEvent>().Subscribe(SetTrueFalse);
+            _eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Subscribe(SetMuliAnswerPositions);
+            _eventAggregator.GetEvent<SendMultiAnswerListEvent>().Subscribe(SetMultiAnswerList);
+           
 
              SaveQuestionCommand = new DelegateCommand(SaveQuestion);
 
-
             Questions = new ObservableCollection<Question>(QuestionIOManager.Instance.GetQuestionsFromFile());
+
+            _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
         }
 
         #region Commands
@@ -81,12 +88,12 @@ namespace EpicQuizGen.ViewModels
         }
         public void SetQuestionType(QuestionTypes obj)
         {
-            Question.QuestionType = obj;
+            Question.QuestionType = obj.ToString();
         }
 
         public void SetQuestionCategory(QuestionCategory obj)
         {
-            Question.QuestionCategory = obj;
+            Question.QuestionCategory = obj.ToString();
         }
 
         public void SetTrueFalse(bool obj)
@@ -102,6 +109,11 @@ namespace EpicQuizGen.ViewModels
         public void SetMultiAnswerList(List<string> obj)
         {
             Question.MultiAnswerList = obj;
+        }
+
+        public void SendQuestion()
+        {
+            _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Publish(Question);
         }
         #endregion
     }

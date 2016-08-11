@@ -9,14 +9,15 @@
              mc:Ignorable="d" 
              d:DesignHeight="640" d:DesignWidth="1000">
     <StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Button Content="Save" Command="{Binding Path=Parent.DataContext.SaveQuestionCommand, RelativeSource={RelativeSource Self}}"/>
-            <Button Content="Update"/>
-            <Button Content="New"/>
-            <Button Content="Clear"/>
-        </StackPanel>
         <TextBlock Text="List of Questrions"></TextBlock>
-        <DataGrid ItemsSource="{Binding Questions, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="True" Height="100" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True"/>
+        <DataGrid ItemsSource="{Binding Path=Questions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  IsSynchronizedWithCurrentItem="True" Margin="5" Width="1000"  Height="150" SelectedItem="{Binding Path=Question, Mode=TwoWay}" AutoGenerateColumns="True"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True"/>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Save" Command="{Binding Path=Parent.DataContext.SaveQuestionCommand, RelativeSource={RelativeSource Self}}" Margin="2"/>
+            <Button Content="Update" Margin="2"/>
+            <Button Content="New" Margin="2"/>
+            <Button Content="Clear" Margin="2"/>
+        </StackPanel>
         <ContentControl Content="{Binding Path=QuestionView}"/>
     </StackPanel>
 </UserControl>

@@ -46,10 +46,14 @@ namespace EpicQuizGen.Utils
 
         public List<Question> GetQuestionsFromFile()
         {
-            string[] questionNames = Directory.GetFiles(DirectoryManager.Instance.QuestionDirectoryPath, "*.xml");
 
-            if(questionNames != null)
+            bool isEmpty = true;
+
+            IEnumerable<string> questionNames = Directory.EnumerateFileSystemEntries(DirectoryManager.Instance.QuestionDirectoryPath, "*.xml");
+
+            if(questionNames.GetEnumerator().Current != null)
             {
+
                 QuestionsFromFile = new List<Question>();
 
                 // clear out xml object using uknown node and attr events
@@ -65,9 +69,10 @@ namespace EpicQuizGen.Utils
                 }
 
                 FStream.Close();
-            }
 
-            return QuestionsFromFile;
+                return QuestionsFromFile;
+            }
+            return new List<Question>();
         }
 
          void serializer_UnknownNode

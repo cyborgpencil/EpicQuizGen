@@ -10,17 +10,20 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="1020">
+
+    <UserControl.Resources>
+        
+    </UserControl.Resources>
     <StackPanel>
         <TextBlock Text="Question Name:"/>
-        <TextBox Text="{Binding Path=QuestionName, Mode=TwoWay}"/>
+        <TextBox Text="{Binding Path=Question.QuestionName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         <TextBlock Text="Question Type:" />
-        <ComboBox ItemsSource="{Binding QuestionTypeList}" SelectedIndex="0" SelectedValue="{Binding Path=QuestionTypes}" />
+        <ComboBox ItemsSource="{Binding Path=QuestionTypeList}" SelectedItem="{ Binding Path=SelectedType, UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding Path=Question.QuestionType, Mode=TwoWay}"/>
         <TextBlock Text="Question Category:" />
-        <ComboBox ItemsSource="{Binding CategoryList}" SelectedIndex="0" SelectedValue="{Binding QuestionCategory}"/>
-
+        <ComboBox ItemsSource="{Binding Path=CategoryList, Mode=TwoWay}" SelectedIndex="0" SelectedItem="{Binding Path=Question.QuestionCategory, Mode=TwoWay}"/>
         <TextBlock Text="Question" />
         <CheckBox Content="Image?"/>
-        <TextBox Height="100" Text="{Binding Path=MainQuestion}"/>
+        <TextBox Height="100" Text="{Binding Path=Question.MainQuestion}"/>
         <ContentControl prism:RegionManager.RegionName="AnswerSets" />
     </StackPanel>
 </UserControl>

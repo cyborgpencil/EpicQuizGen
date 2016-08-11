@@ -1,8 +1,8 @@
 ﻿namespace EpicQuizGen.Models
 {
-    public enum QuestionTypes
+    public enum QuestionTypes : int
     {
-        TRUEFALSE,
-        MULTICHOICE4
+        TRUEFALSE = 0,
+        MULTICHOICE4 = 1
     }
 }

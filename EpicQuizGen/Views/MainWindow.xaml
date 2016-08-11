@@ -9,7 +9,7 @@
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
-        Title="Epic Quiz Generator" Height="768" Width="1024" ResizeMode="NoResize" Background="#FF005737" WindowStartupLocation="CenterScreen">
+        Title="Epic Quiz Generator" Height="768" Width="1024" ResizeMode="NoResize" Background="#FF72B89E" WindowStartupLocation="CenterScreen">
 
     <DockPanel LastChildFill="False">
         <StackPanel  Orientation="Horizontal" DockPanel.Dock="Top" Margin="2" HorizontalAlignment="Right">

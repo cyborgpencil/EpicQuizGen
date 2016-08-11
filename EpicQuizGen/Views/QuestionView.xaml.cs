@@ -24,5 +24,10 @@ namespace EpicQuizGen.Views
         {
             InitializeComponent();
         }
+
+        private void UserControl_Initialized(object sender, EventArgs e)
+        {
+
+        }
     }
 }
