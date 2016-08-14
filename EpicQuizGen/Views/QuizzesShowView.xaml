@@ -9,20 +9,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel>
-        <TextBlock Text="Current Quizzes Status:"></TextBlock>
-        <DataGrid Height="200">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Quiz Name" />
-                <DataGridTextColumn Header="Creation Date" />
-                <DataGridTextColumn Header="Category" />
-                <DataGridTextColumn Header="Last Grade" />
-            </DataGrid.Columns>
-        </DataGrid>
+        <TextBlock Text="Current Quizzes:"></TextBlock>
+        <DataGrid Height="200" ItemsSource="{Binding Path=QuizList}" />
         <StackPanel Orientation="Horizontal">
-            <Button Content="New Quiz" Margin="2"/>
+            <Button Content="New Quiz" Margin="2" Command="{Binding Path=NewQuizCommand}"/>
             <Button Content="Edit Quiz" Margin="2"/>
             <Button Content="Delete Quiz" Margin="2"/>
         </StackPanel>
-        <ContentControl prism:RegionManager.RegionName="QuizState"/>
+        <local:QuizView />
     </StackPanel>
 </UserControl>

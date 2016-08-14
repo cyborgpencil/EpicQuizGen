@@ -6,17 +6,26 @@
              xmlns:local="clr-namespace:EpicQuizGen.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <StackPanel>
+    <StackPanel Width="600" HorizontalAlignment="Left">
         <TextBlock Text="Quiz Name: "/>
-        <TextBox />
+        <TextBox Text="{Binding Path=Quiz.QuizName}"/>
         <TextBlock Text="Question Count:" />
         <TextBox />
         <TextBlock Text="Category Percent 1" />
-        <TextBox />
+        <StackPanel Orientation="Horizontal">
+            <TextBox Width="100" />
+            <ComboBox SelectedIndex="0" Width="100" ItemsSource="{Binding Path=QuestionCategories}"/>
+        </StackPanel>
         <TextBlock Text="Category Percent 2" />
-        <TextBox />
+        <StackPanel Orientation="Horizontal">
+            <TextBox Width="100" />
+            <ComboBox SelectedIndex="0" Width="100" ItemsSource="{Binding Path=QuestionCategories}" />
+        </StackPanel>
         <TextBlock Text="Category Percent 3" />
-        <TextBox />
-        <Button Content="Save" />
+        <StackPanel Orientation="Horizontal">
+            <TextBox Width="100" />
+            <ComboBox SelectedIndex="0" Width="100" ItemsSource="{Binding Path=QuestionCategories}" />
+        </StackPanel>
+        <Button Content="Save" Width="100" HorizontalAlignment="Left" Command="{Binding Path=SaveQuizCommand}"/>
     </StackPanel>
 </UserControl>
