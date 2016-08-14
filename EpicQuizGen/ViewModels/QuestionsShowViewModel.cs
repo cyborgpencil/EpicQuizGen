@@ -44,13 +44,13 @@ namespace EpicQuizGen.ViewModels
                 Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, false, }, MultiAnswerList = new List<string>() { "", "", "", "" }, TrueFalseAnswer = false, CreationDate = DateTime.Now };
             }
             QuestionView = new QuestionView();
-            _eventAggregator.GetEvent<SendQuestionNameEvent>().Subscribe(SetQuestionName);
-            _eventAggregator.GetEvent<SendMainQuestionEvent>().Subscribe(SetMainQuestion);
-            _eventAggregator.GetEvent<SendQuestionTypesEvent>().Subscribe(SetQuestionType);
-            _eventAggregator.GetEvent<SendCategoryEvent>().Subscribe(SetQuestionCategory);
-            _eventAggregator.GetEvent<SendTrueFalseEvent>().Subscribe(SetTrueFalse);
-            _eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Subscribe(SetMuliAnswerPositions);
-            _eventAggregator.GetEvent<SendMultiAnswerListEvent>().Subscribe(SetMultiAnswerList);
+            //_eventAggregator.GetEvent<SendQuestionNameEvent>().Subscribe(SetQuestionName);
+            //_eventAggregator.GetEvent<SendMainQuestionEvent>().Subscribe(SetMainQuestion);
+            //_eventAggregator.GetEvent<SendQuestionTypesEvent>().Subscribe(SetQuestionType);
+            //_eventAggregator.GetEvent<SendCategoryEvent>().Subscribe(SetQuestionCategory);
+            //_eventAggregator.GetEvent<SendTrueFalseEvent>().Subscribe(SetTrueFalse);
+            //_eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Subscribe(SetMuliAnswerPositions);
+            //_eventAggregator.GetEvent<SendMultiAnswerListEvent>().Subscribe(SetMultiAnswerList);
             _eventAggregator.GetEvent<SendQuestionFromEditEvent>().Subscribe(SetQuestion);
 
 

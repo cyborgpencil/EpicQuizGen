@@ -13,11 +13,14 @@ namespace EpicQuizGen.ViewModels
         #region RegionManager
         private readonly IRegionManager _regionManager;
         public DelegateCommand<string> NavigateCommand { get; set; }
+
+        public DelegateCommand LoadQuizzesCommand { get; set; }
         public MainWindowViewModel(IRegionManager regionManager)
         {
             _regionManager = regionManager;
 
             NavigateCommand = new DelegateCommand<string>(Navigate);
+            LoadQuizzesCommand = new DelegateCommand(LoadQuizzes);
         }
 
         #endregion
@@ -29,6 +32,10 @@ namespace EpicQuizGen.ViewModels
             _regionManager.RequestNavigate("ContentRegion", uri);
         }
 
+        private void LoadQuizzes()
+        {
+            _regionManager.RequestNavigate("ContentRegion", "QuizzesShowView");
+        }
         #endregion
 
     }

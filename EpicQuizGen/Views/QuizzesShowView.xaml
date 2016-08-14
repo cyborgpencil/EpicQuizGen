@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel>
-        <TextBlock Text="List of Quizzes"></TextBlock>
+        <TextBlock Text="Current Quizzes Status:"></TextBlock>
         <DataGrid>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Quiz Name" />

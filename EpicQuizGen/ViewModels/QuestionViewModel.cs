@@ -247,6 +247,7 @@ namespace EpicQuizGen.ViewModels
         public void SetQuestion(Question obj)
         {
             Question = obj;
+            Navigate(Question.QuestionType);
         }
         #endregion
 
