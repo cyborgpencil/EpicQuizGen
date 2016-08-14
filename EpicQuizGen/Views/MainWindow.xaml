@@ -25,7 +25,6 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="2" >
-            <Button Content="Take a Quiz" Margin="2" Command="{Binding Path=NavigateCommand}" CommandParameter="QuizTakeView"/>
             <Button Content="Edit a Question" Margin="2" Command="{Binding Path=NavigateCommand}" CommandParameter="QuestionsShowView"/>
             <Button Content="Edit a Quiz" Margin="2" Command="{Binding Path=NavigateCommand}" CommandParameter="QuizzesShowView"/>
 

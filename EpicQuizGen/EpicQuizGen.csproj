@@ -116,6 +116,9 @@
     <Compile Include="Views\QuizTakeView.xaml.cs">
       <DependentUpon>QuizTakeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\QuizView.xaml.cs">
+      <DependentUpon>QuizView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\QuizzesShowView.xaml.cs">
       <DependentUpon>QuizzesShowView.xaml</DependentUpon>
     </Compile>
@@ -151,6 +154,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\QuizTakeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\QuizView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

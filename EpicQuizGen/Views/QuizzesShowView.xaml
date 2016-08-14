@@ -10,7 +10,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel>
         <TextBlock Text="Current Quizzes Status:"></TextBlock>
-        <DataGrid>
+        <DataGrid Height="200">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Quiz Name" />
                 <DataGridTextColumn Header="Creation Date" />
@@ -18,5 +18,11 @@
                 <DataGridTextColumn Header="Last Grade" />
             </DataGrid.Columns>
         </DataGrid>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="New Quiz" Margin="2"/>
+            <Button Content="Edit Quiz" Margin="2"/>
+            <Button Content="Delete Quiz" Margin="2"/>
+        </StackPanel>
+        <ContentControl prism:RegionManager.RegionName="QuizState"/>
     </StackPanel>
 </UserControl>
