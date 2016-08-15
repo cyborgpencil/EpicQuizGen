@@ -36,6 +36,7 @@ namespace EpicQuizGen.ViewModels
         {
             _regionManager.RequestNavigate("ContentRegion", "QuizzesShowView");
         }
+
         #endregion
 
     }

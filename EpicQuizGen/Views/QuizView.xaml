@@ -8,9 +8,9 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel Width="600" HorizontalAlignment="Left">
         <TextBlock Text="Quiz Name: "/>
-        <TextBox Text="{Binding Path=Quiz.QuizName}"/>
+        <TextBox Text="{Binding Path=CurrentQuiz.QuizName, Mode=TwoWay}"/>
         <TextBlock Text="Question Count:" />
-        <TextBox />
+        <TextBox Text="{Binding Path=QuestionCount}"/>
         <TextBlock Text="Category Percent 1" />
         <StackPanel Orientation="Horizontal">
             <TextBox Width="100" />

@@ -1,4 +1,5 @@
 ﻿using EpicQuizGen.Models;
+using EpicQuizGen.Utils;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -18,7 +19,7 @@ namespace EpicQuizGen.ViewModels
         public Quiz CurrentQuiz
         {
             get { return _currentQuiz; }
-            set { SetProperty(ref _currentQuiz, value); }
+            set { SetProperty(ref _currentQuiz, value); Debug.WriteLine("Changing Quiz"); }
         }
 
         /// <summary>
@@ -33,6 +34,13 @@ namespace EpicQuizGen.ViewModels
         }
 
         public List<string> QuestionCategories { get; set; }
+
+        private string _questionCount;
+        public string QuestionCount
+        {
+            get { return _questionCount; }
+            set { SetProperty(ref _questionCount, value); }
+        }
         #endregion
 
         public QuizzesShowViewModel()
@@ -60,7 +68,9 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand SaveQuizCommand { get; set; }
         public void SaveQuiz()
         {
-            Debug.WriteLine("Saveing Quiz");
+            BuildQuiz();
+            QuizIOManager.Instance.Quiz = CurrentQuiz;
+            QuizIOManager.Instance.SaveQuiz();
         }
         #endregion
 
@@ -70,7 +80,20 @@ namespace EpicQuizGen.ViewModels
         /// </summary>
         public void BuildQuiz()
         {
-            
+            CurrentQuiz.CreationDate = DateTime.Now;
+            // Build Question Count for list
+            CurrentQuiz.Questions = new List<Question>(ConvertQuestionCount(QuestionCount));
+            for (int i = 0; i < CurrentQuiz.Questions.Count; i++)
+            {
+                CurrentQuiz.Questions[i] = new Question();
+            }
+        }
+
+        private int ConvertQuestionCount(string count)
+        {
+            int result;
+            int.TryParse(count, out result);
+            return result;
         }
         #endregion
     }

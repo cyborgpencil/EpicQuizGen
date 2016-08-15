@@ -1,14 +1,36 @@
-﻿using System;
+﻿using EpicQuizGen.Models;
+using Prism.Mvvm;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace EpicQuizGen.Models
 {
-    public class Quiz
+    public class Quiz : BindableBase
     {
-        public string QuizName { get; set; }
-        public DateTime CreationDate { get; set; }
-        public List<Question> Questions { get; set; }
-        public float Grade { get; set; }
+        private string _quizName;
+        public string QuizName
+        {
+            get { return _quizName; }
+            set { SetProperty(ref _quizName, value); }
+        }
+        private DateTime _creationDate;
+        public DateTime CreationDate
+        {
+            get { return _creationDate; }
+            set { SetProperty(ref _creationDate, value); }
+        }
+        private List<Question> _questions;
+        public List<Question> Questions
+        {
+            get { return _questions; }
+            set { SetProperty(ref _questions, value); }
+        }
+        private float _grade;
+        public float Grade
+        {
+            get { return _grade; }
+            set { SetProperty(ref _grade, value); }
+        }
     }
 }
