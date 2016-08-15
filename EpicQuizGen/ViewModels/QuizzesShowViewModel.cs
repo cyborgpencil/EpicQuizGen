@@ -33,13 +33,20 @@ namespace EpicQuizGen.ViewModels
             set { SetProperty(ref _quizList, value); }
         }
 
-        public List<string> QuestionCategories { get; set; }
+        public List<string> QuestionCategoriesSelect { get; set; }
 
         private string _questionCount;
         public string QuestionCount
         {
             get { return _questionCount; }
             set { SetProperty(ref _questionCount, value); }
+        }
+        
+        private string _selectedCategory;
+        public string SelectedCategory
+        {
+            get { return _selectedCategory; }
+            set { SetProperty(ref _selectedCategory, value); }
         }
         #endregion
 
@@ -48,8 +55,9 @@ namespace EpicQuizGen.ViewModels
             QuizList = new ObservableCollection<Quiz>();
             CurrentQuiz = new Quiz();
 
-            // Get list of QuestionCategories to a string
-            QuestionCategories = new List<string>(Enum.GetNames(typeof(QuestionTypes)));
+            SelectedCategory = QuestionCategory.MISC.ToString();
+            // Get list of QuestionCategoriesSelect to a string
+            QuestionCategoriesSelect = new List<string>(Enum.GetNames(typeof(QuestionCategory)));
 
             // Commands
             NewQuizCommand = new DelegateCommand(NewQuiz);
@@ -72,11 +80,14 @@ namespace EpicQuizGen.ViewModels
         public void SaveQuiz()
         {
             BuildQuiz();
+            CurrentQuiz.Questions = QuestionIOManager.Instance.GetQuestionsByCategory(SelectedCategory, ConvertQuestionCount(QuestionCount));
             QuizIOManager.Instance.Quiz = CurrentQuiz;
             QuizIOManager.Instance.SaveQuiz();
 
             // Update Quizzes
             QuizList = new ObservableCollection<Quiz>(QuizIOManager.Instance.LoadQuizzesFromFile());
+            CurrentQuiz = null;
+            QuestionCount = "";
         }
         #endregion
 
@@ -89,7 +100,6 @@ namespace EpicQuizGen.ViewModels
             CurrentQuiz.CreationDate = DateTime.Now;
             // Build Question Count for list
             CurrentQuiz.Questions = new List<Question>(ConvertQuestionCount(QuestionCount));
-            CurrentQuiz.Questions = QuestionIOManager.Instance.GetQuestionsByCategory("MISC");
         }
 
         private int ConvertQuestionCount(string count)

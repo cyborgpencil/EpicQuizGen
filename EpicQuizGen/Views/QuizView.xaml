@@ -11,21 +11,9 @@
         <TextBox Text="{Binding Path=CurrentQuiz.QuizName, Mode=TwoWay}"/>
         <TextBlock Text="Question Count:" />
         <TextBox Text="{Binding Path=QuestionCount}"/>
-        <TextBlock Text="Category Percent 1" />
-        <StackPanel Orientation="Horizontal">
-            <TextBox Width="100" />
-            <ComboBox SelectedIndex="0" Width="100" ItemsSource="{Binding Path=QuestionCategories}"/>
-        </StackPanel>
-        <TextBlock Text="Category Percent 2" />
-        <StackPanel Orientation="Horizontal">
-            <TextBox Width="100" />
-            <ComboBox SelectedIndex="0" Width="100" ItemsSource="{Binding Path=QuestionCategories}" />
-        </StackPanel>
-        <TextBlock Text="Category Percent 3" />
-        <StackPanel Orientation="Horizontal">
-            <TextBox Width="100" />
-            <ComboBox SelectedIndex="0" Width="100" ItemsSource="{Binding Path=QuestionCategories}" />
-        </StackPanel>
+        <TextBlock Text="Question Category" />
+        <ComboBox Width="100" ItemsSource="{Binding Path=QuestionCategoriesSelect}" SelectedItem="{Binding Path=SelectedCategory}" HorizontalAlignment="Left" Margin="2"/>
+
         <Button Content="Save" Width="100" HorizontalAlignment="Left" Command="{Binding Path=SaveQuizCommand}"/>
     </StackPanel>
 </UserControl>

@@ -93,19 +93,24 @@ namespace EpicQuizGen.Utils
             return new List<Question>();
         }
 
-        public List<Question> GetQuestionsByCategory(string category)
+        public List<Question> GetQuestionsByCategory(string category, int questionCount)
         {
             if (GetQuestionsFromFile())
             {
-                List<Question> catQuestions = new List<Question>();
+                List<Question> catQuestions = new List<Question>(questionCount);
                 foreach (var q in QuestionsFromFile)
                 {
                     if(q.QuestionCategory.Equals(category))
                     {
-                        catQuestions.Add(q);
+                        for (int i = 0; i < questionCount; i++)
+                        {
+                            catQuestions.Add(q);
+                        }
+                        return catQuestions;
+
                     }
                 }
-                return catQuestions;
+                
             }
             return new List<Question>();
         }
