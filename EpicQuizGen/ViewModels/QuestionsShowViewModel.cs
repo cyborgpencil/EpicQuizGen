@@ -59,7 +59,7 @@ namespace EpicQuizGen.ViewModels
             NewQuestionCommand = new DelegateCommand(NewQuestion);
             DeleteQuestionCommand = new DelegateCommand(DeleteQuestion);
 
-            Questions = new ObservableCollection<Question>(QuestionIOManager.Instance.GetQuestionsFromFile());
+            Questions = new ObservableCollection<Question>(QuestionIOManager.Instance.LoadQuestionsFromFile());
 
             _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
         }
@@ -75,7 +75,7 @@ namespace EpicQuizGen.ViewModels
             QuestionIOManager.Instance.SaveQuestionModel();
 
             // Update Question List
-            Questions = new ObservableCollection<Question>( QuestionIOManager.Instance.GetQuestionsFromFile());
+            Questions = new ObservableCollection<Question>( QuestionIOManager.Instance.LoadQuestionsFromFile());
 
             // Clear question
             Question = new Question();
@@ -93,7 +93,7 @@ namespace EpicQuizGen.ViewModels
             if(!string.IsNullOrWhiteSpace(Question.QuestionName))
             {
                 QuestionIOManager.Instance.DeleteQuestionFromFile(Question.QuestionName);
-                Questions = new ObservableCollection<Question>(QuestionIOManager.Instance.GetQuestionsFromFile());
+                Questions = new ObservableCollection<Question>(QuestionIOManager.Instance.LoadQuestionsFromFile());
             }
 
         }

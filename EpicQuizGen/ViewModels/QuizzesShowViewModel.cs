@@ -89,10 +89,7 @@ namespace EpicQuizGen.ViewModels
             CurrentQuiz.CreationDate = DateTime.Now;
             // Build Question Count for list
             CurrentQuiz.Questions = new List<Question>(ConvertQuestionCount(QuestionCount));
-            for (int i = 0; i < CurrentQuiz.Questions.Count; i++)
-            {
-                CurrentQuiz.Questions[i] = new Question();
-            }
+            CurrentQuiz.Questions = QuestionIOManager.Instance.GetQuestionsByCategory("MISC");
         }
 
         private int ConvertQuestionCount(string count)
@@ -101,6 +98,8 @@ namespace EpicQuizGen.ViewModels
             int.TryParse(count, out result);
             return result;
         }
+
+        
         #endregion
     }
 }

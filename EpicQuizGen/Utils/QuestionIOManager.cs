@@ -46,9 +46,9 @@ namespace EpicQuizGen.Utils
 
         public void DeleteQuestionFromFile(string questionName)
         {
-            QuestionsFromFile = GetQuestionsFromFile();
+            QuestionsFromFile = LoadQuestionsFromFile();
 
-            var QuestionToDelete = from question in GetQuestionsFromFile()
+            var QuestionToDelete = from question in LoadQuestionsFromFile()
                                    where question.QuestionName.Contains(questionName)
                                    select questionName;
 
@@ -56,12 +56,11 @@ namespace EpicQuizGen.Utils
 
         }
 
-        public List<Question> GetQuestionsFromFile()
+        private bool GetQuestionsFromFile()
         {
-
             IEnumerable<string> questionNames = Directory.EnumerateFileSystemEntries(DirectoryManager.Instance.QuestionDirectoryPath, "*.xml");
 
-            if(questionNames.GetEnumerator().Current != null)
+            if (questionNames.GetEnumerator().Current != null)
             {
 
                 QuestionsFromFile = new List<Question>();
@@ -80,8 +79,33 @@ namespace EpicQuizGen.Utils
                 }
 
                 FStream.Close();
+                return true;
+            }
+            return false;
+        }
+        public List<Question> LoadQuestionsFromFile()
+        {
 
+           if(GetQuestionsFromFile())
+            { 
                 return QuestionsFromFile;
+            }
+            return new List<Question>();
+        }
+
+        public List<Question> GetQuestionsByCategory(string category)
+        {
+            if (GetQuestionsFromFile())
+            {
+                List<Question> catQuestions = new List<Question>();
+                foreach (var q in QuestionsFromFile)
+                {
+                    if(q.QuestionCategory.Equals(category))
+                    {
+                        catQuestions.Add(q);
+                    }
+                }
+                return catQuestions;
             }
             return new List<Question>();
         }
