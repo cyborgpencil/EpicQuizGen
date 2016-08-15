@@ -54,6 +54,9 @@ namespace EpicQuizGen.ViewModels
             // Commands
             NewQuizCommand = new DelegateCommand(NewQuiz);
             SaveQuizCommand = new DelegateCommand(SaveQuiz);
+
+            // Load Quizzes
+            QuizList = new ObservableCollection<Quiz>(QuizIOManager.Instance.LoadQuizzesFromFile());
         }
 
         #region Commands
@@ -71,6 +74,9 @@ namespace EpicQuizGen.ViewModels
             BuildQuiz();
             QuizIOManager.Instance.Quiz = CurrentQuiz;
             QuizIOManager.Instance.SaveQuiz();
+
+            // Update Quizzes
+            QuizList = new ObservableCollection<Quiz>(QuizIOManager.Instance.LoadQuizzesFromFile());
         }
         #endregion
 
