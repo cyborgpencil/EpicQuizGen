@@ -12,7 +12,7 @@ namespace EpicQuizGen.Models
         public string QuestionName
         {
             get { return _questionName; }
-            set { SetProperty(ref _questionName, value); }
+            set{ SetProperty(ref _questionName, value); }
         }
         private string _mainQuestion;
         public string MainQuestion

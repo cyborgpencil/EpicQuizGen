@@ -7,20 +7,24 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:m="clr-namespace:EpicQuizGen.Models"
              xmlns:vm="clr-namespace:EpicQuizGen.ViewModels"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="1020">
 
-    <UserControl.Resources>
-        
-    </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Path=QuestionViewCommand}" CommandParameter="TRUEFALSE"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <StackPanel>
         <TextBlock Text="Question Name:"/>
-        <TextBox Text="{Binding Path=Question.QuestionName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox Text="{Binding Path=QuestionName}" />
         <TextBlock Text="Question Type:" />
-        <ComboBox ItemsSource="{Binding Path=QuestionTypeList}" SelectedItem="{ Binding Path=SelectedType, UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding Path=Question.QuestionType, Mode=TwoWay}"/>
+        <ComboBox ItemsSource="{Binding Path=QuestionTypeList}" SelectedItem="{ Binding Path=SelectedQuestionType}"/>
         <TextBlock Text="Question Category:" />
-        <ComboBox ItemsSource="{Binding Path=CategoryList, Mode=TwoWay}" SelectedIndex="0" SelectedItem="{Binding Path=Question.QuestionCategory, Mode=TwoWay}"/>
+        <ComboBox ItemsSource="{Binding Path=CategoryList, Mode=TwoWay}" SelectedIndex="0" SelectedItem="{Binding Path=SelectedCategory, Mode=TwoWay}"/>
         <TextBlock Text="Question" />
         <CheckBox Content="Image?"/>
         <TextBox Height="100" Text="{Binding Path=Question.MainQuestion}"/>

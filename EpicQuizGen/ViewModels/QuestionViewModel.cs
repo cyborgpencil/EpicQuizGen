@@ -30,25 +30,37 @@ namespace EpicQuizGen.ViewModels
         /// <summary>
         /// Properties for GUI
         /// </summary>
-        private QuestionCategory _questionCategory;
-        public QuestionCategory QuestionCategory
+        /// 
+        private string _questionName;
+        public string QuestionName
         {
-            get { return _questionCategory; }
-            set { SetProperty(ref _questionCategory, value); SendCategory(); }
+            get { return _questionName; }
+            set { SetProperty(ref _questionName, value); Question.QuestionName = value; _eventAggregator.GetEvent<SendQuestionNameEvent>().Publish(Question.QuestionName); }
         }
 
         private List<string> _categoryList;
         public List<string> CategoryList
         {
             get { return _categoryList; }
-            set { SetProperty(ref _categoryList, value); }
+            set { SetProperty(ref _categoryList, value);
+
+            }
         }
 
-        private QuestionTypes _questionTypes;
-        public QuestionTypes QuestionTypes
+        private string _selectedCategory;
+        public string SelectedCategory
         {
-            get { return _questionTypes; }
-            set { SetProperty(ref _questionTypes, value); SendQuestionTypes(); }
+            get { return _selectedCategory; }
+            set { SetProperty(ref _selectedCategory, value); Question.QuestionCategory = value;
+                SendCategory();
+            }
+        }
+
+        private string _selectedQuestionType;
+        public string SelectedQuestionType
+        {
+            get { return _selectedQuestionType; }
+            set { SetProperty(ref _selectedQuestionType, value);Question.QuestionType = value; SendQuestionTypes(); }
         }
 
         private ObservableCollection<string> _questionTypeList;
@@ -58,18 +70,11 @@ namespace EpicQuizGen.ViewModels
             set { SetProperty(ref _questionTypeList, value); }
         }
 
-        private string _questionName;
-        public string QuestionName
-        {
-            get { return _questionName; }
-            set { SetProperty(ref _questionName, value); SendQuestionName(); }
-        }
-
         private string _mainQuestion;
         public string MainQuestion
         {
             get { return _mainQuestion; }
-            set { SetProperty(ref _mainQuestion, value); SendMainQuestion(); }
+            set { SetProperty(ref _mainQuestion, value); Question.MainQuestion = value; SendMainQuestion(); }
         }
 
         private List<string> _answerList;
@@ -128,7 +133,7 @@ namespace EpicQuizGen.ViewModels
         public string SelectedType
         {
             get { return _selectedType; }
-            set { SetProperty(ref _selectedType, value); Question.QuestionType = value; Debug.WriteLine(Question.QuestionType); Navigate(Question.QuestionType); }
+            set { SetProperty(ref _selectedType, value); Question.QuestionType = value; Navigate(Question.QuestionType); }
         }
         private readonly IEventAggregator _eventAggregator;
 
@@ -137,6 +142,7 @@ namespace EpicQuizGen.ViewModels
         #region RegionManager
         private readonly IRegionManager _regionManager;
         public DelegateCommand<string> NavigateCommand { get; set; }
+        public DelegateCommand<string> QuestionViewCommand { get; set; }
 
         #endregion
 
@@ -144,11 +150,16 @@ namespace EpicQuizGen.ViewModels
         {
             _eventAggregator = eventAggregator;
             _regionManager = regionManager;
-            
+            NavigateCommand = new DelegateCommand<string>(Navigate);
+            QuestionViewCommand = new DelegateCommand<string>(QuestionView);
+
+            if(Question == null)
+            {
+                SetDefaultQuestion();
+            }
 
             CategoryList = new List<string>(Enum.GetNames(typeof(QuestionCategory)));
             QuestionTypeList = new ObservableCollection<string>(Enum.GetNames(typeof(QuestionTypes)));
-            QuestionTypes = new QuestionTypes();
 
 
             AnswerList = new List<string> (){"","","","" };
@@ -160,14 +171,8 @@ namespace EpicQuizGen.ViewModels
             // Build Question Model from parent
             _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Subscribe(SetQuestion);
             _eventAggregator.GetEvent<SendQuestionFromEditEvent>().Publish(Question);
+            _eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion);
 
-            // Check for null Question
-            if (Question == null)
-            {
-                Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, false, }, MultiAnswerList = new List<string>() { "", "", "", "" }, TrueFalseAnswer = false, CreationDate = DateTime.Now };
-            }
-
-            Navigate(Question.QuestionType);
             //DEBUG
             TestBox_TextChanged = new DelegateCommand(Test);
         }
@@ -183,9 +188,9 @@ namespace EpicQuizGen.ViewModels
                 uri = "TRUEFALSE";
             }
 
-            QuestionTypes = (QuestionTypes)Enum.Parse(typeof(QuestionTypes), uri);
+            QuestionTypes QuestionTypeSelected = (QuestionTypes)Enum.Parse(typeof(QuestionTypes), uri);
 
-            switch (QuestionTypes)
+            switch (QuestionTypeSelected)
             {
                 case QuestionTypes.MULTICHOICE4:
                     _regionManager.RequestNavigate("AnswerSets", "MultiChoice4View");
@@ -197,13 +202,15 @@ namespace EpicQuizGen.ViewModels
             
         }
 
+        private void QuestionView(string uri)
+        {
+            _eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion);
+            Navigate(uri);
+        }
+
         #endregion
 
         #region Events
-        public void SendQuestionName()
-        {
-            _eventAggregator.GetEvent<SendQuestionNameEvent>().Publish(QuestionName);
-        }
 
         public void SendMainQuestion()
         {
@@ -211,11 +218,11 @@ namespace EpicQuizGen.ViewModels
         }
         public void SendQuestionTypes()
         {
-            _eventAggregator.GetEvent<SendQuestionTypesEvent>().Publish(QuestionTypes);
+            _eventAggregator.GetEvent<SendQuestionTypesEvent>().Publish((QuestionTypes)Enum.Parse(typeof(QuestionTypes), Question.QuestionType));
         }
         public void SendCategory()
         {
-            _eventAggregator.GetEvent<SendCategoryEvent>().Publish(QuestionCategory);
+            _eventAggregator.GetEvent<SendQuestionCategoryEvent>().Publish((QuestionCategory)Enum.Parse(typeof(QuestionCategory), Question.QuestionCategory));
         }
 
         public void SendTrueFalse()
@@ -247,9 +254,15 @@ namespace EpicQuizGen.ViewModels
         public void SetQuestion(Question obj)
         {
             Question = obj;
-            Navigate(Question.QuestionType);
+            // Navigate
+            SelectedQuestionType = Question.QuestionType;
         }
         #endregion
+
+        private void SetDefaultQuestion()
+        {
+            Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, false, }, MultiAnswerList = new List<string>() { "", "", "", "" }, TrueFalseAnswer = false, CreationDate = DateTime.Now };
+        }
 
         #region DEBUG
         public DelegateCommand TestBox_TextChanged { get; set; }

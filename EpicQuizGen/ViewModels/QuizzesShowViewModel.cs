@@ -86,7 +86,7 @@ namespace EpicQuizGen.ViewModels
 
             // Update Quizzes
             QuizList = new ObservableCollection<Quiz>(QuizIOManager.Instance.LoadQuizzesFromFile());
-            CurrentQuiz = null;
+            CurrentQuiz = new Quiz();
             QuestionCount = "";
         }
         #endregion
