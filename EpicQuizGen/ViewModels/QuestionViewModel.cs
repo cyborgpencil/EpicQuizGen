@@ -100,33 +100,33 @@ namespace EpicQuizGen.ViewModels
         public string Answer1
         {
             get { return _answer1; }
-            set { SetProperty(ref _answer1, value); SendMultiAnswerList(); }
+            set { SetProperty(ref _answer1, value); SendMultiAnswer1(); Debug.WriteLine(_answer1); }
         }
         private string _answer2;
         public string Answer2
         {
             get { return _answer2; }
-            set { SetProperty(ref _answer2, value); SendMultiAnswerList(); }
+            set { SetProperty(ref _answer2, value); SendMultiAnswer2(); Debug.WriteLine(_answer2); }
         }
         private string _answer3;
         public string Answer3
         {
             get { return _answer3; }
-            set { SetProperty(ref _answer3, value); SendMultiAnswerList(); }
+            set { SetProperty(ref _answer3, value); SendMultiAnswer3(); Debug.WriteLine(_answer3); }
         }
 
         private string _answer4;
         public string Answer4
         {
             get { return _answer4; }
-            set { SetProperty(ref _answer4, value); SendMultiAnswerList(); }
+            set { SetProperty(ref _answer4, value); SendMultiAnswer4(); Debug.WriteLine(_answer4); }
         }
 
         private Question _question;
         public Question Question
         {
             get { return _question; }
-            set { SetProperty(ref _question, value); }
+            set { SetProperty(ref _question, value); _eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion); }
         }
 
         private string _selectedType;
@@ -142,7 +142,7 @@ namespace EpicQuizGen.ViewModels
         #region RegionManager
         private readonly IRegionManager _regionManager;
         public DelegateCommand<string> NavigateCommand { get; set; }
-        public DelegateCommand<string> QuestionViewCommand { get; set; }
+        public DelegateCommand<string> QuestionViewLoadCommand { get; set; }
 
         #endregion
 
@@ -151,7 +151,7 @@ namespace EpicQuizGen.ViewModels
             _eventAggregator = eventAggregator;
             _regionManager = regionManager;
             NavigateCommand = new DelegateCommand<string>(Navigate);
-            QuestionViewCommand = new DelegateCommand<string>(QuestionView);
+            QuestionViewLoadCommand = new DelegateCommand<string>(QuestionViewLoad);
 
             if(Question == null)
             {
@@ -161,23 +161,23 @@ namespace EpicQuizGen.ViewModels
             CategoryList = new List<string>(Enum.GetNames(typeof(QuestionCategory)));
             QuestionTypeList = new ObservableCollection<string>(Enum.GetNames(typeof(QuestionTypes)));
 
-
-            AnswerList = new List<string> (){"","","","" };
-
             MultichoiceAnswersPositions = new List<bool>() { false, false, false, false };
+            AnswerList = new List<string>() { "", "", "", "" };
+            Answer1 = AnswerList[0];
+            Answer2 = AnswerList[1];
+            Answer3 = AnswerList[2];
+            Answer4 = AnswerList[3];
 
             UpdateMultiAnswerPositionsCommand = new DelegateCommand(UpdateMultiAnswerPosition);
 
             // Build Question Model from parent
             _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Subscribe(SetQuestion);
-            _eventAggregator.GetEvent<SendQuestionFromEditEvent>().Publish(Question);
+            //_eventAggregator.GetEvent<SendQuestionFromEditEvent>().Publish(Question);
             _eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion);
 
             //DEBUG
             TestBox_TextChanged = new DelegateCommand(Test);
         }
-
-
 
         #region Commands
         private void Navigate(string uri)
@@ -202,7 +202,7 @@ namespace EpicQuizGen.ViewModels
             
         }
 
-        private void QuestionView(string uri)
+        private void QuestionViewLoad(string uri)
         {
             _eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion);
             Navigate(uri);
@@ -219,6 +219,7 @@ namespace EpicQuizGen.ViewModels
         public void SendQuestionTypes()
         {
             _eventAggregator.GetEvent<SendQuestionTypesEvent>().Publish((QuestionTypes)Enum.Parse(typeof(QuestionTypes), Question.QuestionType));
+            Navigate(Question.QuestionType);
         }
         public void SendCategory()
         {
@@ -240,22 +241,59 @@ namespace EpicQuizGen.ViewModels
         {
             _eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Publish(MultichoiceAnswersPositions);
         }
+        public void SendMultiAnswer1()
+        {
+            _eventAggregator.GetEvent<SendMultiAnswer1Event>().Publish(Answer1);
+        }
+        public void SendMultiAnswer2()
+        {
+            _eventAggregator.GetEvent<SendMultiAnswer2Event>().Publish(Answer2);
+        }
+        public void SendMultiAnswer3()
+        {
+            _eventAggregator.GetEvent<SendMultiAnswer3Event>().Publish(Answer3);
+        }
+        public void SendMultiAnswer4()
+        {
+            _eventAggregator.GetEvent<SendMultiAnswer4Event>().Publish(Answer4);
+        }
 
         public void SendMultiAnswerList()
         {
-            AnswerList[0] = Answer1;
-            AnswerList[1] = Answer2;
-            AnswerList[2] = Answer3;
-            AnswerList[3] = Answer4;
+            AnswerList = new List<string>();
+            AnswerList.Add(Answer1);
+            AnswerList.Add(Answer2);
+            AnswerList.Add(Answer3);
+            AnswerList.Add(Answer4);
 
             _eventAggregator.GetEvent<SendMultiAnswerListEvent>().Publish(AnswerList);
         }
 
         public void SetQuestion(Question obj)
         {
+            if (obj == null)
+            {
+                SetDefaultQuestion();
+                obj = Question;
+            }
             Question = obj;
+            QuestionName = obj.QuestionName;
+            Question.MultiAnswerPositions = obj.MultiAnswerPositions;
+            Question.MultiAnswerList = obj.MultiAnswerList;
             // Navigate
             SelectedQuestionType = Question.QuestionType;
+            SelectedCategory = Question.QuestionCategory;
+            CorrectToFAnswer = Question.TrueFalseAnswer;
+            if (Question.QuestionType == QuestionTypes.MULTICHOICE4.ToString())
+            {
+                MultichoiceAnswersPositions =  new List<bool>(Question.MultiAnswerPositions);
+                AnswerList = new List<string>(Question.MultiAnswerList);
+                Answer1 = obj.MultiAnswerList[0];
+                Answer2 = obj.MultiAnswerList[1];
+                Answer3 = obj.MultiAnswerList[2];
+                Answer4 = obj.MultiAnswerList[3];
+            }
+
         }
         #endregion
 

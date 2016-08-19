@@ -46,14 +46,12 @@ namespace EpicQuizGen.ViewModels
 
             QuestionView = new QuestionView();
 
-            _eventAggregator.GetEvent<SendQuestionFromEditEvent>().Subscribe(SetQuestion);
-            eventAggregator.GetEvent<SendQuestionNameEvent>().Subscribe(SetQuestionName);
-
             // Command setup
             SaveQuestionCommand = new DelegateCommand(SaveQuestion);
             EditQuestionCommand = new DelegateCommand(EditQuestion);
             NewQuestionCommand = new DelegateCommand(NewQuestion);
             DeleteQuestionCommand = new DelegateCommand(DeleteQuestion);
+            QuestionShowLoadCommand = new DelegateCommand(LoadQuestionShow);
 
             Questions = new ObservableCollection<Question>(QuestionIOManager.Instance.LoadQuestionsFromFile());
 
@@ -66,6 +64,10 @@ namespace EpicQuizGen.ViewModels
             _eventAggregator.GetEvent<SendTrueFalseEvent>().Subscribe(SetTrueFalse);
             _eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Subscribe(SetMuliAnswerPositions);
             _eventAggregator.GetEvent<SendMultiAnswerListEvent>().Subscribe(SetMultiAnswerList);
+            _eventAggregator.GetEvent<SendMultiAnswer1Event>().Subscribe(SetMultiAnswer1);
+            _eventAggregator.GetEvent<SendMultiAnswer2Event>().Subscribe(SetMultiAnswer2);
+            _eventAggregator.GetEvent<SendMultiAnswer3Event>().Subscribe(SetMultiAnswer3);
+            _eventAggregator.GetEvent<SendMultiAnswer4Event>().Subscribe(SetMultiAnswer4);
         }
 
         #region Commands
@@ -87,6 +89,13 @@ namespace EpicQuizGen.ViewModels
             
         }
 
+        public DelegateCommand QuestionShowLoadCommand { get; set; }
+        public void LoadQuestionShow()
+        {
+            SetDefaultQuestion();
+            SendQuestion();
+        }
+
         public DelegateCommand EditQuestionCommand { get; set; }
         public void EditQuestion()
         {
@@ -96,19 +105,20 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand DeleteQuestionCommand { get; set; }
         public void DeleteQuestion()
         {
-            if(!string.IsNullOrWhiteSpace(Question.QuestionName))
-            {
+            //if(!string.IsNullOrWhiteSpace(Question.QuestionName))
+            //{
                 QuestionIOManager.Instance.DeleteQuestionFromFile(Question.QuestionName);
+                
                 Questions = new ObservableCollection<Question>(QuestionIOManager.Instance.LoadQuestionsFromFile());
-            }
-
+            SetDefaultQuestion();
+            // }
         }
 
         public DelegateCommand NewQuestionCommand { get; set; }
         public void NewQuestion()
         {
             SetDefaultQuestion();
-            _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
+            SendQuestion();
         }
 
         #endregion
@@ -149,9 +159,26 @@ namespace EpicQuizGen.ViewModels
         {
             Question.MultiAnswerList = obj;
         }
-
+        public void SetMultiAnswer1(string obj)
+        {
+            Question.MultiAnswerList[0] = obj;
+        }
+        public void SetMultiAnswer2(string obj)
+        {
+            Question.MultiAnswerList[1] = obj;
+        }
+        public void SetMultiAnswer3(string obj)
+        {
+            Question.MultiAnswerList[2] = obj;
+        }
+        public void SetMultiAnswer4(string obj)
+        {
+            Question.MultiAnswerList[3] = obj;
+        }
         public void SendQuestion()
         {
+            if (Question == null)
+                SetDefaultQuestion();
             _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
         }
         public void SetQuestion(Question obj)
@@ -159,6 +186,11 @@ namespace EpicQuizGen.ViewModels
             Question = obj;
         }
         #endregion
+
+        private void LoadQuestion()
+        {
+            _eventAggregator.GetEvent<SendQuestionFromEditEvent>().Publish(Question);
+        }
 
         private void SetDefaultQuestion()
         {

@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace EpicQuizGen.Views
 {
     /// <summary>
-    /// Interaction logic for QuestionView.xaml
+    /// Interaction logic for QuestionViewLoad.xaml
     /// </summary>
     public partial class QuestionView : UserControl
     {

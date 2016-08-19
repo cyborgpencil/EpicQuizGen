@@ -5,12 +5,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EpicQuizGen.Views"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="640" d:DesignWidth="1000">
+    
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Path=QuestionShowLoadCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
     <StackPanel>
         <TextBlock Text="List of Questrions"></TextBlock>
-        <DataGrid ItemsSource="{Binding Path=Questions, UpdateSourceTrigger=Explicit}"
+        <DataGrid ItemsSource="{Binding Path=Questions}"
                   IsSynchronizedWithCurrentItem="False" Margin="5" Width="1000"  Height="150" SelectedItem="{Binding Path=Question}" AutoGenerateColumns="True"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" />
         <StackPanel Orientation="Horizontal">
             <Button Content="New" Margin="2" Command="{Binding Path=NewQuestionCommand}"/>

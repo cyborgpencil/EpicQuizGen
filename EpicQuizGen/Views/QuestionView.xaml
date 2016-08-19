@@ -14,20 +14,20 @@
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding Path=QuestionViewCommand}" CommandParameter="TRUEFALSE"/>
+            <i:InvokeCommandAction Command="{Binding Path=QuestionViewLoadCommand}" CommandParameter="TRUEFALSE"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
     <StackPanel>
         <TextBlock Text="Question Name:"/>
-        <TextBox Text="{Binding Path=QuestionName}" />
+        <TextBox Text="{Binding Path=QuestionName, Mode=TwoWay}" />
         <TextBlock Text="Question Type:" />
-        <ComboBox ItemsSource="{Binding Path=QuestionTypeList}" SelectedItem="{ Binding Path=SelectedQuestionType}"/>
+        <ComboBox ItemsSource="{Binding Path=QuestionTypeList}" SelectedItem="{ Binding Path=SelectedQuestionType, Mode=TwoWay}"/>
         <TextBlock Text="Question Category:" />
         <ComboBox ItemsSource="{Binding Path=CategoryList, Mode=TwoWay}" SelectedIndex="0" SelectedItem="{Binding Path=SelectedCategory, Mode=TwoWay}"/>
         <TextBlock Text="Question" />
         <CheckBox Content="Image?"/>
-        <TextBox Height="100" Text="{Binding Path=Question.MainQuestion}"/>
+        <TextBox Height="100" Text="{Binding Path=Question.MainQuestion, Mode=TwoWay}"/>
         <ContentControl prism:RegionManager.RegionName="AnswerSets" />
     </StackPanel>
 </UserControl>

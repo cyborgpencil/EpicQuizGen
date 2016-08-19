@@ -14,5 +14,9 @@ namespace EpicQuizGen.Events
     public class SendSelectedQuestionEvent : PubSubEvent<Question> { }
     public class SendQuestionEvent : PubSubEvent<Question> { }
     public class SendQuestionFromEditEvent : PubSubEvent<Question> { }
+    public class SendMultiAnswer1Event : PubSubEvent<string> { }
+    public class SendMultiAnswer2Event : PubSubEvent<string> { }
+    public class SendMultiAnswer3Event : PubSubEvent<string> { }
+    public class SendMultiAnswer4Event : PubSubEvent<string> { }
 
 }
