@@ -11,6 +11,7 @@
     <StackPanel>
         <TextBlock Text="Current Quizzes:"></TextBlock>
         <DataGrid Height="200" ItemsSource="{Binding Path=QuizList, Mode=TwoWay}" SelectedItem="{Binding Path=EditQuiz, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
+        <Button Content="Take Quiz" Width="100" HorizontalAlignment="Left" Margin="2" Command="{Binding Path=TakeQuizCommand}"/>
         <StackPanel Orientation="Horizontal">
             <Button Content="New Quiz" Margin="2" Command="{Binding Path=NewQuizCommand}"/>
             <Button Content="Edit Quiz" Margin="2" Command="{Binding Path=EditCommand}"/>

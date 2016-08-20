@@ -7,31 +7,9 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="640" d:DesignWidth="1020">
+             d:DesignHeight="640" d:DesignWidth="1000" Background="Gray">
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="27*"/>
-            <ColumnDefinition Width="143*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="207*"/>
-            <RowDefinition Height="113*"/>
-        </Grid.RowDefinitions>
-
-        <TextBlock Text="This is the Main Questions ;ok;nadskfnsofsndfknkfn" HorizontalAlignment="Stretch" Background="White" Margin="2,2,2,10"
-          Grid.Row="0" Grid.ColumnSpan="2"></TextBlock>
-        <StackPanel Grid.Row="1" Grid.Column="0">
-            <CheckBox Content="1)" HorizontalAlignment="Right" Margin="4"></CheckBox>
-            <CheckBox Content="2)" HorizontalAlignment="Right" Margin="4"></CheckBox>
-            <CheckBox Content="3)" HorizontalAlignment="Right" Margin="4"></CheckBox>
-            <CheckBox Content="4)" HorizontalAlignment="Right" Margin="4"></CheckBox>
-        </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="1">
-            <TextBlock Text="This is Answer 1" Background="White" Margin="4" VerticalAlignment="Stretch"/>
-            <TextBlock Text="This is Answer 1" Background="White" Margin="4" VerticalAlignment="Stretch"/>
-            <TextBlock Text="This is Answer 1" Background="White" Margin="4" VerticalAlignment="Stretch"/>
-            <TextBlock Text="This is Answer 1" Background="White" Margin="4" VerticalAlignment="Stretch"/>
-        </StackPanel >
-    </Grid>
+    <StackPanel MaxWidth="1000">
+        <TextBlock Text="Time Left: 00" Margin="2" HorizontalAlignment="Right" Background="White" FontSize="30" TextAlignment="Center"/>
+    </StackPanel>
 </UserControl>

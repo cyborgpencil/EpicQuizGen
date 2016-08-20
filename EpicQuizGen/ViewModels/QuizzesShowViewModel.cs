@@ -1,6 +1,8 @@
-﻿using EpicQuizGen.Models;
+﻿using EpicQuizGen.Events;
+using EpicQuizGen.Models;
 using EpicQuizGen.Utils;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -61,9 +63,10 @@ namespace EpicQuizGen.ViewModels
             set { SetProperty(ref _quizName, value); }
         }
         #endregion
-
-        public QuizzesShowViewModel()
+        private IEventAggregator _eventAggregator;
+        public QuizzesShowViewModel( IEventAggregator eventAggregator)
         {
+            _eventAggregator = eventAggregator;
             QuizList = new ObservableCollection<Quiz>();
             QuizName = "";
             QuestionCount = "1";
@@ -82,6 +85,7 @@ namespace EpicQuizGen.ViewModels
 
             // Load Quizzes
             QuizList = new ObservableCollection<Quiz>(QuizIOManager.Instance.LoadQuizzesFromFile());
+            TakeQuizCommand = new DelegateCommand(TakeQuiz);
         }
 
         #region Commands
@@ -138,6 +142,12 @@ namespace EpicQuizGen.ViewModels
 
             }
             QuizList = new ObservableCollection<Quiz>(QuizIOManager.Instance.LoadQuizzesFromFile());
+        }
+
+        public DelegateCommand TakeQuizCommand { get; set; }
+        public void TakeQuiz()
+        {
+            _eventAggregator.GetEvent<TakeQuizEvent>().Publish(CurrentQuiz);
         }
         #endregion
 
