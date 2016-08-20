@@ -99,7 +99,7 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand EditQuestionCommand { get; set; }
         public void EditQuestion()
         {
-            _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Publish(Question);
+            _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
         }
 
         public DelegateCommand DeleteQuestionCommand { get; set; }
@@ -118,7 +118,7 @@ namespace EpicQuizGen.ViewModels
         public void NewQuestion()
         {
             SetDefaultQuestion();
-            SendQuestion();
+            _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
         }
 
         #endregion
@@ -179,7 +179,7 @@ namespace EpicQuizGen.ViewModels
         {
             if (Question == null)
                 SetDefaultQuestion();
-            _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
+            
         }
         public void SetQuestion(Question obj)
         {

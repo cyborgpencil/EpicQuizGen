@@ -21,6 +21,12 @@ namespace EpicQuizGen.ViewModels
             get { return _currentQuiz; }
             set { SetProperty(ref _currentQuiz, value); Debug.WriteLine("Changing Quiz"); }
         }
+        private Quiz _editQuiz;
+        public Quiz EditQuiz
+        {
+            get { return _editQuiz; }
+            set { SetProperty(ref _editQuiz, value); EditExecute(); }
+        }
 
         /// <summary>
         /// Current Working List of Quizes
@@ -48,12 +54,21 @@ namespace EpicQuizGen.ViewModels
             get { return _selectedCategory; }
             set { SetProperty(ref _selectedCategory, value); }
         }
+        private string _quizName;
+        public string QuizName
+        {
+            get { return _quizName; }
+            set { SetProperty(ref _quizName, value); }
+        }
         #endregion
 
         public QuizzesShowViewModel()
         {
             QuizList = new ObservableCollection<Quiz>();
-            CurrentQuiz = new Quiz();
+            QuizName = "";
+            QuestionCount = "1";
+            SelectedCategory = QuestionCategory.MISC.ToString();
+            BuildNewQuiz();
 
             SelectedCategory = QuestionCategory.MISC.ToString();
             // Get list of QuestionCategoriesSelect to a string
@@ -62,6 +77,8 @@ namespace EpicQuizGen.ViewModels
             // Commands
             NewQuizCommand = new DelegateCommand(NewQuiz);
             SaveQuizCommand = new DelegateCommand(SaveQuiz);
+            EditCommand = new DelegateCommand(EditExecute, EditCanExecute).ObservesProperty(() => EditQuiz);
+            DeleteCommand = new DelegateCommand(DeleteQuiz);
 
             // Load Quizzes
             QuizList = new ObservableCollection<Quiz>(QuizIOManager.Instance.LoadQuizzesFromFile());
@@ -72,22 +89,55 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand NewQuizCommand { get; set; }
         public void NewQuiz()
         {
-            CurrentQuiz = new Quiz();
-            Debug.WriteLine("Create created");
+            BuildNewQuiz();
         }
 
         public DelegateCommand SaveQuizCommand { get; set; }
         public void SaveQuiz()
         {
-            BuildQuiz();
+            BuildSaveQuiz();
+            EditQuiz = new Quiz();
+            EditQuiz.Questions = new List<Question>();
             CurrentQuiz.Questions = QuestionIOManager.Instance.GetQuestionsByCategory(SelectedCategory, ConvertQuestionCount(QuestionCount));
+
             QuizIOManager.Instance.Quiz = CurrentQuiz;
             QuizIOManager.Instance.SaveQuiz();
 
             // Update Quizzes
             QuizList = new ObservableCollection<Quiz>(QuizIOManager.Instance.LoadQuizzesFromFile());
-            CurrentQuiz = new Quiz();
-            QuestionCount = "";
+            BuildNewQuiz();
+            QuestionCount = "1";
+            QuizName = "";
+            EditQuiz = new Quiz();
+
+        }
+
+        public DelegateCommand EditCommand { get; set; }
+        public bool EditCanExecute()
+        {
+            
+            return true;
+        }
+        public void EditExecute()
+        {
+            if (EditQuiz != null && EditQuiz.Questions != null)
+            {
+                CurrentQuiz = EditQuiz;
+                QuizName = CurrentQuiz.QuizName;
+                QuestionCount = CurrentQuiz.Questions.Count.ToString();
+                SelectedCategory = CurrentQuiz.QuizCategory;
+            }
+        }
+        public DelegateCommand DeleteCommand { get; set; }
+        public void DeleteQuiz()
+        {
+            if (EditQuiz != null)
+            {
+                QuizIOManager.Instance.Quiz = EditQuiz;
+                QuizIOManager.Instance.DeleteQuestionFromFile(EditQuiz.QuizName);
+
+            }
+            QuizList = new ObservableCollection<Quiz>(QuizIOManager.Instance.LoadQuizzesFromFile());
         }
         #endregion
 
@@ -95,11 +145,21 @@ namespace EpicQuizGen.ViewModels
         /// <summary>
         /// Utility to build a Quiz
         /// </summary>
-        public void BuildQuiz()
+        public void BuildNewQuiz()
         {
+            CurrentQuiz = new Quiz();
             CurrentQuiz.CreationDate = DateTime.Now;
             // Build Question Count for list
             CurrentQuiz.Questions = new List<Question>(ConvertQuestionCount(QuestionCount));
+            CurrentQuiz.QuizName = "";
+            CurrentQuiz.QuizCategory = QuestionCategory.MISC.ToString();
+        }
+
+        public void BuildSaveQuiz()
+        {
+            CurrentQuiz.QuizName = QuizName;
+            CurrentQuiz.CreationDate = DateTime.Now;
+            CurrentQuiz.QuizCategory = SelectedCategory;
         }
 
         private int ConvertQuestionCount(string count)

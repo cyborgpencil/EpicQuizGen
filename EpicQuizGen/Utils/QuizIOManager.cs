@@ -73,6 +73,18 @@ namespace EpicQuizGen.Utils
             return new List<Quiz>();
         }
 
+        public void DeleteQuestionFromFile(string quizname)
+        {
+            QuizzesFromFile = LoadQuizzesFromFile();
+
+            var QuizToDelete = from question in LoadQuizzesFromFile()
+                                   where Quiz.QuizName.Contains(quizname)
+                                   select quizname;
+
+            File.Delete(DirectoryManager.Instance.QuizDirectoryPath + "\\" + QuizToDelete.FirstOrDefault() + ".xml");
+
+        }
+
         void serializer_UnknownNode
            (object sender, XmlNodeEventArgs e)
         {

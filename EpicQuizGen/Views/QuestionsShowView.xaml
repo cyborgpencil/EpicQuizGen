@@ -20,6 +20,7 @@
         <TextBlock Text="List of Questrions"></TextBlock>
         <DataGrid ItemsSource="{Binding Path=Questions}"
                   IsSynchronizedWithCurrentItem="False" Margin="5" Width="1000"  Height="150" SelectedItem="{Binding Path=Question}" AutoGenerateColumns="True"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" />
+        <Button Content="Take Quiz" Width="100" HorizontalAlignment="Left" Margin="2" Command="{Binding Path=TakeQuizCommand}"/>
         <StackPanel Orientation="Horizontal">
             <Button Content="New" Margin="2" Command="{Binding Path=NewQuestionCommand}"/>
             <Button Content="Save" Command="{Binding Path=Parent.DataContext.SaveQuestionCommand, RelativeSource={RelativeSource Self}}" Margin="2"/>

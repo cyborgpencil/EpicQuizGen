@@ -8,9 +8,9 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel Width="600" HorizontalAlignment="Left">
         <TextBlock Text="Quiz Name: "/>
-        <TextBox Text="{Binding Path=CurrentQuiz.QuizName, Mode=TwoWay}"/>
+        <TextBox Text="{Binding Path=QuizName, Mode=TwoWay}"/>
         <TextBlock Text="Question Count:" />
-        <TextBox Text="{Binding Path=QuestionCount}"/>
+        <TextBox Text="{Binding Path=QuestionCount, Mode=TwoWay}"/>
         <TextBlock Text="Question Category" />
         <ComboBox Width="100" ItemsSource="{Binding Path=QuestionCategoriesSelect}" SelectedItem="{Binding Path=SelectedCategory}" HorizontalAlignment="Left" Margin="2"/>
 
