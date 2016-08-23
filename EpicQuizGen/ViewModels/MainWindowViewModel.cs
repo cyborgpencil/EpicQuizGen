@@ -1,5 +1,6 @@
 ﻿using EpicQuizGen.Events;
 using EpicQuizGen.Models;
+using EpicQuizGen.Utils;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -46,6 +47,7 @@ namespace EpicQuizGen.ViewModels
         #endregion
         public void TakeQuiz(Quiz obj)
         {
+            QuizIOManager.Instance.Quiz = obj;
             Navigate("QuizTakeView");
         }
     }

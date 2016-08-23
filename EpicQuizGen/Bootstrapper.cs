@@ -29,6 +29,8 @@ namespace EpicQuizGen
             Container.RegisterTypeForNavigation<MultiChoice4View>();
             Container.RegisterTypeForNavigation<QuizView>();
             Container.RegisterTypeForNavigation<QuizTakeView>();
+            Container.RegisterTypeForNavigation<TrueFalseQuizView>();
+            Container.RegisterTypeForNavigation<MultiChoice4QuizView>();
         }
     }
 }

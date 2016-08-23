@@ -103,6 +103,9 @@
     <Compile Include="ViewModels\QuizQuestionSelectViewModel.cs" />
     <Compile Include="ViewModels\QuizTakeViewModel.cs" />
     <Compile Include="ViewModels\QuizzesShowViewModel.cs" />
+    <Compile Include="Views\MultiChoice4QuizView.xaml.cs">
+      <DependentUpon>MultiChoice4QuizView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MultiChoice4View.xaml.cs">
       <DependentUpon>MultiChoice4View.xaml</DependentUpon>
     </Compile>
@@ -111,6 +114,9 @@
     </Compile>
     <Compile Include="Views\QuestionView.xaml.cs">
       <DependentUpon>QuestionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\QuizMainQuestionText.xaml.cs">
+      <DependentUpon>QuizMainQuestionText.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\QuizQuestionSelectView.xaml.cs">
       <DependentUpon>QuizQuestionSelectView.xaml</DependentUpon>
@@ -123,6 +129,9 @@
     </Compile>
     <Compile Include="Views\QuizzesShowView.xaml.cs">
       <DependentUpon>QuizzesShowView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TrueFalseQuizView.xaml.cs">
+      <DependentUpon>TrueFalseQuizView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TrueFalseView.xaml.cs">
       <DependentUpon>TrueFalseView.xaml</DependentUpon>
@@ -139,6 +148,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\MultiChoice4QuizView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MultiChoice4View.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -148,6 +161,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\QuestionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\QuizMainQuestionText.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -164,6 +181,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\QuizzesShowView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TrueFalseQuizView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

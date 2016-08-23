@@ -5,11 +5,29 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EpicQuizGen.Views"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="640" d:DesignWidth="1000" Background="Gray">
 
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Path=NavigateCommand}" CommandParameter="TrueFalseQuizView"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <StackPanel MaxWidth="1000">
-        <TextBlock Text="Time Left: 00" Margin="2" HorizontalAlignment="Right" Background="White" FontSize="30" TextAlignment="Center"/>
+        <TextBlock Text="{Binding Path=TimeLeftString, Mode=TwoWay}" Margin="2" HorizontalAlignment="Right" Background="White" FontSize="30" TextAlignment="Left"/>
+        <StackPanel Orientation="Horizontal" Background="White" Margin="2">
+            <TextBlock Text="{Binding Path=Quiz.QuizName}" Margin="2"/>
+            <TextBlock Text="Question 1 of 10" Margin="2"/>
+        </StackPanel>
+        <local:QuizMainQuestionText Height="250" Margin="2" />
+        <ContentControl prism:RegionManager.RegionName="CurrentQuestionType" Height="250" Background="White" Margin="2"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Previous" Margin="2" Width="100"/>
+            <Button Content="Next" Margin="2" Width="100"/>
+            <Button Content="Finish" Margin="2" Width="100"/>
+        </StackPanel>
     </StackPanel>
 </UserControl>
