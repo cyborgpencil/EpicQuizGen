@@ -97,6 +97,7 @@
     <Compile Include="Utils\DirectoryManager.cs" />
     <Compile Include="Utils\QuestionIOManager.cs" />
     <Compile Include="Utils\QuizIOManager.cs" />
+    <Compile Include="Utils\QuizTimeManager.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\QuestionsShowViewModel.cs" />
     <Compile Include="ViewModels\QuestionViewModel.cs" />
