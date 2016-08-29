@@ -35,7 +35,7 @@ namespace EpicQuizGen.Utils
             _quizTakeViewModel = quizTakeViewModel;
             // each quiz will be at lease 5 secs
             QuizTimeIntervalSeconds = 1;
-            QuizTimerCounter = 5;
+            QuizTimerCounter = _quizTakeViewModel.Timer;
             DispatcherTimer = new DispatcherTimer();
             DispatcherTimer.Tick += _quizTakeViewModel.QuizTimerEvent;
             DispatcherTimer.Interval = new TimeSpan(QuizTimerIntevalHours, QuizTimerIntervalMinutes, QuizTimeIntervalSeconds);

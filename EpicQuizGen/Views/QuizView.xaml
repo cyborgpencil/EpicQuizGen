@@ -11,8 +11,10 @@
         <TextBox Text="{Binding Path=QuizName, Mode=TwoWay}"/>
         <TextBlock Text="Question Count:" />
         <TextBox Text="{Binding Path=QuestionCount, Mode=TwoWay}"/>
+        <TextBlock Text="Quiz Time (in Seconds):" />
+        <TextBox Text="{Binding Path=QuizTime, Mode=TwoWay}" />
         <TextBlock Text="Question Category" />
-        <ComboBox Width="100" ItemsSource="{Binding Path=QuestionCategoriesSelect}" SelectedItem="{Binding Path=SelectedCategory}" HorizontalAlignment="Left" Margin="2"/>
+        <ComboBox Width="180" ItemsSource="{Binding Path=QuestionCategoriesSelect}" SelectedItem="{Binding Path=SelectedCategory}" HorizontalAlignment="Left" Margin="2"/>
 
         <Button Content="Save" Width="100" HorizontalAlignment="Left" Command="{Binding Path=SaveQuizCommand}"/>
     </StackPanel>

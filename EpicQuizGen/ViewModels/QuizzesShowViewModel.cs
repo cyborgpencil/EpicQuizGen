@@ -21,7 +21,7 @@ namespace EpicQuizGen.ViewModels
         public Quiz CurrentQuiz
         {
             get { return _currentQuiz; }
-            set { SetProperty(ref _currentQuiz, value); Debug.WriteLine("Changing Quiz"); }
+            set { SetProperty(ref _currentQuiz, value); }
         }
         private Quiz _editQuiz;
         public Quiz EditQuiz
@@ -62,6 +62,13 @@ namespace EpicQuizGen.ViewModels
             get { return _quizName; }
             set { SetProperty(ref _quizName, value); }
         }
+
+        private string _quizTime;
+        public string QuizTime
+        {
+            get { return _quizTime; }
+            set { SetProperty(ref _quizTime, value); }
+        }
         #endregion
         private IEventAggregator _eventAggregator;
         public QuizzesShowViewModel( IEventAggregator eventAggregator)
@@ -70,6 +77,7 @@ namespace EpicQuizGen.ViewModels
             QuizList = new ObservableCollection<Quiz>();
             QuizName = "";
             QuestionCount = "1";
+            QuizTime = "30";
             SelectedCategory = QuestionCategory.MISC.ToString();
             BuildNewQuiz();
 
@@ -130,6 +138,7 @@ namespace EpicQuizGen.ViewModels
                 QuizName = CurrentQuiz.QuizName;
                 QuestionCount = CurrentQuiz.Questions.Count.ToString();
                 SelectedCategory = CurrentQuiz.QuizCategory;
+                QuizTime = CurrentQuiz.QuizTime;
             }
         }
         public DelegateCommand DeleteCommand { get; set; }
@@ -163,6 +172,7 @@ namespace EpicQuizGen.ViewModels
             CurrentQuiz.Questions = new List<Question>(ConvertQuestionCount(QuestionCount));
             CurrentQuiz.QuizName = "";
             CurrentQuiz.QuizCategory = QuestionCategory.MISC.ToString();
+            CurrentQuiz.QuizTime = "5";
         }
 
         public void BuildSaveQuiz()
@@ -170,6 +180,7 @@ namespace EpicQuizGen.ViewModels
             CurrentQuiz.QuizName = QuizName;
             CurrentQuiz.CreationDate = DateTime.Now;
             CurrentQuiz.QuizCategory = SelectedCategory;
+            CurrentQuiz.QuizTime = QuizTime;
         }
 
         private int ConvertQuestionCount(string count)

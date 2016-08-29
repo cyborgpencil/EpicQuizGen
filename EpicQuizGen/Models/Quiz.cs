@@ -38,5 +38,12 @@ namespace EpicQuizGen.Models
             get { return _quizCategory; }
             set { SetProperty(ref _quizCategory, value); }
         }
+
+        private string _quizTime;
+        public string QuizTime
+        {
+            get { return _quizTime; }
+            set { SetProperty(ref _quizTime, value); }
+        }
     }
 }
