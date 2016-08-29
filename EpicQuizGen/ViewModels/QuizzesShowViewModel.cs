@@ -74,12 +74,12 @@ namespace EpicQuizGen.ViewModels
         public QuizzesShowViewModel( IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
+
             QuizList = new ObservableCollection<Quiz>();
             QuizName = "";
             QuestionCount = "1";
             QuizTime = "30";
             SelectedCategory = QuestionCategory.MISC.ToString();
-            BuildNewQuiz();
 
             SelectedCategory = QuestionCategory.MISC.ToString();
             // Get list of QuestionCategoriesSelect to a string
@@ -94,6 +94,7 @@ namespace EpicQuizGen.ViewModels
             // Load Quizzes
             QuizList = new ObservableCollection<Quiz>(QuizIOManager.Instance.LoadQuizzesFromFile());
             TakeQuizCommand = new DelegateCommand(TakeQuiz);
+            QuizzesShowLoadCommand = new DelegateCommand(QuizzesShowLoad);
         }
 
         #region Commands
@@ -102,6 +103,32 @@ namespace EpicQuizGen.ViewModels
         public void NewQuiz()
         {
             BuildNewQuiz();
+        }
+
+        public DelegateCommand QuizzesShowLoadCommand { get; set; }
+        public void QuizzesShowLoad()
+        {
+
+            QuizList = new ObservableCollection<Quiz>();
+            QuizName = "";
+            QuestionCount = "1";
+            QuizTime = "30";
+            SelectedCategory = QuestionCategory.MISC.ToString();
+
+            SelectedCategory = QuestionCategory.MISC.ToString();
+            // Get list of QuestionCategoriesSelect to a string
+            QuestionCategoriesSelect = new List<string>(Enum.GetNames(typeof(QuestionCategory)));
+
+            // Commands
+            NewQuizCommand = new DelegateCommand(NewQuiz);
+            SaveQuizCommand = new DelegateCommand(SaveQuiz);
+            EditCommand = new DelegateCommand(EditExecute, EditCanExecute).ObservesProperty(() => EditQuiz);
+            DeleteCommand = new DelegateCommand(DeleteQuiz);
+
+            // Load Quizzes
+            QuizList = new ObservableCollection<Quiz>(QuizIOManager.Instance.LoadQuizzesFromFile());
+            TakeQuizCommand = new DelegateCommand(TakeQuiz);
+            QuizzesShowLoadCommand = new DelegateCommand(QuizzesShowLoad);
         }
 
         public DelegateCommand SaveQuizCommand { get; set; }

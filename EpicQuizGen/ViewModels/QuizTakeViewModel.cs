@@ -64,12 +64,14 @@ namespace EpicQuizGen.ViewModels
             get { return _questionNavIndex; }
             set { SetProperty(ref _questionNavIndex, value);}
         }
+        private MainWindowViewModel _mainVM { get; set; }
         private IRegionManager _regionManager { get; set; }
         #endregion
 
         #region Constructor
-        public QuizTakeViewModel(IRegionManager regionManager)
+        public QuizTakeViewModel(IRegionManager regionManager, MainWindowViewModel mainVM)
         {
+            _mainVM = mainVM;
             QuestionNavIndex = 0;
             _regionManager = regionManager;
             Quiz = QuizIOManager.Instance.Quiz;
@@ -88,6 +90,7 @@ namespace EpicQuizGen.ViewModels
         public void Navigate(string uri)
         {
             // Timer
+            Timer = int.Parse(Quiz.QuizTime);
             QuizTimer = new QuizTimeManager(this);
             QuizTimer.StartTimer();
             _regionManager.RequestNavigate("CurrentQuestionType", uri);
@@ -99,6 +102,11 @@ namespace EpicQuizGen.ViewModels
         {
             Timer = QuizTimer.SendCurrentSecound();
             TimeLeftString = "";
+            if (Timer == 0)
+            {
+                _regionManager.RequestNavigate("ContentRegion", "QuizzesShowView");
+                
+            }
         }
         #endregion
 

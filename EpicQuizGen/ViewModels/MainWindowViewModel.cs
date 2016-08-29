@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace EpicQuizGen.ViewModels
 {
-    class MainWindowViewModel : BindableBase
+    public class MainWindowViewModel : BindableBase
     {
         #region Properties
 
@@ -34,7 +34,7 @@ namespace EpicQuizGen.ViewModels
 
         #region Commands
 
-        private void Navigate(string uri)
+        public void Navigate(string uri)
         {
             _evenAggregator.GetEvent<TakeQuizEvent>().Subscribe(TakeQuiz);
             _regionManager.RequestNavigate("ContentRegion", uri);

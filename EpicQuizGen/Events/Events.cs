@@ -1,4 +1,5 @@
 ﻿using EpicQuizGen.Models;
+using EpicQuizGen.Views;
 using Prism.Events;
 using System.Collections.Generic;
 
@@ -19,5 +20,6 @@ namespace EpicQuizGen.Events
     public class SendMultiAnswer3Event : PubSubEvent<string> { }
     public class SendMultiAnswer4Event : PubSubEvent<string> { }
     public class TakeQuizEvent : PubSubEvent<Quiz> { }
+    public class SendMainWindow : PubSubEvent<MainWindow> { }
 
 }
