@@ -62,7 +62,12 @@ namespace EpicQuizGen.ViewModels
         public int QuestionNavIndex
         {
             get { return _questionNavIndex; }
-            set { SetProperty(ref _questionNavIndex, value);}
+            set
+            {
+                if (value < 0)
+                    value = 0;
+                SetProperty(ref _questionNavIndex, value);
+            }
         }
         private MainWindowViewModel _mainVM { get; set; }
         private IRegionManager _regionManager { get; set; }
@@ -81,36 +86,85 @@ namespace EpicQuizGen.ViewModels
             CurrentQuestionType = CurrentQuestion.QuestionType;
             TimeLeftString = "";
             QuestionCounter = "";
-            NavigateCommand = new DelegateCommand<string>(Navigate);    
+            QuizTakeLoadCommand = new DelegateCommand(QuizTakeLoad);
+            NavigateCommand = new DelegateCommand<string>(Navigate);
+            NextQuestionCommand = new DelegateCommand(NextQuestion);
+            PreviousQuestionCommand = new DelegateCommand(PreviousQuestion);
         }
         #endregion
 
         #region Commands
-        public DelegateCommand<string> NavigateCommand { get; set; }
-        public void Navigate(string uri)
+        public DelegateCommand QuizTakeLoadCommand { get; set; }
+        public void QuizTakeLoad()
         {
             // Timer
             Timer = int.Parse(Quiz.QuizTime);
             QuizTimer = new QuizTimeManager(this);
             QuizTimer.StartTimer();
+
+            Navigate(CheckQuestionAnswerType());
+        }
+
+       
+
+        public DelegateCommand<string> NavigateCommand { get; set; }
+        public void Navigate(string uri)
+        {
             _regionManager.RequestNavigate("CurrentQuestionType", uri);
         }
+
+        public DelegateCommand NextQuestionCommand { get; set; }
+        public void NextQuestion()
+        {
+            QuestionNavIndex += 1;
+            if (QuestionNavIndex > Quiz.Questions.Count - 1)
+                QuestionNavIndex = Quiz.Questions.Count - 1;
+
+            SetQuestionAnserView();
+        }
+        public DelegateCommand PreviousQuestionCommand { get; set; }
+        public void PreviousQuestion()
+        {
+            QuestionNavIndex -= 1;
+            SetQuestionAnserView(); ;
+        }
+        public DelegateCommand FinishQuizCommand { get; set; }
         #endregion
 
         #region Events
         internal void QuizTimerEvent(object sender, EventArgs e)
         {
-            Timer = QuizTimer.SendCurrentSecound();
-            TimeLeftString = "";
-            if (Timer == 0)
-            {
-                _regionManager.RequestNavigate("ContentRegion", "QuizzesShowView");
-                
-            }
+            //Timer = QuizTimer.SendCurrentSecound();
+            //TimeLeftString = "";
+            //if (Timer == 0)
+            //{
+            //    _regionManager.RequestNavigate("ContentRegion", "QuizzesShowView");
+            //}
         }
         #endregion
 
         #region Methods
+        private string CheckQuestionAnswerType()
+        {
+            switch(CurrentQuestion.QuestionType)
+            {
+                case "MULTICHOICE4":
+                    return "MultiChoice4QuizView";
+                default:
+                    return "TrueFalseQuizView";
+            }
+        }
+
+        private void SetQuestionAnserView()
+        {
+            if (QuestionNavIndex < Quiz.Questions.Count && QuestionNavIndex >= 0)
+            {
+                QuestionCounter = "";
+                CurrentQuestion = Quiz.Questions[QuestionNavIndex];
+                CurrentQuestionType = CurrentQuestion.QuestionType;
+                Navigate(CheckQuestionAnswerType());
+            }
+        }
         #endregion
     }
 }

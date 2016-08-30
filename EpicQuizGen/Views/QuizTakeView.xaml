@@ -12,7 +12,7 @@
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding Path=NavigateCommand}" CommandParameter="TrueFalseQuizView"/>
+            <i:InvokeCommandAction Command="{Binding Path=QuizTakeLoadCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
@@ -25,9 +25,9 @@
         <local:QuizMainQuestionText Height="250" Margin="2" />
         <ContentControl prism:RegionManager.RegionName="CurrentQuestionType" Height="250" Background="White" Margin="2"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Previous" Margin="2" Width="100"/>
-            <Button Content="Next" Margin="2" Width="100"/>
-            <Button Content="Finish" Margin="2" Width="100"/>
+            <Button Content="Previous" Margin="2" Width="100" Command="{Binding Path=PreviousQuestionCommand}"/>
+            <Button Content="Next" Margin="2" Width="100" Command="{Binding Path=NextQuestionCommand}"/>
+            <Button Content="Finish" Margin="2" Width="100" Command="{Binding Path=FinishQuizCommand}"/>
         </StackPanel>
     </StackPanel>
 </UserControl>
