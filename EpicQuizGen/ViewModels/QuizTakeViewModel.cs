@@ -39,11 +39,21 @@ namespace EpicQuizGen.ViewModels
             get { return _currentQuestion; }
             set { SetProperty(ref _currentQuestion, value); }
         }
+
+        /// <summary>
+        /// Question list to match up with loaded Quiz Questions
+        /// </summary>
+        private List<Question> _currentWorkingQustions;
+        public List<Question> CurrentWorkingQuestions
+        {
+            get { return _currentWorkingQustions; }
+            set { SetProperty(ref _currentWorkingQustions, value); }
+        }
         private string _currentQuestionType;
         public string CurrentQuestionType
         {
             get { return _currentQuestionType; }
-            set {SetProperty(ref _currentQuestionType, value); }
+            set { SetProperty(ref _currentQuestionType, value); }
         }
 
         private QuizTimeManager _quizTimer;
@@ -56,7 +66,7 @@ namespace EpicQuizGen.ViewModels
         public string QuestionCounter
         {
             get { return _questionCounter; }
-            set { value = $"Question {QuestionNavIndex+1} of {Quiz.Questions.Count.ToString()}:"; SetProperty(ref _questionCounter, value); }
+            set { value = $"Question {QuestionNavIndex + 1} of {Quiz.Questions.Count.ToString()}:"; SetProperty(ref _questionCounter, value); }
         }
         private int _questionNavIndex;
         public int QuestionNavIndex
@@ -69,6 +79,43 @@ namespace EpicQuizGen.ViewModels
                 SetProperty(ref _questionNavIndex, value);
             }
         }
+        private bool _multiChoiceAnswer1;
+        public bool MultiChoiceAnswer1
+        {
+            get { return _multiChoiceAnswer1; }
+            set { SetProperty(ref _multiChoiceAnswer1, value); SetWorkingQuestionsCurrentAnswers(); }
+        }
+        private bool _multiChoiceAnswer2;
+        public bool MultiChoiceAnswer2
+        {
+            get { return _multiChoiceAnswer2; }
+            set { SetProperty(ref _multiChoiceAnswer2, value); SetWorkingQuestionsCurrentAnswers(); }
+        }
+        private bool _multiChoiceAnswer3;
+        public bool MultiChoiceAnswer3
+        {
+            get { return _multiChoiceAnswer3; }
+            set { SetProperty(ref _multiChoiceAnswer3, value); SetWorkingQuestionsCurrentAnswers(); }
+        }
+        private bool _multiChoiceAnswer4;
+        public bool MultiChoiceAnswer4
+        {
+            get { return _multiChoiceAnswer4; }
+            set { SetProperty(ref _multiChoiceAnswer4, value); SetWorkingQuestionsCurrentAnswers(); }
+        }
+        private List<bool> _trueAnswer;
+        public List<bool> TrueAnswer
+        {
+            get { return _trueAnswer; }
+            set { SetProperty(ref _trueAnswer, value); SetWorkingQuestionsCurrentAnswers(); }
+        }
+        private List<bool> _falseAnswer;
+        public List<bool> FalseAnswer
+        {
+            get { return _falseAnswer; }
+            set { SetProperty(ref _falseAnswer, value); SetWorkingQuestionsCurrentAnswers(); }
+        }
+        
         private MainWindowViewModel _mainVM { get; set; }
         private IRegionManager _regionManager { get; set; }
         #endregion
@@ -90,6 +137,11 @@ namespace EpicQuizGen.ViewModels
             NavigateCommand = new DelegateCommand<string>(Navigate);
             NextQuestionCommand = new DelegateCommand(NextQuestion);
             PreviousQuestionCommand = new DelegateCommand(PreviousQuestion);
+            // Create a copy of loaded Questions
+
+            CurrentWorkingQuestions = new List<Question>(Quiz.Questions);
+            clearQustionAnswers();
+
         }
         #endregion
 
@@ -105,8 +157,6 @@ namespace EpicQuizGen.ViewModels
             Navigate(CheckQuestionAnswerType());
         }
 
-       
-
         public DelegateCommand<string> NavigateCommand { get; set; }
         public void Navigate(string uri)
         {
@@ -120,13 +170,16 @@ namespace EpicQuizGen.ViewModels
             if (QuestionNavIndex > Quiz.Questions.Count - 1)
                 QuestionNavIndex = Quiz.Questions.Count - 1;
 
-            SetQuestionAnserView();
+            SetQuestionAnswerView();
+            SetAnswerProgress(1);
         }
         public DelegateCommand PreviousQuestionCommand { get; set; }
         public void PreviousQuestion()
         {
             QuestionNavIndex -= 1;
-            SetQuestionAnserView(); ;
+
+            SetQuestionAnswerView();
+            SetAnswerProgress(-1);
         }
         public DelegateCommand FinishQuizCommand { get; set; }
         #endregion
@@ -146,7 +199,7 @@ namespace EpicQuizGen.ViewModels
         #region Methods
         private string CheckQuestionAnswerType()
         {
-            switch(CurrentQuestion.QuestionType)
+            switch (CurrentQuestion.QuestionType)
             {
                 case "MULTICHOICE4":
                     return "MultiChoice4QuizView";
@@ -155,7 +208,7 @@ namespace EpicQuizGen.ViewModels
             }
         }
 
-        private void SetQuestionAnserView()
+        private void SetQuestionAnswerView()
         {
             if (QuestionNavIndex < Quiz.Questions.Count && QuestionNavIndex >= 0)
             {
@@ -165,6 +218,37 @@ namespace EpicQuizGen.ViewModels
                 Navigate(CheckQuestionAnswerType());
             }
         }
-        #endregion
+
+        private void clearQustionAnswers()
+        {
+            switch (CurrentWorkingQuestions[QuestionNavIndex].QuestionType)
+            {
+                case "MULTICHOICE4":
+                    ClearMultiChoice4Answers();
+                    break;
+                default:
+                    CurrentWorkingQuestions[QuestionNavIndex].TrueAnswer = false;
+                    CurrentWorkingQuestions[QuestionNavIndex].FalseAnswer = false;
+                    break;
+            }
+        }
+        private void ClearMultiChoice4Answers()
+        {
+            for (int i = 0; i < CurrentWorkingQuestions[QuestionNavIndex].MultiAnswerPositions.Count; i++)
+            {
+                CurrentWorkingQuestions[QuestionNavIndex].MultiAnswerPositions[i] = new bool();
+            }
+        }
+
+        private void SetWorkingQuestionsCurrentAnswers()
+        {
+           
+        }
+
+        private void SetAnswerProgress(int navDir)
+        {
+            
+            #endregion
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace EpicQuizGen.ViewModels
         public Question Question
         {
             get { return _question; }
-            set { SetProperty(ref _question, value); SendQuestion(); }
+            set { SetProperty(ref _question, value); }
         }
         private readonly IEventAggregator _eventAggregator;
 
@@ -61,13 +61,16 @@ namespace EpicQuizGen.ViewModels
             _eventAggregator.GetEvent<SendQuestionTypesEvent>().Subscribe(SetQuestionType);
             _eventAggregator.GetEvent<SendQuestionCategoryEvent>().Subscribe(SetQuestionCategory);
             _eventAggregator.GetEvent<SendMainQuestionEvent>().Subscribe(SetMainQuestion);
-            _eventAggregator.GetEvent<SendTrueFalseEvent>().Subscribe(SetTrueFalse);
+            _eventAggregator.GetEvent<SendTrueEvent>().Subscribe(SetTrue);
+            _eventAggregator.GetEvent<SendFalseEvent>().Subscribe(SetFalse);
             _eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Subscribe(SetMuliAnswerPositions);
             _eventAggregator.GetEvent<SendMultiAnswerListEvent>().Subscribe(SetMultiAnswerList);
             _eventAggregator.GetEvent<SendMultiAnswer1Event>().Subscribe(SetMultiAnswer1);
             _eventAggregator.GetEvent<SendMultiAnswer2Event>().Subscribe(SetMultiAnswer2);
             _eventAggregator.GetEvent<SendMultiAnswer3Event>().Subscribe(SetMultiAnswer3);
             _eventAggregator.GetEvent<SendMultiAnswer4Event>().Subscribe(SetMultiAnswer4);
+
+            
         }
 
         #region Commands
@@ -84,9 +87,8 @@ namespace EpicQuizGen.ViewModels
             Questions = new ObservableCollection<Question>( QuestionIOManager.Instance.LoadQuestionsFromFile());
 
             // Clear question
-            SetDefaultQuestion();
-            SendQuestion();
-            
+            NewQuestion();
+            _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
         }
 
         public DelegateCommand QuestionShowLoadCommand { get; set; }
@@ -99,7 +101,7 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand EditQuestionCommand { get; set; }
         public void EditQuestion()
         {
-            _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
+            _eventAggregator.GetEvent<SendQuestionEdit>().Publish(Question);
         }
 
         public DelegateCommand DeleteQuestionCommand { get; set; }
@@ -128,7 +130,6 @@ namespace EpicQuizGen.ViewModels
         public void SetQuestionName(string obj)
         {
             Question.QuestionName = obj;
-            Debug.WriteLine(Question.QuestionName);
         }
 
         public void SetMainQuestion(string obj)
@@ -145,9 +146,13 @@ namespace EpicQuizGen.ViewModels
             Question.QuestionCategory = obj.ToString();
         }
 
-        public void SetTrueFalse(bool obj)
+        public void SetTrue(bool obj)
         {
-            Question.TrueFalseAnswer = obj;
+            Question.TrueAnswer = obj;
+        }
+        public void SetFalse(bool obj)
+        {
+            Question.FalseAnswer = obj;
         }
 
         public void SetMuliAnswerPositions(List<bool> obj)
@@ -179,7 +184,7 @@ namespace EpicQuizGen.ViewModels
         {
             if (Question == null)
                 SetDefaultQuestion();
-            
+            _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
         }
         public void SetQuestion(Question obj)
         {
@@ -194,7 +199,7 @@ namespace EpicQuizGen.ViewModels
 
         private void SetDefaultQuestion()
         {
-            Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, false, }, MultiAnswerList = new List<string>() { "", "", "", "" }, TrueFalseAnswer = false, CreationDate = DateTime.Now };
+            Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, false, }, MultiAnswerList = new List<string>() { "", "", "", "" }, TrueAnswer = false, FalseAnswer = false ,CreationDate = DateTime.Now };
         }
     }
 }

@@ -44,11 +44,17 @@ namespace EpicQuizGen.Models
             get { return _multiAnswerList; }
             set { SetProperty(ref _multiAnswerList, value); }
         }
-        private bool _trueFalseAnswer;
-        public bool TrueFalseAnswer
+        private bool _trueAnswer;
+        public bool TrueAnswer
         {
-            get { return _trueFalseAnswer; }
-            set { SetProperty(ref _trueFalseAnswer, value); }
+            get { return _trueAnswer; }
+            set { SetProperty(ref _trueAnswer, value); }
+        }
+        private bool _falseAnswer;
+        public bool FalseAnswer
+        {
+            get { return _falseAnswer; }
+            set { SetProperty(ref _falseAnswer, value); }
         }
         private List<bool> _multiAnswerPositions;
         public List<bool> MultiAnswerPositions

@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="300">
     <StackPanel>
-        <RadioButton Content="True" />
-        <RadioButton Content="False" />
+        <RadioButton IsChecked="{Binding Path=TrueAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="True" GroupName="ToF"/>
+        <RadioButton IsChecked="{Binding Path=FalseAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="False" GroupName="ToF"/>
     </StackPanel>
 </UserControl>

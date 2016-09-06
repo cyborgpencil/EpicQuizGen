@@ -27,7 +27,7 @@
         <ComboBox ItemsSource="{Binding Path=CategoryList, Mode=TwoWay}" SelectedIndex="0" SelectedItem="{Binding Path=SelectedCategory, Mode=TwoWay}"/>
         <TextBlock Text="Question" />
         <CheckBox Content="Image?"/>
-        <TextBox Height="100" Text="{Binding Path=Question.MainQuestion, Mode=TwoWay}"/>
+        <TextBox Height="100" Text="{Binding Path=MainQuestion, Mode=TwoWay}"/>
         <ContentControl prism:RegionManager.RegionName="AnswerSets" />
     </StackPanel>
 </UserControl>

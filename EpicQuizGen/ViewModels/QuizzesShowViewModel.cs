@@ -74,12 +74,14 @@ namespace EpicQuizGen.ViewModels
         public QuizzesShowViewModel( IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
+            BuildNewQuiz();
 
             QuizList = new ObservableCollection<Quiz>();
             QuizName = "";
             QuestionCount = "1";
             QuizTime = "30";
             SelectedCategory = QuestionCategory.MISC.ToString();
+
 
             SelectedCategory = QuestionCategory.MISC.ToString();
             // Get list of QuestionCategoriesSelect to a string
@@ -134,6 +136,7 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand SaveQuizCommand { get; set; }
         public void SaveQuiz()
         {
+            BuildNewQuiz();
             BuildSaveQuiz();
             EditQuiz = new Quiz();
             EditQuiz.Questions = new List<Question>();

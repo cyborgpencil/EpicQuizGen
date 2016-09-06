@@ -19,16 +19,16 @@
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
 
-        <CheckBox IsChecked="{Binding Path=Parent.DataContext.MultichoiceAnswersPositions[0], RelativeSource={RelativeSource Self}, Mode=TwoWay}" Command="{Binding Path=Parent.DataContext.UpdateMultiAnswerPositionsCommand, RelativeSource={RelativeSource Self}}" Content="Answer 1" Grid.Row="1" Grid.Column="0" Margin="5"/>
-        <TextBox Text="{Binding Path=Parent.DataContext.Answer1, RelativeSource={RelativeSource Self}, Mode=TwoWay}"  Grid.Row="1" Grid.Column="1" Margin="10"/>
+        <CheckBox IsChecked="{Binding Path=MultiChoiceAnswer1, Mode=TwoWay}" Content="1)" Grid.Row="1" Grid.Column="0" Margin="5"/>
+        <TextBlock Background="White" Text="{Binding Path=CurrentQuestion.MultiAnswerList[0]}"  Grid.Row="1" Grid.Column="1" Margin="10"/>
 
-        <CheckBox IsChecked="{Binding Path=Parent.DataContext.MultichoiceAnswersPositions[1], RelativeSource={RelativeSource Self}, Mode=TwoWay}" Command="{Binding Path=Parent.DataContext.UpdateMultiAnswerPositionsCommand, RelativeSource={RelativeSource Self}}" Content="Answer 2" Grid.Row="2" Grid.Column="0" Margin="5"/>
-        <TextBox Text="{Binding Path=Parent.DataContext.Answer2, RelativeSource={RelativeSource Self}, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" Margin="10"/>
+        <CheckBox IsChecked="{Binding Path=MultiChoiceAnswer2, Mode=TwoWay}"  Content="2)" Grid.Row="2" Grid.Column="0" Margin="5"/>
+        <TextBlock Background="White" Text="{Binding Path=CurrentQuestion.MultiAnswerList[1]}" Grid.Row="2" Grid.Column="1" Margin="10"/>
 
-        <CheckBox IsChecked="{Binding Path=Parent.DataContext.MultichoiceAnswersPositions[2], RelativeSource={RelativeSource Self}, Mode=TwoWay}" Command="{Binding Path=Parent.DataContext.UpdateMultiAnswerPositionsCommand, RelativeSource={RelativeSource Self}}" Content="Answer 3" Grid.Row="3" Grid.Column="0" Margin="5"/>
-        <TextBox Text="{Binding Path=Parent.DataContext.Answer3, RelativeSource={RelativeSource Self}, Mode=TwoWay}" Grid.Row="3" Grid.Column="1" Margin="10"/>
+        <CheckBox IsChecked="{Binding Path=MultiChoiceAnswer3, Mode=TwoWay}"  Content="3)" Grid.Row="3" Grid.Column="0" Margin="5"/>
+        <TextBlock Background="White" Text="{Binding Path=CurrentQuestion.MultiAnswerList[2]}" Grid.Row="3" Grid.Column="1" Margin="10"/>
 
-        <CheckBox IsChecked="{Binding Path=Parent.DataContext.MultichoiceAnswersPositions[3], RelativeSource={RelativeSource Self}, Mode=TwoWay}" Command="{Binding Path=Parent.DataContext.UpdateMultiAnswerPositionsCommand, RelativeSource={RelativeSource Self}}" Content="Answer 4" Grid.Row="4" Grid.Column="0" Margin="5"/>
-        <TextBox Name="TestBox" Text="{Binding Path=Parent.DataContext.Answer4, RelativeSource={RelativeSource Self}, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" Margin="10" />
+        <CheckBox IsChecked="{Binding Path=MultiChoiceAnswer4, Mode=TwoWay}"  Content="4)" Grid.Row="4" Grid.Column="0" Margin="5"/>
+        <TextBlock Background="White" Name="TestBox" Text="{Binding Path=CurrentQuestion.MultiAnswerList[3]}" Grid.Row="4" Grid.Column="1" Margin="10" />
     </Grid>
 </UserControl>

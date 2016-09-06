@@ -84,11 +84,17 @@ namespace EpicQuizGen.ViewModels
             set { SetProperty(ref _answerList, value); }
         }
 
-        private bool _correctToFAnswer;
-        public bool CorrectToFAnswer
+        private bool _fasleAnswer;
+        public bool FalseAnswer
         {
-            get { return _correctToFAnswer; }
-            set { SetProperty(ref _correctToFAnswer, value); SendTrueFalse(); }
+            get { return _fasleAnswer; }
+            set { SetProperty(ref _fasleAnswer, value); SendFalse(); }
+        }
+        private bool _trueAnswer;
+        public bool TrueAnswer
+        {
+            get { return _trueAnswer; }
+            set { SetProperty(ref _trueAnswer, value); SendTrue(); }
         }
         private List<bool> _multichoiceAnswersPositions;
         public List<bool> MultichoiceAnswersPositions
@@ -100,26 +106,26 @@ namespace EpicQuizGen.ViewModels
         public string Answer1
         {
             get { return _answer1; }
-            set { SetProperty(ref _answer1, value); SendMultiAnswer1(); Debug.WriteLine(_answer1); }
+            set { SetProperty(ref _answer1, value); SendMultiAnswer1();}
         }
         private string _answer2;
         public string Answer2
         {
             get { return _answer2; }
-            set { SetProperty(ref _answer2, value); SendMultiAnswer2(); Debug.WriteLine(_answer2); }
+            set { SetProperty(ref _answer2, value); SendMultiAnswer2();}
         }
         private string _answer3;
         public string Answer3
         {
             get { return _answer3; }
-            set { SetProperty(ref _answer3, value); SendMultiAnswer3(); Debug.WriteLine(_answer3); }
+            set { SetProperty(ref _answer3, value); SendMultiAnswer3();}
         }
 
         private string _answer4;
         public string Answer4
         {
             get { return _answer4; }
-            set { SetProperty(ref _answer4, value); SendMultiAnswer4(); Debug.WriteLine(_answer4); }
+            set { SetProperty(ref _answer4, value); SendMultiAnswer4();}
         }
 
         private Question _question;
@@ -174,6 +180,7 @@ namespace EpicQuizGen.ViewModels
             _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Subscribe(SetQuestion);
             //_eventAggregator.GetEvent<SendQuestionFromEditEvent>().Publish(Question);
             _eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion);
+            _eventAggregator.GetEvent<SendQuestionEdit>().Subscribe(SetEditQuestion);
 
             //DEBUG
             TestBox_TextChanged = new DelegateCommand(Test);
@@ -226,9 +233,13 @@ namespace EpicQuizGen.ViewModels
             _eventAggregator.GetEvent<SendQuestionCategoryEvent>().Publish((QuestionCategory)Enum.Parse(typeof(QuestionCategory), Question.QuestionCategory));
         }
 
-        public void SendTrueFalse()
+        public void SendTrue()
         {
-            _eventAggregator.GetEvent<SendTrueFalseEvent>().Publish(CorrectToFAnswer);
+            _eventAggregator.GetEvent<SendTrueEvent>().Publish(TrueAnswer);
+        }
+        public void SendFalse()
+        {
+            _eventAggregator.GetEvent<SendFalseEvent>().Publish(FalseAnswer);
         }
 
         public void SendMultiAnswerPositions()
@@ -271,11 +282,7 @@ namespace EpicQuizGen.ViewModels
 
         public void SetQuestion(Question obj)
         {
-            if (obj == null)
-            {
-                SetDefaultQuestion();
-                obj = Question;
-            }
+
             Question = obj;
             QuestionName = obj.QuestionName;
             Question.MultiAnswerPositions = obj.MultiAnswerPositions;
@@ -283,8 +290,10 @@ namespace EpicQuizGen.ViewModels
             // Navigate
             SelectedQuestionType = Question.QuestionType;
             SelectedCategory = Question.QuestionCategory;
-            CorrectToFAnswer = Question.TrueFalseAnswer;
-            if (Question.QuestionType == QuestionTypes.MULTICHOICE4.ToString())
+            TrueAnswer = Question.TrueAnswer;
+            FalseAnswer = Question.FalseAnswer;
+            MainQuestion = Question.MainQuestion;
+            if (Question.QuestionType == QuestionTypes.MULTICHOICE4.ToString() && Question.QuestionName != "")
             {
                 MultichoiceAnswersPositions =  new List<bool>(Question.MultiAnswerPositions);
                 AnswerList = new List<string>(Question.MultiAnswerList);
@@ -292,14 +301,51 @@ namespace EpicQuizGen.ViewModels
                 Answer2 = obj.MultiAnswerList[1];
                 Answer3 = obj.MultiAnswerList[2];
                 Answer4 = obj.MultiAnswerList[3];
+            }else
+            {
+                ClearAnswersAndMultiChoice();
             }
 
+        }
+        public void SetEditQuestion(Question obj)
+        {
+            Question = obj;
+            QuestionName = Question.QuestionName;
+            MainQuestion = Question.MainQuestion;
+            Question.MultiAnswerPositions = Question.MultiAnswerPositions;
+            Question.MultiAnswerList = Question.MultiAnswerList;
+            // Navigate
+            SelectedQuestionType = Question.QuestionType;
+            SelectedCategory = Question.QuestionCategory;
+            TrueAnswer = Question.TrueAnswer;
+            FalseAnswer = Question.FalseAnswer;
+            if (Question.QuestionType == QuestionTypes.MULTICHOICE4.ToString() && Question.QuestionName != "")
+            {
+                MultichoiceAnswersPositions = new List<bool>(Question.MultiAnswerPositions);
+                AnswerList = new List<string>(Question.MultiAnswerList);
+                Answer1 = Question.MultiAnswerList[0];
+                Answer2 = Question.MultiAnswerList[1];
+                Answer3 = Question.MultiAnswerList[2];
+                Answer4 = Question.MultiAnswerList[3];
+            }
         }
         #endregion
 
         private void SetDefaultQuestion()
         {
-            Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, false, }, MultiAnswerList = new List<string>() { "", "", "", "" }, TrueFalseAnswer = false, CreationDate = DateTime.Now };
+            Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, false, }, MultiAnswerList = new List<string>() { "", "", "", "" }, TrueAnswer = false, FalseAnswer = false ,CreationDate = DateTime.Now };
+        }
+        private void ClearAnswersAndMultiChoice()
+        {
+            Answer1 = "";
+            Answer2 = "";
+            Answer3 = "";
+            Answer4 = "";
+
+            for (int i = 0; i < MultichoiceAnswersPositions.Count; i++)
+            {
+                MultichoiceAnswersPositions[i] = false;
+            }
         }
 
         #region DEBUG

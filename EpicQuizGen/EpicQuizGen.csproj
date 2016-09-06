@@ -89,6 +89,7 @@
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Events\Events.cs" />
+    <Compile Include="Models\MultiChoice4Answer.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\QuestionCategory.cs" />
     <Compile Include="Models\QuestionTypes.cs" />

@@ -9,11 +9,13 @@ namespace EpicQuizGen.Events
     public class SendMainQuestionEvent : PubSubEvent<string>{}
     public class SendQuestionTypesEvent : PubSubEvent<QuestionTypes>{}
     public class SendQuestionCategoryEvent : PubSubEvent<QuestionCategory>{}
-    public class SendTrueFalseEvent : PubSubEvent<bool>{}
+    public class SendTrueEvent : PubSubEvent<bool>{}
+    public class SendFalseEvent : PubSubEvent<bool> { }
     public class SendMultiAnswerPositionsEvent : PubSubEvent<List<bool>>{ }
     public class SendMultiAnswerListEvent : PubSubEvent<List<string>> { }
     public class SendSelectedQuestionEvent : PubSubEvent<Question> { }
     public class SendQuestionEvent : PubSubEvent<Question> { }
+    public class SendQuestionEdit : PubSubEvent<Question> { }
     public class SendQuestionFromEditEvent : PubSubEvent<Question> { }
     public class SendMultiAnswer1Event : PubSubEvent<string> { }
     public class SendMultiAnswer2Event : PubSubEvent<string> { }
