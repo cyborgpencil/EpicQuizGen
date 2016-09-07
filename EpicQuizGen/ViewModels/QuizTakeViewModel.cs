@@ -101,21 +101,26 @@ namespace EpicQuizGen.ViewModels
         public bool MultiChoiceAnswer4
         {
             get { return _multiChoiceAnswer4; }
-            set { SetProperty(ref _multiChoiceAnswer4, value); SetWorkingQuestionsCurrentAnswers(); }
+            set { SetProperty(ref _multiChoiceAnswer4, value);}
         }
-        private List<bool> _trueAnswer;
-        public List<bool> TrueAnswer
+        private bool _trueAnswer;
+        public bool TrueAnswer
         {
             get { return _trueAnswer; }
             set { SetProperty(ref _trueAnswer, value); SetWorkingQuestionsCurrentAnswers(); }
         }
-        private List<bool> _falseAnswer;
-        public List<bool> FalseAnswer
+        private bool _falseAnswer;
+        public bool FalseAnswer
         {
             get { return _falseAnswer; }
             set { SetProperty(ref _falseAnswer, value); SetWorkingQuestionsCurrentAnswers(); }
         }
-        
+        //private List<TrueFalseQuizTake> _currentWorkingToF;
+        //public List<TrueFalseQuizTake> CurrentWorkingToF
+        //{
+        //    get { return _currentWorkingToF; }
+        //    set { SetProperty(ref _currentWorkingToF, value); }
+        //}
         private MainWindowViewModel _mainVM { get; set; }
         private IRegionManager _regionManager { get; set; }
         #endregion
@@ -137,7 +142,6 @@ namespace EpicQuizGen.ViewModels
             NavigateCommand = new DelegateCommand<string>(Navigate);
             NextQuestionCommand = new DelegateCommand(NextQuestion);
             PreviousQuestionCommand = new DelegateCommand(PreviousQuestion);
-            // Create a copy of loaded Questions
 
             CurrentWorkingQuestions = new List<Question>(Quiz.Questions);
             clearQustionAnswers();
@@ -154,6 +158,10 @@ namespace EpicQuizGen.ViewModels
             QuizTimer = new QuizTimeManager(this);
             QuizTimer.StartTimer();
 
+           // if (CurrentWorkingToF == null)
+            //    CurrentWorkingToF = new List<TrueFalseQuizTake>();
+            //SetToFWorkingQuestions();
+
             Navigate(CheckQuestionAnswerType());
         }
 
@@ -166,16 +174,19 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand NextQuestionCommand { get; set; }
         public void NextQuestion()
         {
+            // set Prev previous View Question 
+            SetPreviousViewQuestion();
             QuestionNavIndex += 1;
             if (QuestionNavIndex > Quiz.Questions.Count - 1)
                 QuestionNavIndex = Quiz.Questions.Count - 1;
 
             SetQuestionAnswerView();
-            SetAnswerProgress(1);
+            
         }
         public DelegateCommand PreviousQuestionCommand { get; set; }
         public void PreviousQuestion()
         {
+            SetPreviousViewQuestion();
             QuestionNavIndex -= 1;
 
             SetQuestionAnswerView();
@@ -216,6 +227,7 @@ namespace EpicQuizGen.ViewModels
                 CurrentQuestion = Quiz.Questions[QuestionNavIndex];
                 CurrentQuestionType = CurrentQuestion.QuestionType;
                 Navigate(CheckQuestionAnswerType());
+                
             }
         }
 
@@ -240,9 +252,29 @@ namespace EpicQuizGen.ViewModels
             }
         }
 
+        //private void SetToFWorkingQuestions()
+        //{
+        //    for (int i = 0; i < Quiz.Questions.Count; i++)
+        //    {
+        //        if (Quiz.Questions[i].QuestionType == QuestionTypes.TRUEFALSE.ToString())
+        //        {
+        //            CurrentWorkingToF.Add(new TrueFalseQuizTake());
+
+        //        }
+        //    }
+            
+        //}
+
+        private void SetPreviousViewQuestion()
+        {
+            TrueAnswer = CurrentWorkingQuestions[QuestionNavIndex].TrueAnswer;
+            FalseAnswer = CurrentWorkingQuestions[QuestionNavIndex].FalseAnswer;
+        }
+
         private void SetWorkingQuestionsCurrentAnswers()
         {
-           
+
+            
         }
 
         private void SetAnswerProgress(int navDir)

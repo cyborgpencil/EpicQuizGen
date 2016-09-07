@@ -94,17 +94,20 @@
     <Compile Include="Models\QuestionCategory.cs" />
     <Compile Include="Models\QuestionTypes.cs" />
     <Compile Include="Models\Quiz.cs" />
+    <Compile Include="Models\TrueFalseQuizTake.cs" />
     <Compile Include="Models\ViewTypes.cs" />
     <Compile Include="Utils\DirectoryManager.cs" />
     <Compile Include="Utils\QuestionIOManager.cs" />
     <Compile Include="Utils\QuizIOManager.cs" />
     <Compile Include="Utils\QuizTimeManager.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\MultiChoice4QuizViewModel.cs" />
     <Compile Include="ViewModels\QuestionsShowViewModel.cs" />
     <Compile Include="ViewModels\QuestionViewModel.cs" />
     <Compile Include="ViewModels\QuizQuestionSelectViewModel.cs" />
     <Compile Include="ViewModels\QuizTakeViewModel.cs" />
     <Compile Include="ViewModels\QuizzesShowViewModel.cs" />
+    <Compile Include="ViewModels\TrueFalseQuizViewModel.cs" />
     <Compile Include="Views\MultiChoice4QuizView.xaml.cs">
       <DependentUpon>MultiChoice4QuizView.xaml</DependentUpon>
     </Compile>

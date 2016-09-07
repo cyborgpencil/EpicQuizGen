@@ -4,10 +4,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EpicQuizGen.Views"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="300">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Path=TFQuizViewLoadCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
     <StackPanel>
-        <RadioButton IsChecked="{Binding Path=TrueAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="True" GroupName="ToF"/>
-        <RadioButton IsChecked="{Binding Path=FalseAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="False" GroupName="ToF"/>
+        <RadioButton IsChecked="{Binding Path=TrueAnswer, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Content="True" GroupName="ToF"/>
+        <RadioButton IsChecked="{Binding Path=FalseAnswer, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Content="False" GroupName="ToF"/>
     </StackPanel>
 </UserControl>
