@@ -17,7 +17,7 @@
     </i:Interaction.Triggers>
     
     <StackPanel>
-        <RadioButton IsChecked="{Binding Path=TrueAnswer, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Content="True" GroupName="ToF"/>
-        <RadioButton IsChecked="{Binding Path=FalseAnswer, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Content="False" GroupName="ToF"/>
+        <RadioButton IsChecked="{Binding Path=TrueAnswer, Mode=TwoWay}" Content="True" GroupName="ToF"/>
+        <RadioButton IsChecked="{Binding Path=FalseAnswer, Mode=TwoWay}" Content="False" GroupName="ToF"/>
     </StackPanel>
 </UserControl>

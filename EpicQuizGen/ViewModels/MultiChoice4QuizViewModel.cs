@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EpicQuizGen.ViewModels
 {
-    public class MultiChoice4QuizViewModel : BindableBase
+    public class MultiChoice4QuizViewModel : BindableBase, INavigationAware
     {
         #region Properties
         private bool _multiChoiceAnswer1;
@@ -79,9 +80,28 @@ namespace EpicQuizGen.ViewModels
         {
 
         }
+
+
         #endregion
 
         #region Events
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            MultiChoiceAnswerQuestion1 = navigationContext.Parameters["MultiList1"].ToString();
+            MultiChoiceAnswerQuestion2 = navigationContext.Parameters["MultiList2"].ToString();
+            MultiChoiceAnswerQuestion3 = navigationContext.Parameters["MultiList3"].ToString();
+            MultiChoiceAnswerQuestion4 = navigationContext.Parameters["MultiList4"].ToString();
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            
+        }
         #endregion
 
         #region Methods

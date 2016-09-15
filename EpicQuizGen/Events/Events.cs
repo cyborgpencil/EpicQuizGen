@@ -23,5 +23,6 @@ namespace EpicQuizGen.Events
     public class SendMultiAnswer4Event : PubSubEvent<string> { }
     public class TakeQuizEvent : PubSubEvent<Quiz> { }
     public class SendMainWindow : PubSubEvent<MainWindow> { }
-
+    public class SendQuizTakeTrueAnswer : PubSubEvent<bool> { }
+    public class SendQuizTakeFalseAnswer : PubSubEvent<bool> { }
 }

@@ -1,6 +1,8 @@
-﻿using EpicQuizGen.Models;
+﻿using EpicQuizGen.Events;
+using EpicQuizGen.Models;
 using EpicQuizGen.Utils;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
@@ -121,14 +123,24 @@ namespace EpicQuizGen.ViewModels
         //    get { return _currentWorkingToF; }
         //    set { SetProperty(ref _currentWorkingToF, value); }
         //}
+
+        private List<BindableBase> _questionViews;
+        public List<BindableBase> QuestionViews
+        {
+            get { return _questionViews; }
+            set { SetProperty(ref _questionViews, value); }
+        }
         private MainWindowViewModel _mainVM { get; set; }
         private IRegionManager _regionManager { get; set; }
+        public NavigationParameters NavPar { get; set; }
+        public EventAggregator _eventAggregator { get; set; }
         #endregion
 
         #region Constructor
-        public QuizTakeViewModel(IRegionManager regionManager, MainWindowViewModel mainVM)
+        public QuizTakeViewModel(IRegionManager regionManager, MainWindowViewModel mainVM, EventAggregator eventAggregator)
         {
             _mainVM = mainVM;
+            _eventAggregator = eventAggregator;
             QuestionNavIndex = 0;
             _regionManager = regionManager;
             Quiz = QuizIOManager.Instance.Quiz;
@@ -138,14 +150,18 @@ namespace EpicQuizGen.ViewModels
             CurrentQuestionType = CurrentQuestion.QuestionType;
             TimeLeftString = "";
             QuestionCounter = "";
+
+            // Question Views
+            QuestionViews = new List<BindableBase>();
+
             QuizTakeLoadCommand = new DelegateCommand(QuizTakeLoad);
             NavigateCommand = new DelegateCommand<string>(Navigate);
             NextQuestionCommand = new DelegateCommand(NextQuestion);
             PreviousQuestionCommand = new DelegateCommand(PreviousQuestion);
 
-            CurrentWorkingQuestions = new List<Question>(Quiz.Questions);
-            clearQustionAnswers();
-
+            SetUpWorkingQuestions();
+            
+            ClearQustionAnswers();
         }
         #endregion
 
@@ -153,43 +169,85 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand QuizTakeLoadCommand { get; set; }
         public void QuizTakeLoad()
         {
-            // Timer
+            //_eventAggregator.GetEvent<SendQuizTakeTrueAnswer>().Subscribe(SetTrueAnswer);
+            //_eventAggregator.GetEvent<SendQuizTakeFalseAnswer>().Subscribe(SetFalseAnswer);
+
+            // Set Main Quiz
+            if (Quiz == null)
+            {
+                // Set main quiz based on Passed in Quiz
+                Quiz = QuizIOManager.Instance.Quiz;
+            }
+            // Set Quiz Questions that will match users answers
+            CurrentWorkingQuestions = new List<Question>();
+            CurrentWorkingQuestions = Quiz.Questions;
+
+            // Clear out Working Questions
+            ClearQustionAnswers();
+
+            // Set current Question
+            QuestionNavIndex = 0;
+
+
+            // Set QuizView
+            //foreach (var q in Quiz.Questions)
+            //{
+            //    SetQuestionViews(q);
+            //}
+
+            // Set Up Timer For Quiz
             Timer = int.Parse(Quiz.QuizTime);
             QuizTimer = new QuizTimeManager(this);
             QuizTimer.StartTimer();
 
-           // if (CurrentWorkingToF == null)
+            // Set Initial Question
+
+            // if (CurrentWorkingToF == null)
             //    CurrentWorkingToF = new List<TrueFalseQuizTake>();
             //SetToFWorkingQuestions();
 
+            // Parameters to send to current view
+            CheckNavParameters();
+
+           // _eventAggregator.GetEvent<SendQuizTakeTrueAnswer>().Subscribe(SetTrueAnswer);
+           // _eventAggregator.GetEvent<SendQuizTakeFalseAnswer>().Subscribe(SetFalseAnswer);
+
+            // Navigate to Question #1
             Navigate(CheckQuestionAnswerType());
         }
 
         public DelegateCommand<string> NavigateCommand { get; set; }
         public void Navigate(string uri)
         {
-            _regionManager.RequestNavigate("CurrentQuestionType", uri);
+            _regionManager.RequestNavigate("CurrentQuestionType", uri, NavPar);
         }
 
         public DelegateCommand NextQuestionCommand { get; set; }
         public void NextQuestion()
         {
+            CheckNavParameters();
+            _eventAggregator.GetEvent<SendQuizTakeTrueAnswer>().Subscribe(SetTrueAnswer);
+            _eventAggregator.GetEvent<SendQuizTakeFalseAnswer>().Subscribe(SetFalseAnswer);
             // set Prev previous View Question 
             SetPreviousViewQuestion();
             QuestionNavIndex += 1;
             if (QuestionNavIndex > Quiz.Questions.Count - 1)
                 QuestionNavIndex = Quiz.Questions.Count - 1;
-
+            
             SetQuestionAnswerView();
             
         }
         public DelegateCommand PreviousQuestionCommand { get; set; }
         public void PreviousQuestion()
         {
+            CheckNavParameters();
+            _eventAggregator.GetEvent<SendQuizTakeTrueAnswer>().Subscribe(SetTrueAnswer);
+            _eventAggregator.GetEvent<SendQuizTakeFalseAnswer>().Subscribe(SetFalseAnswer);
             SetPreviousViewQuestion();
             QuestionNavIndex -= 1;
 
             SetQuestionAnswerView();
+            
             SetAnswerProgress(-1);
         }
         public DelegateCommand FinishQuizCommand { get; set; }
@@ -226,19 +284,21 @@ namespace EpicQuizGen.ViewModels
                 QuestionCounter = "";
                 CurrentQuestion = Quiz.Questions[QuestionNavIndex];
                 CurrentQuestionType = CurrentQuestion.QuestionType;
+                NavPar = new NavigationParameters();
+                CheckNavParameters();
+
                 Navigate(CheckQuestionAnswerType());
-                
             }
         }
 
-        private void clearQustionAnswers()
+        private void ClearQustionAnswers()
         {
             switch (CurrentWorkingQuestions[QuestionNavIndex].QuestionType)
             {
                 case "MULTICHOICE4":
                     ClearMultiChoice4Answers();
                     break;
-                default:
+                default: // QuetionType = TRUEFALSE
                     CurrentWorkingQuestions[QuestionNavIndex].TrueAnswer = false;
                     CurrentWorkingQuestions[QuestionNavIndex].FalseAnswer = false;
                     break;
@@ -271,16 +331,70 @@ namespace EpicQuizGen.ViewModels
             FalseAnswer = CurrentWorkingQuestions[QuestionNavIndex].FalseAnswer;
         }
 
+        private void SetQuestionViews(Question question)
+        {
+            //if(question.QuestionType == QuestionTypes.TRUEFALSE.ToString())
+            //{
+            //    TrueFalseQuizViewModel view = new TrueFalseQuizViewModel(new Prism.Events.EventAggregator());
+            //    view.TrueAnswer = question.TrueAnswer;
+            //    view.FalseAnswer = question.FalseAnswer;
+            //    QuestionViews.Add(view);
+            //}
+            if (question.QuestionType == QuestionTypes.MULTICHOICE4.ToString())
+            {
+                MultiChoice4QuizViewModel view = new MultiChoice4QuizViewModel();
+                view.MultiChoiceAnswerQuestion1 = question.MultiAnswerList[0];
+                view.MultiChoiceAnswerQuestion2 = question.MultiAnswerList[1];
+                view.MultiChoiceAnswerQuestion3 = question.MultiAnswerList[2];
+                view.MultiChoiceAnswerQuestion4 = question.MultiAnswerList[3];
+                QuestionViews.Add(new MultiChoice4QuizViewModel());
+            }
+        }
+        
+        //Sets the Parameters to be sent with Current Question User is working on (QuestionNavIndex) based on Question Type
+        private void CheckNavParameters()
+        {
+            NavPar = new NavigationParameters();
+            if (CurrentWorkingQuestions[QuestionNavIndex].QuestionType == QuestionTypes.TRUEFALSE.ToString())
+            {
+                NavPar.Add("TrueAnswer", CurrentWorkingQuestions[QuestionNavIndex].TrueAnswer);
+                NavPar.Add("FalseAnswer", CurrentWorkingQuestions[QuestionNavIndex].FalseAnswer);
+            }
+            if (CurrentWorkingQuestions[QuestionNavIndex].QuestionType == QuestionTypes.MULTICHOICE4.ToString())
+            {
+                NavPar.Add("MultiList1", CurrentWorkingQuestions[QuestionNavIndex].MultiAnswerList[0]);
+                NavPar.Add("MultiList2", CurrentWorkingQuestions[QuestionNavIndex].MultiAnswerList[1]);
+                NavPar.Add("MultiList3", CurrentWorkingQuestions[QuestionNavIndex].MultiAnswerList[2]);
+                NavPar.Add("MultiList4", CurrentWorkingQuestions[QuestionNavIndex].MultiAnswerList[3]);
+            }
+        }
+
         private void SetWorkingQuestionsCurrentAnswers()
         {
 
-            
         }
 
         private void SetAnswerProgress(int navDir)
         {
             
             #endregion
+        }
+
+        private void SetTrueAnswer(bool obj)
+        {
+            CurrentWorkingQuestions[QuestionNavIndex].TrueAnswer = obj;
+        }
+        private void SetFalseAnswer(bool obj)
+        {
+            CurrentWorkingQuestions[QuestionNavIndex].FalseAnswer = obj;
+        }
+
+        private void SetUpWorkingQuestions()
+        {
+            CurrentWorkingQuestions = new List<Question>(Quiz.Questions);
+
+            // Clear True False questions
+            ClearQustionAnswers();
         }
     }
 }
