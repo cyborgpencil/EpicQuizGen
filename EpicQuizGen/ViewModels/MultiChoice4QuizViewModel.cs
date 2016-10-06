@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EpicQuizGen.ViewModels
 {
-    public class MultiChoice4QuizViewModel : BindableBase, INavigationAware
+    public class MultiChoice4QuizViewModel : QuizViewModelbase
     {
         #region Properties
         private bool _multiChoiceAnswer1;
@@ -65,11 +65,6 @@ namespace EpicQuizGen.ViewModels
         #region Contructors
         public MultiChoice4QuizViewModel()
         {
-            MultiChoiceAnswerQuestion1 = "";
-            MultiChoiceAnswerQuestion2 = "";
-            MultiChoiceAnswerQuestion3 = "";
-            MultiChoiceAnswerQuestion4 = "";
-
             LoadMulti4QuizViewCommand = new DelegateCommand(LoadMulti4QuizView);
         }
         #endregion

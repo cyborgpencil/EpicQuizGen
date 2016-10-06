@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace EpicQuizGen.ViewModels
 {
-    class TrueFalseQuizViewModel : BindableBase, INavigationAware
+    class TrueFalseQuizViewModel : QuizViewModelbase
     {
         #region Properties
         private bool _trueAnswer;
@@ -28,10 +28,16 @@ namespace EpicQuizGen.ViewModels
             }
         }
         private EventAggregator _eventAggregator;
+
+        
         #endregion
 
         #region Contructors
-        public TrueFalseQuizViewModel(EventAggregator eventaggregator)
+        public TrueFalseQuizViewModel()
+        {
+           
+        }
+        public TrueFalseQuizViewModel(EventAggregator eventaggregator) :this()
         {
             _eventAggregator = eventaggregator;
             TFQuizViewLoadCommand = new DelegateCommand(TFQuizViewLoad);

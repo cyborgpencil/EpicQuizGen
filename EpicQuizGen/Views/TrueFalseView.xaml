@@ -9,7 +9,7 @@
              d:DesignHeight="35" d:DesignWidth="52">
     <StackPanel Margin="0,0,-133,-16">
         <TextBlock Text="Which one is the correct Answer?"/>
-        <RadioButton IsChecked="{Binding Path=TrueAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Content="True" />
-        <RadioButton IsChecked="{Binding Path=FalseAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="False" />
+        <RadioButton IsChecked="{Binding Path=QuestionLists.TrueAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Content="True" />
+        <RadioButton IsChecked="{Binding Path=QuestionLists.FalseAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="False" />
     </StackPanel>
 </UserControl>

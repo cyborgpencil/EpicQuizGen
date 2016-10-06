@@ -106,6 +106,7 @@
     <Compile Include="ViewModels\QuestionViewModel.cs" />
     <Compile Include="ViewModels\QuizQuestionSelectViewModel.cs" />
     <Compile Include="ViewModels\QuizTakeViewModel.cs" />
+    <Compile Include="ViewModels\QuizViewModelbase.cs" />
     <Compile Include="ViewModels\QuizzesShowViewModel.cs" />
     <Compile Include="ViewModels\TrueFalseQuizViewModel.cs" />
     <Compile Include="Views\MultiChoice4QuizView.xaml.cs">

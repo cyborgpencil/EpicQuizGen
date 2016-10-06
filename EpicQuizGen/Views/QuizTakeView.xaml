@@ -6,9 +6,18 @@
              xmlns:local="clr-namespace:EpicQuizGen.Views"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:vm="clr-namespace:EpicQuizGen.ViewModels"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="640" d:DesignWidth="1000" Background="Gray">
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type vm:TrueFalseQuizViewModel}">
+            <local:TrueFalseQuizView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:MultiChoice4QuizViewModel}">
+            <local:MultiChoice4QuizView/>
+        </DataTemplate>
+    </UserControl.Resources>
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -23,7 +32,7 @@
             <TextBlock Text="{Binding Path=QuestionCounter}" Margin="2"/>
         </StackPanel>
         <local:QuizMainQuestionText Height="250" Margin="2" />
-        <ContentControl prism:RegionManager.RegionName="CurrentQuestionType" Height="250" Background="White" Margin="2"/>
+        <ContentControl Content="{Binding Path=CurrentWorkingQuestion}"  Height="250" Background="White" Margin="2"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="Previous" Margin="2" Width="100" Command="{Binding Path=PreviousQuestionCommand}"/>
             <Button Content="Next" Margin="2" Width="100" Command="{Binding Path=NextQuestionCommand}"/>
