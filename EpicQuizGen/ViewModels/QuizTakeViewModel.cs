@@ -184,7 +184,7 @@ namespace EpicQuizGen.ViewModels
         public void FinishQuiz()
         {
             // Navigate to Quiz View
-            _regionManager.RequestNavigate("ContentRegion", "QuizView");
+            _regionManager.RequestNavigate("ContentRegion", "QuizzesShowView");
         }
         #endregion
 
