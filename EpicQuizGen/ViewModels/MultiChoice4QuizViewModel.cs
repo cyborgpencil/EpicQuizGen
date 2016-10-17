@@ -16,25 +16,25 @@ namespace EpicQuizGen.ViewModels
         public bool MultiChoiceAnswer1
         {
             get { return _multiChoiceAnswer1; }
-            set { SetProperty(ref _multiChoiceAnswer1, value); }
+            set { SetAnswerd(); SetProperty(ref _multiChoiceAnswer1, value); }
         }
         private bool _multiChoiceAnswer2;
         public bool MultiChoiceAnswer2
         {
             get { return _multiChoiceAnswer2; }
-            set { SetProperty(ref _multiChoiceAnswer2, value); }
+            set { SetAnswerd(); SetProperty(ref _multiChoiceAnswer2, value); }
         }
         private bool _multiChoiceAnswer3;
         public bool MultiChoiceAnswer3
         {
             get { return _multiChoiceAnswer3; }
-            set { SetProperty(ref _multiChoiceAnswer3, value); }
+            set { SetAnswerd(); SetProperty(ref _multiChoiceAnswer3, value); }
         }
         private bool _multiChoiceAnswer4;
         public bool MultiChoiceAnswer4
         {
             get { return _multiChoiceAnswer4; }
-            set { SetProperty(ref _multiChoiceAnswer4, value); }
+            set { SetAnswerd(); SetProperty(ref _multiChoiceAnswer4, value); }
         }
         private string _multiChoiceAnswerQuestion1;
         public string MultiChoiceAnswerQuestion1
@@ -60,11 +60,25 @@ namespace EpicQuizGen.ViewModels
             get { return _multiChoiceAnswerQuestion4; }
             set { SetProperty(ref _multiChoiceAnswerQuestion4, value); }
         }
+        private int _answered;
+        public int Answered
+        {
+            get { return _answered; }
+            set {
+                if (value > 1)
+                   value = 1;
+
+                else
+                    value = 0;
+                SetProperty(ref _answered, value);
+            }
+        }
         #endregion
 
         #region Contructors
         public MultiChoice4QuizViewModel()
         {
+            Answered = 0;
             LoadMulti4QuizViewCommand = new DelegateCommand(LoadMulti4QuizView);
         }
         #endregion
@@ -100,6 +114,10 @@ namespace EpicQuizGen.ViewModels
         #endregion
 
         #region Methods
+        private void SetAnswerd()
+        {
+            Answered = 1;
+        }
         #endregion
 
     }

@@ -109,6 +109,12 @@
     <Compile Include="ViewModels\QuizViewModelbase.cs" />
     <Compile Include="ViewModels\QuizzesShowViewModel.cs" />
     <Compile Include="ViewModels\TrueFalseQuizViewModel.cs" />
+    <Compile Include="Views\CompleteQuizView.xaml.cs">
+      <DependentUpon>CompleteQuizView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ConfirmMessageView.xaml.cs">
+      <DependentUpon>ConfirmMessageView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MultiChoice4QuizView.xaml.cs">
       <DependentUpon>MultiChoice4QuizView.xaml</DependentUpon>
     </Compile>
@@ -142,6 +148,14 @@
     <Compile Include="Views\TrueFalseView.xaml.cs">
       <DependentUpon>TrueFalseView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\CompleteQuizView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ConfirmMessageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

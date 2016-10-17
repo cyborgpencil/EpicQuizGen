@@ -1,17 +1,13 @@
-﻿using EpicQuizGen.Events;
-using EpicQuizGen.Models;
+﻿using EpicQuizGen.Models;
 using EpicQuizGen.Utils;
+using EpicQuizGen.Views;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 
 namespace EpicQuizGen.ViewModels
 {
@@ -183,6 +179,14 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand FinishQuizCommand { get; set; }
         public void FinishQuiz()
         {
+            // Check for unanswered questions
+            // If any unanswered, return
+            if (CheckUnanswered())
+                return;
+
+            // Show Finish Dialog
+            ShowCompletePopup();
+
             // Navigate to Quiz View
             _regionManager.RequestNavigate("ContentRegion", "QuizzesShowView");
         }
@@ -220,6 +224,25 @@ namespace EpicQuizGen.ViewModels
                     QuestionLists.Add(question);
                 }
             }
+        }
+        private void ShowCompletePopup()
+        {
+
+            CalculateScore();
+            Window popup = new CompleteQuizView();
+            popup.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            popup.ShowDialog();
+        }
+
+        private void CalculateScore()
+        {
+            Quiz.Grade = 80;
+        }
+
+        private bool CheckUnanswered()
+        {
+            // Check answers for 
+            return false;
         }
 
         #endregion
