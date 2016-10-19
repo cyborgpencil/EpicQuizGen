@@ -95,6 +95,27 @@ namespace EpicQuizGen.ViewModels
             }
         }
         private readonly int MAX_QUESTIONS;
+
+        //Binding for yes/no Popup when finish is clicked
+        private bool _isCompleteOpen;
+        public bool IsCompleteOpen
+        {
+            get { return _isCompleteOpen; }
+            set { SetProperty(ref _isCompleteOpen, value); }
+        }
+        // Popup for Final Quiz info
+        private bool _isFinalInfoOpen;
+        public bool IsFinalInfoOpen
+        {
+            get { return _isFinalInfoOpen; }
+            set { SetProperty(ref _isFinalInfoOpen, value); }
+        }
+        private bool _isQuizComplete;
+        public bool IsQuizComplete
+        {
+            get { return _isQuizComplete; }
+            set { SetProperty(ref _isQuizComplete, value); }
+        }
         #endregion
 
         #region Constructor
@@ -129,6 +150,9 @@ namespace EpicQuizGen.ViewModels
             NextQuestionCommand = new DelegateCommand(NextQuestion);
             PreviousQuestionCommand = new DelegateCommand(PreviousQuestion);
             FinishQuizCommand = new DelegateCommand(FinishQuiz);
+            YesEndQuizCommand = new DelegateCommand(YesEndQuiz);
+            NoEndQuizCommand = new DelegateCommand(NoEndQuiz);
+            ConfirmOKCommand = new DelegateCommand(ConfirmOK);
         }
         #endregion
 
@@ -153,7 +177,12 @@ namespace EpicQuizGen.ViewModels
             QuizTimer = new QuizTimeManager(this);
             QuizTimer.StartTimer();
 
-           // Navigate(CheckQuestionAnswerType());
+            // Make sure Quiz Complete is false
+            IsQuizComplete = false;
+
+            // Make sure Popups are all false
+            IsCompleteOpen = false;
+            IsFinalInfoOpen = false;
         }
 
         public DelegateCommand<string> NavigateCommand { get; set; }
@@ -179,15 +208,47 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand FinishQuizCommand { get; set; }
         public void FinishQuiz()
         {
-            // Check for unanswered questions
-            // If any unanswered, return
-            if (CheckUnanswered())
-                return;
-
-            // Show Finish Dialog
+            // Ask user if they are sure
+            // only if popup is already closed
+            if(!IsCompleteOpen)
             ShowCompletePopup();
 
-            // Navigate to Quiz View
+            // Check if Quiz has ended or user ended quiz
+            if (IsQuizComplete)
+            {
+                CompleteQuiz();
+            }
+            else
+                return;
+        }
+        public DelegateCommand YesEndQuizCommand { get; set; }
+        public void YesEndQuiz()
+        {
+            // Close Popup
+            IsCompleteOpen = false;
+
+            // Show Final Info Popup
+            IsQuizComplete = true;
+
+            FinishQuiz();
+            
+        }
+        public DelegateCommand NoEndQuizCommand { get; set; }
+        public void NoEndQuiz()
+        {
+            // Set Completed to True
+            IsQuizComplete = false;
+
+            // Close Popup
+            IsCompleteOpen = false;
+        }
+        public DelegateCommand ConfirmOKCommand { get; set; }
+        public void ConfirmOK()
+        {
+            // Set Completed to True
+            IsQuizComplete = true;
+
+            // Navigate to Quiz List Screen
             _regionManager.RequestNavigate("ContentRegion", "QuizzesShowView");
         }
         #endregion
@@ -205,6 +266,18 @@ namespace EpicQuizGen.ViewModels
         #endregion
 
         #region Methods
+        private void CompleteQuiz()
+        {
+            // Calulate Score
+            CalculateScore();
+
+            // Show Quiz Grade
+            IsFinalInfoOpen = true;
+
+            // Save Quiz Grade
+
+        }
+
         private void BuildWorkingQuestions()
         {
             for (int i = 0; i < Quiz.Questions.Count; i++)
@@ -227,22 +300,13 @@ namespace EpicQuizGen.ViewModels
         }
         private void ShowCompletePopup()
         {
-
-            CalculateScore();
-            Window popup = new CompleteQuizView();
-            popup.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            popup.ShowDialog();
+            IsCompleteOpen = true;
         }
 
         private void CalculateScore()
         {
+            //DEBUG
             Quiz.Grade = 80;
-        }
-
-        private bool CheckUnanswered()
-        {
-            // Check answers for 
-            return false;
         }
 
         #endregion

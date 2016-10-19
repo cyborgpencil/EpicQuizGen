@@ -26,6 +26,7 @@
     </i:Interaction.Triggers>
 
     <StackPanel MaxWidth="1000">
+        
         <TextBlock Text="{Binding Path=TimeLeftString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="2" HorizontalAlignment="Right" Background="White" FontSize="30" TextAlignment="Left"/>
         <StackPanel Orientation="Horizontal" Background="White" Margin="2">
             <TextBlock Text="{Binding Path=Quiz.QuizName}" Margin="2"/>
@@ -38,5 +39,23 @@
             <Button Content="Next" Margin="2" Width="100" Command="{Binding Path=NextQuestionCommand}"/>
             <Button Content="Finish" Margin="2" Width="100" Command="{Binding Path=FinishQuizCommand}"/>
         </StackPanel>
+        <Popup Width="200" Height="200" IsOpen="{Binding Path=IsCompleteOpen}" Placement="Center">
+            <StackPanel>
+                <TextBlock Text="Are You Sure you are Completed?" Background="LightGray"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Yes" Width="50" Margin="10" Command="{Binding Path=YesEndQuizCommand}"/>
+                    <Button Content="No" Width="50" Margin="10" Command="{Binding Path=NoEndQuizCommand}" />
+                </StackPanel>
+            </StackPanel>
+        </Popup>
+        <Popup Width="200" Height="200" IsOpen="{Binding Path=IsFinalInfoOpen}" Placement="Center">
+            <StackPanel>
+                <StackPanel Background="Wheat">
+                    <TextBlock Text="Score: " />
+                    <TextBlock Text="{ Binding Path=Quiz.Grade}"/>
+                </StackPanel>
+                <Button Content="OK" Command="{Binding Path=ConfirmOKCommand}" />
+            </StackPanel>
+        </Popup>
     </StackPanel>
 </UserControl>
