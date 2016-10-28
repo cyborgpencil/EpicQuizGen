@@ -28,16 +28,16 @@
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
 
-        <CheckBox IsChecked="{Binding Path=MultiChoiceAnswer1, Mode=TwoWay}" Content="1)" Grid.Row="1" Grid.Column="0" Margin="5"/>
+        <CheckBox IsChecked="{Binding Path=MultiChoiceAnswer1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="1)" Grid.Row="1" Grid.Column="0" Margin="5"/>
         <TextBlock Background="White" Text="{Binding Path=MultiChoiceAnswerQuestion1, Mode=TwoWay}"  Grid.Row="1" Grid.Column="1" Margin="10"/>
 
-        <CheckBox IsChecked="{Binding Path=MultiChoiceAnswer2, Mode=TwoWay}"  Content="2)" Grid.Row="2" Grid.Column="0" Margin="5"/>
+        <CheckBox IsChecked="{Binding Path=MultiChoiceAnswer2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Content="2)" Grid.Row="2" Grid.Column="0" Margin="5"/>
         <TextBlock Background="White" Text="{Binding Path=MultiChoiceAnswerQuestion2}" Grid.Row="2" Grid.Column="1" Margin="10"/>
 
-        <CheckBox IsChecked="{Binding Path=MultiChoiceAnswer3, Mode=TwoWay}"  Content="3)" Grid.Row="3" Grid.Column="0" Margin="5"/>
+        <CheckBox IsChecked="{Binding Path=MultiChoiceAnswer3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Content="3)" Grid.Row="3" Grid.Column="0" Margin="5"/>
         <TextBlock Background="White" Text="{Binding Path=MultiChoiceAnswerQuestion3}" Grid.Row="3" Grid.Column="1" Margin="10"/>
 
-        <CheckBox IsChecked="{Binding Path=MultiChoiceAnswer4, Mode=TwoWay}"  Content="4)" Grid.Row="4" Grid.Column="0" Margin="5"/>
+        <CheckBox IsChecked="{Binding Path=MultiChoiceAnswer4, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Content="4)" Grid.Row="4" Grid.Column="0" Margin="5"/>
         <TextBlock Background="White" Name="TestBox" Text="{Binding Path=MultiChoiceAnswerQuestion4, Mode=TwoWay}" Grid.Row="4" Grid.Column="1" Margin="10" />
     </Grid>
 </UserControl>

@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using EpicQuizGen.Models;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
@@ -16,25 +17,25 @@ namespace EpicQuizGen.ViewModels
         public bool MultiChoiceAnswer1
         {
             get { return _multiChoiceAnswer1; }
-            set { SetAnswerd(); SetProperty(ref _multiChoiceAnswer1, value); }
+            set { SetProperty(ref _multiChoiceAnswer1, value); SetAnswered(); }
         }
         private bool _multiChoiceAnswer2;
         public bool MultiChoiceAnswer2
         {
             get { return _multiChoiceAnswer2; }
-            set { SetAnswerd(); SetProperty(ref _multiChoiceAnswer2, value); }
+            set { SetProperty(ref _multiChoiceAnswer2, value); SetAnswered(); }
         }
         private bool _multiChoiceAnswer3;
         public bool MultiChoiceAnswer3
         {
             get { return _multiChoiceAnswer3; }
-            set { SetAnswerd(); SetProperty(ref _multiChoiceAnswer3, value); }
+            set { SetProperty(ref _multiChoiceAnswer3, value); SetAnswered(); }
         }
         private bool _multiChoiceAnswer4;
         public bool MultiChoiceAnswer4
         {
             get { return _multiChoiceAnswer4; }
-            set { SetAnswerd(); SetProperty(ref _multiChoiceAnswer4, value); }
+            set { SetProperty(ref _multiChoiceAnswer4, value); SetAnswered(); }
         }
         private string _multiChoiceAnswerQuestion1;
         public string MultiChoiceAnswerQuestion1
@@ -60,25 +61,18 @@ namespace EpicQuizGen.ViewModels
             get { return _multiChoiceAnswerQuestion4; }
             set { SetProperty(ref _multiChoiceAnswerQuestion4, value); }
         }
-        private int _answered;
-        public int Answered
+        private bool _answered;
+        public bool Answered
         {
             get { return _answered; }
-            set {
-                if (value > 1)
-                   value = 1;
-
-                else
-                    value = 0;
-                SetProperty(ref _answered, value);
-            }
+            set { SetProperty(ref _answered, value); }
         }
+
         #endregion
 
         #region Contructors
         public MultiChoice4QuizViewModel()
         {
-            Answered = 0;
             LoadMulti4QuizViewCommand = new DelegateCommand(LoadMulti4QuizView);
         }
         #endregion
@@ -89,18 +83,9 @@ namespace EpicQuizGen.ViewModels
         {
 
         }
-
-
         #endregion
 
         #region Events
-        public void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            MultiChoiceAnswerQuestion1 = navigationContext.Parameters["MultiList1"].ToString();
-            MultiChoiceAnswerQuestion2 = navigationContext.Parameters["MultiList2"].ToString();
-            MultiChoiceAnswerQuestion3 = navigationContext.Parameters["MultiList3"].ToString();
-            MultiChoiceAnswerQuestion4 = navigationContext.Parameters["MultiList4"].ToString();
-        }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
@@ -114,9 +99,71 @@ namespace EpicQuizGen.ViewModels
         #endregion
 
         #region Methods
-        private void SetAnswerd()
+        private void SetAnswered()
         {
-            Answered = 1;
+            // Check if any Answers are flase
+            if (MultiChoiceAnswer1 == false && MultiChoiceAnswer2 == false && MultiChoiceAnswer3 == false && MultiChoiceAnswer4 == false)
+            {
+                Answered = false;
+            }
+            else
+                Answered = true;
+        }
+        private bool CheckAnswer1(Question checkanswer)
+        {
+            #region 1-4 True
+            // answer 1 = true
+            if(MultiChoiceAnswer1 == checkanswer.MultiAnswerPositions[0])
+            {
+                // answer 2 = true
+               if(MultiChoiceAnswer2 == checkanswer.MultiAnswerPositions[1])
+                {
+                    // answer 3 = true
+                    if (MultiChoiceAnswer3 == checkanswer.MultiAnswerPositions[2])
+                    {
+                        // answer 4 = true
+                        if (MultiChoiceAnswer4 == checkanswer.MultiAnswerPositions[3])
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            #region 1-3 True
+            // answer 1 = true
+            if (MultiChoiceAnswer1 == checkanswer.MultiAnswerPositions[0])
+            {
+                // answer 2 = true
+                if (MultiChoiceAnswer2 == checkanswer.MultiAnswerPositions[1])
+                {
+                    // answer 3 = true
+                    if (MultiChoiceAnswer3 == checkanswer.MultiAnswerPositions[2])
+                    {
+                        // answer 4 = true
+                        if (MultiChoiceAnswer4 == checkanswer.MultiAnswerPositions[3])
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            return false;
+        }
+        private void CheckAnswer2()
+        {
+
+        }
+        private void CheckAnswer3()
+        {
+
+        }
+        private void CheckAnswer4()
+        {
+
         }
         #endregion
 

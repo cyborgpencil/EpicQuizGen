@@ -116,6 +116,12 @@ namespace EpicQuizGen.ViewModels
             get { return _isQuizComplete; }
             set { SetProperty(ref _isQuizComplete, value); }
         }
+        private int _currentCorrectAnswers;
+        public int CurrentCorrectAnswers
+        {
+            get { return _currentCorrectAnswers; }
+            set { SetProperty(ref _currentCorrectAnswers, value); }
+        }
         #endregion
 
         #region Constructor
@@ -167,6 +173,9 @@ namespace EpicQuizGen.ViewModels
                 Quiz = QuizIOManager.Instance.Quiz;
             }
 
+            // Clear Question list
+            QuestionLists = new ObservableCollection<QuizViewModelbase>();
+
             BuildWorkingQuestions();
 
             // Set current Question
@@ -183,6 +192,11 @@ namespace EpicQuizGen.ViewModels
             // Make sure Popups are all false
             IsCompleteOpen = false;
             IsFinalInfoOpen = false;
+
+            // Clear correct answers
+            CurrentCorrectAnswers = 0;
+
+            CurrentWorkingQuestion = QuestionLists[CurrentQuestionIndex];
         }
 
         public DelegateCommand<string> NavigateCommand { get; set; }
@@ -190,19 +204,24 @@ namespace EpicQuizGen.ViewModels
         {
             _regionManager.RequestNavigate("CurrentQuestionType", uri);
         }
-
         public DelegateCommand NextQuestionCommand { get; set; }
         public void NextQuestion()
         {
             CurrentQuestionIndex++;
             CurrentWorkingQuestion = QuestionLists[CurrentQuestionIndex];
             CurrentMainQuestion = Quiz.Questions[CurrentQuestionIndex].MainQuestion;
+            
         }
         public DelegateCommand PreviousQuestionCommand { get; set; }
         public void PreviousQuestion()
         {
             CurrentQuestionIndex--;
-            CurrentWorkingQuestion = QuestionLists[CurrentQuestionIndex];
+            if(QuestionLists[CurrentQuestionIndex].GetType() == typeof(TrueFalseQuizViewModel))
+            {
+                var newToF = QuestionLists[CurrentQuestionIndex] as TrueFalseQuizViewModel;
+                
+            }
+            
             CurrentMainQuestion = Quiz.Questions[CurrentQuestionIndex].MainQuestion;
         }
         public DelegateCommand FinishQuizCommand { get; set; }
@@ -245,8 +264,7 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand ConfirmOKCommand { get; set; }
         public void ConfirmOK()
         {
-            // Set Completed to True
-            IsQuizComplete = true;
+            CurrentQuestionIndex = 0;
 
             // Navigate to Quiz List Screen
             _regionManager.RequestNavigate("ContentRegion", "QuizzesShowView");
@@ -277,7 +295,6 @@ namespace EpicQuizGen.ViewModels
             // Save Quiz Grade
 
         }
-
         private void BuildWorkingQuestions()
         {
             for (int i = 0; i < Quiz.Questions.Count; i++)
@@ -305,10 +322,62 @@ namespace EpicQuizGen.ViewModels
 
         private void CalculateScore()
         {
-            //DEBUG
-            Quiz.Grade = 80;
+
+            for(int i = 0; i < Quiz.Questions.Count;++i)
+            {
+                
+                if(QuestionLists[i].GetType() == typeof(TrueFalseQuizViewModel) )
+                {
+                    
+                    CheckCorrectTrueFalse(Quiz.Questions[i], QuestionLists[i] as TrueFalseQuizViewModel);
+                }
+                if (QuestionLists[i].GetType() == typeof(MultiChoice4QuizViewModel))
+                {
+                    CheckCorrectMultiChoice4(Quiz.Questions[i], QuestionLists[i] as MultiChoice4QuizViewModel);
+                }
+            }
+
+            //BEBUG
+            Quiz.Grade = (100.0f / Quiz.Questions.Count) * CurrentCorrectAnswers;
+        }
+        private void CheckCorrectTrueFalse(Question quizQuestion, TrueFalseQuizViewModel question)
+        {
+            // Check if question has been answered
+            if (question.Answered)
+            {
+                if (question.TrueAnswer == quizQuestion.TrueAnswer)
+                {
+                    if (question.FalseAnswer == quizQuestion.FalseAnswer)
+                    {
+                        CurrentCorrectAnswers++;
+                    }
+                }
+                
+            }
         }
 
+        private void CheckCorrectMultiChoice4(Question quizQuestion, MultiChoice4QuizViewModel question)
+        {
+            // Check if question has been answered
+            if (question.Answered)
+            {
+                if (question.MultiChoiceAnswer1 == quizQuestion.MultiAnswerPositions[0])
+                {
+                    if (question.MultiChoiceAnswer2 == quizQuestion.MultiAnswerPositions[1])
+                    {
+                        if (question.MultiChoiceAnswer3 == quizQuestion.MultiAnswerPositions[2])
+                        {
+                            if (question.MultiChoiceAnswer4 == quizQuestion.MultiAnswerPositions[3])
+                            {
+                                CurrentCorrectAnswers++;
+                            }
+                        }
+                    }
+
+                }
+                
+            }
+        }
         #endregion
     }
 }

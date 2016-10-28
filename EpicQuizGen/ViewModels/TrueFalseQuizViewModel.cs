@@ -1,13 +1,9 @@
 ﻿using EpicQuizGen.Events;
+using EpicQuizGen.Models;
 using Prism.Commands;
 using Prism.Events;
-using Prism.Mvvm;
 using Prism.Regions;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EpicQuizGen.ViewModels
 {
@@ -18,24 +14,28 @@ namespace EpicQuizGen.ViewModels
         public bool TrueAnswer
         {
             get { return _trueAnswer; }
-            set {SetProperty(ref _trueAnswer, value);}
+            set { SetProperty(ref _trueAnswer, value); SetAnswer(); }
         }
         private bool _falseAnswer;
         public bool FalseAnswer
         {
             get { return _falseAnswer; }
-            set { SetProperty(ref _falseAnswer, value);
+            set {SetProperty(ref _falseAnswer, value); SetAnswer();
             }
         }
-        private EventAggregator _eventAggregator;
+        private bool _answered;
+        public bool Answered
+        {
+            get { return _answered; }
+            set { SetProperty(ref _answered, value); }
+        }
 
-        
+        private EventAggregator _eventAggregator;
         #endregion
 
         #region Contructors
         public TrueFalseQuizViewModel()
         {
-           
         }
         public TrueFalseQuizViewModel(EventAggregator eventaggregator) :this()
         {
@@ -72,13 +72,16 @@ namespace EpicQuizGen.ViewModels
         #endregion
 
         #region Methods
-        private void SendCurrentAnswer()
+        private void SetAnswer()
         {
-            
-            
+            if (TrueAnswer == false && FalseAnswer == false)
+            {
+                Answered = false;
+            }
+            else
+                Answered = true;
         }
 
-        
         #endregion
 
     }
