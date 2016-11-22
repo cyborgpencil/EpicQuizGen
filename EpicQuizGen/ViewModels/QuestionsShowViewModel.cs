@@ -71,7 +71,8 @@ namespace EpicQuizGen.ViewModels
             _eventAggregator.GetEvent<SendMultiAnswer1Event>().Subscribe(SetMultiAnswer1);
             _eventAggregator.GetEvent<SendMultiAnswer2Event>().Subscribe(SetMultiAnswer2);
             _eventAggregator.GetEvent<SendMultiAnswer3Event>().Subscribe(SetMultiAnswer3);
-            _eventAggregator.GetEvent<SendMultiAnswer4Event>().Subscribe(SetMultiAnswer4);    
+            _eventAggregator.GetEvent<SendMultiAnswer4Event>().Subscribe(SetMultiAnswer4);
+            _eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(UpdateList);
         }
 
         #region Commands
@@ -105,6 +106,11 @@ namespace EpicQuizGen.ViewModels
         {
             SetDefaultQuestion();
             _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
+        }
+
+        public void UpdateList(object obj)
+        {
+            Questions = new ObservableCollection<Question>( QuestionIOManager.Instance.LoadQuestionsFromFile());
         }
 
         #endregion

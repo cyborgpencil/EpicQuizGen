@@ -228,9 +228,7 @@ namespace EpicQuizGen.ViewModels
 
             // Clear question
             NewQuestion();
-            
-            // Refresh Question List
-
+            _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
         }
         private bool CanExecuteSave()
         {
