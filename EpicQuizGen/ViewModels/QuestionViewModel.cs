@@ -1,6 +1,7 @@
 ﻿
 using EpicQuizGen.Events;
 using EpicQuizGen.Models;
+using EpicQuizGen.Utils;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -8,6 +9,7 @@ using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 /// <summary>
@@ -15,7 +17,7 @@ using System.Windows;
 /// </summary>
 namespace EpicQuizGen.ViewModels
 {
-    public class QuestionViewModel :BindableBase
+    public class QuestionViewModel :BindableBase, IDataErrorInfo
     {
         #region Properties
       
@@ -35,7 +37,7 @@ namespace EpicQuizGen.ViewModels
         public string QuestionName
         {
             get { return _questionName; }
-            set { SetProperty(ref _questionName, value); Question.QuestionName = value; _eventAggregator.GetEvent<SendQuestionNameEvent>().Publish(Question.QuestionName); }
+            set { SetProperty(ref _questionName, value); Question.QuestionName = value; }
         }
 
         private List<string> _categoryList;
@@ -74,7 +76,7 @@ namespace EpicQuizGen.ViewModels
         public string MainQuestion
         {
             get { return _mainQuestion; }
-            set { SetProperty(ref _mainQuestion, value); Question.MainQuestion = value; SendMainQuestion(); }
+            set { SetProperty(ref _mainQuestion, value); Question.MainQuestion = value; }
         }
 
         private List<string> _answerList;
@@ -88,44 +90,44 @@ namespace EpicQuizGen.ViewModels
         public bool FalseAnswer
         {
             get { return _fasleAnswer; }
-            set { SetProperty(ref _fasleAnswer, value); SendFalse(); }
+            set { SetProperty(ref _fasleAnswer, value); Question.FalseAnswer = value; }
         }
         private bool _trueAnswer;
         public bool TrueAnswer
         {
             get { return _trueAnswer; }
-            set { SetProperty(ref _trueAnswer, value); SendTrue(); }
+            set { SetProperty(ref _trueAnswer, value); Question.TrueAnswer = value; }
         }
         private List<bool> _multichoiceAnswersPositions;
         public List<bool> MultichoiceAnswersPositions
         {
             get { return _multichoiceAnswersPositions; }
-            set { SetProperty(ref _multichoiceAnswersPositions, value); }
+            set { SetProperty(ref _multichoiceAnswersPositions, value); Debug.Write("Test"); }
         }
         private string _answer1;
         public string Answer1
         {
             get { return _answer1; }
-            set { SetProperty(ref _answer1, value); SendMultiAnswer1();}
+            set { SetProperty(ref _answer1, value); Question.MultiAnswerList[0] = value; }
         }
         private string _answer2;
         public string Answer2
         {
             get { return _answer2; }
-            set { SetProperty(ref _answer2, value); SendMultiAnswer2();}
+            set { SetProperty(ref _answer2, value); Question.MultiAnswerList[1] = value; }
         }
         private string _answer3;
         public string Answer3
         {
             get { return _answer3; }
-            set { SetProperty(ref _answer3, value); SendMultiAnswer3();}
+            set { SetProperty(ref _answer3, value); Question.MultiAnswerList[2] = value; }
         }
 
         private string _answer4;
         public string Answer4
         {
             get { return _answer4; }
-            set { SetProperty(ref _answer4, value); SendMultiAnswer4();}
+            set { SetProperty(ref _answer4, value); Question.MultiAnswerList[3] = value; }
         }
 
         private Question _question;
@@ -152,29 +154,28 @@ namespace EpicQuizGen.ViewModels
 
         #endregion
 
-        public QuestionViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
+        public QuestionViewModel()
+        {
+            SaveQuestionCommand = new DelegateCommand(SaveQuestion, CanExecuteSave).ObservesProperty(() => MainQuestion).ObservesProperty(()=>QuestionName);
+        }
+        public QuestionViewModel(IRegionManager regionManager, IEventAggregator eventAggregator) : this()
         {
             _eventAggregator = eventAggregator;
             _regionManager = regionManager;
             NavigateCommand = new DelegateCommand<string>(Navigate);
             QuestionViewLoadCommand = new DelegateCommand<string>(QuestionViewLoad);
 
-            if(Question == null)
-            {
-                SetDefaultQuestion();
-            }
+
+            SetDefaultQuestion();
+
 
             CategoryList = new List<string>(Enum.GetNames(typeof(QuestionCategory)));
             QuestionTypeList = new ObservableCollection<string>(Enum.GetNames(typeof(QuestionTypes)));
 
-            MultichoiceAnswersPositions = new List<bool>() { false, false, false, false };
-            AnswerList = new List<string>() { "", "", "", "" };
-            Answer1 = AnswerList[0];
-            Answer2 = AnswerList[1];
-            Answer3 = AnswerList[2];
-            Answer4 = AnswerList[3];
 
             UpdateMultiAnswerPositionsCommand = new DelegateCommand(UpdateMultiAnswerPosition);
+
+            ClearAnswersAndMultiChoice();
 
             // Build Question Model from parent
             _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Subscribe(SetQuestion);
@@ -213,6 +214,28 @@ namespace EpicQuizGen.ViewModels
         {
             _eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion);
             Navigate(uri);
+        }
+
+        public DelegateCommand SaveQuestionCommand { get; set; }
+        public void SaveQuestion()
+        {
+            // Assemble Question
+            Question.CreationDate = DateTime.Now;
+
+            //Save Current Question
+            QuestionIOManager.Instance.QuestionModel = Question;
+            QuestionIOManager.Instance.SaveQuestionModel();
+
+            // Clear question
+            NewQuestion();
+            
+            // Refresh Question List
+
+        }
+        private bool CanExecuteSave()
+        {
+            // verify QuestionName and Main Question are not blank
+            return !string.IsNullOrWhiteSpace(QuestionName) && !string.IsNullOrWhiteSpace(MainQuestion);
         }
 
         #endregion
@@ -333,20 +356,109 @@ namespace EpicQuizGen.ViewModels
 
         private void SetDefaultQuestion()
         {
-            Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, false, }, MultiAnswerList = new List<string>() { "", "", "", "" }, TrueAnswer = false, FalseAnswer = false ,CreationDate = DateTime.Now };
+            Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, true, }, MultiAnswerList = new List<string>() { "", "", "", "All of the Above" }, TrueAnswer = false, FalseAnswer = true ,CreationDate = DateTime.Now };
         }
         private void ClearAnswersAndMultiChoice()
         {
-            Answer1 = "";
-            Answer2 = "";
-            Answer3 = "";
-            Answer4 = "";
+            TrueAnswer = Question.TrueAnswer;
+            FalseAnswer = Question.FalseAnswer;
+            Answer1 = Question.MultiAnswerList[0];
+            Answer2 = Question.MultiAnswerList[1];
+            Answer3 = Question.MultiAnswerList[2];
+            Answer4 = Question.MultiAnswerList[3];
+            MultichoiceAnswersPositions = Question.MultiAnswerPositions;
+            
+        }
 
-            for (int i = 0; i < MultichoiceAnswersPositions.Count; i++)
+        #region Validation
+        string IDataErrorInfo.Error
+        {
+            get
             {
-                MultichoiceAnswersPositions[i] = false;
+                return null;
             }
         }
+        readonly string[] ValidateProperties =
+        {
+            "QuestionName",
+            "MainQuestion",
+            "TrueAnswer",
+            "FalseAnswer"
+        };
+
+        string IDataErrorInfo.this[string propertyName]
+        {
+            get
+            {
+                return GetPropertyValidationErrror(propertyName);
+            }
+        }
+
+        public bool IsValid()
+        {
+            foreach (string property in ValidateProperties)
+            {
+                if (GetPropertyValidationErrror(property) != null)
+                    return false;
+            }
+
+            return true;
+        }
+
+        string GetPropertyValidationErrror(string propertyName)
+        {
+            string error = null;
+
+            switch (propertyName)
+            {
+                case "QuestionName":
+                    error = ValidateQuestionName();
+                    break;
+                case "MainQuestion":
+                    error = ValidateMainQuestion();
+                    break;
+                case "TrueAnswer":
+                    error = ValidateTrueFalse();
+                    break;
+                case "FalseAnswer":
+                    error = ValidateTrueFalse();
+                    break;
+            }
+            return error;
+        }
+
+        private string ValidateTrueFalse()
+        {
+            if(TrueAnswer == false && _fasleAnswer == false)
+            {
+                return "True or False Must be selected";
+            }
+            return null;
+        }
+
+        private string ValidateQuestionName()
+        {
+            if (string.IsNullOrWhiteSpace(QuestionName))
+            {
+                return "QuestionName Cannot be Blank";
+            }
+            return null;
+        }
+        private string ValidateMainQuestion()
+        {
+            if (string.IsNullOrWhiteSpace(MainQuestion))
+            {
+                return "Main Question Cannot be Blank";
+            }
+            return null;
+        }
+        public DelegateCommand NewQuestionCommand { get; set; }
+        public void NewQuestion()
+        {
+            SetDefaultQuestion();
+            _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
+        }
+        #endregion
 
         #region DEBUG
         public DelegateCommand TestBox_TextChanged { get; set; }

@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace EpicQuizGen.Models
 {
-    public class Question : BindableBase, IDataErrorInfo
+    public class Question : BindableBase
     {
         private string _questionName;
         public string QuestionName
@@ -49,7 +49,7 @@ namespace EpicQuizGen.Models
         public bool TrueAnswer
         {
             get { return _trueAnswer; }
-            set { SetProperty(ref _trueAnswer, value); }
+            set { SetProperty(ref _trueAnswer, value);}
         }
         private bool _falseAnswer;
         public bool FalseAnswer
@@ -64,59 +64,6 @@ namespace EpicQuizGen.Models
             set { SetProperty(ref _multiAnswerPositions, value); }
         }
 
-        #region Validation
-        string IDataErrorInfo.Error
-        {
-            get
-            {
-                return null;
-            }
-        }
-        readonly string[] ValidateProperties =
-        {
-            "QuestionName"
-        };
-
-        string IDataErrorInfo.this[string propertyName]
-        {
-            get
-            {
-                return GetPropertyValidationErrror(propertyName);
-            }
-        }
-
-        public bool IsValid()
-        {
-            foreach (string property in ValidateProperties)
-            {
-                if (GetPropertyValidationErrror(property) != null)
-                    return false;
-            }
-
-            return true;
-        }
-
-        string GetPropertyValidationErrror(string propertyName)
-        {
-            string error = null;
-
-            switch (propertyName)
-            {
-                case "QuestionName":
-                    error = ValidateQuestionName();
-                    break;
-            }
-            return error;
-        }
-
-        private string ValidateQuestionName()
-        {
-            if (string.IsNullOrWhiteSpace(QuestionName))
-            {
-                return "QuestionName Cannot be Blank";
-            }
-            return null;
-        }
-        #endregion
+       
     }
 }
