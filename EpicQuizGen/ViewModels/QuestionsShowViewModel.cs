@@ -30,29 +30,23 @@ namespace EpicQuizGen.ViewModels
         public Question Question
         {
             get { return _question; }
-            set { SetProperty(ref _question, value); }
+            set { SetProperty(ref _question, value); SendEditQuestion(); }
         }
         private readonly IEventAggregator _eventAggregator;
         public QuestionsShowViewModel()
         {
-
+            SetDefaultQuestion();
         }
         public QuestionsShowViewModel(IEventAggregator eventAggregator) : this()
         {
             _eventAggregator = eventAggregator;
 
-            // Check for null Question
-            if (Question == null)
-            {
-                SetDefaultQuestion();
-            }
-
             QuestionView = new QuestionView();
 
             // Command setup
            
-            EditQuestionCommand = new DelegateCommand(EditQuestion);
-            NewQuestionCommand = new DelegateCommand(NewQuestion);
+           
+            
             DeleteQuestionCommand = new DelegateCommand(DeleteQuestion);
             QuestionShowLoadCommand = new DelegateCommand(LoadQuestionShow);
 
@@ -83,12 +77,6 @@ namespace EpicQuizGen.ViewModels
             SendQuestion();
         }
 
-        public DelegateCommand EditQuestionCommand { get; set; }
-        public void EditQuestion()
-        {
-            _eventAggregator.GetEvent<SendQuestionEdit>().Publish(Question);
-        }
-
         public DelegateCommand DeleteQuestionCommand { get; set; }
         public void DeleteQuestion()
         {
@@ -99,13 +87,6 @@ namespace EpicQuizGen.ViewModels
                 Questions = new ObservableCollection<Question>(QuestionIOManager.Instance.LoadQuestionsFromFile());
             SetDefaultQuestion();
             // }
-        }
-
-        public DelegateCommand NewQuestionCommand { get; set; }
-        public void NewQuestion()
-        {
-            SetDefaultQuestion();
-            _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
         }
 
         public void UpdateList(object obj)
@@ -188,6 +169,15 @@ namespace EpicQuizGen.ViewModels
         private void SetDefaultQuestion()
         {
             Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, true }, MultiAnswerList = new List<string>() { "", "", "", "All of the Above" }, TrueAnswer = true, FalseAnswer = false ,CreationDate = DateTime.Now };
+        }
+
+        private void SendEditQuestion()
+        {
+            //send Question
+            if (!string.IsNullOrWhiteSpace(Question.QuestionName))
+            {
+                _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Publish(Question);
+            }
         }
     }
 }

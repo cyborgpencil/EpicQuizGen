@@ -29,6 +29,15 @@ namespace EpicQuizGen.ViewModels
             set { SetProperty(ref _bindQuestionName, value); }
         }
 
+        // tracks if a question can be edited
+        public bool _canEditQuestion;
+        public bool CanEditQuestion
+        {
+            get { return _canEditQuestion; }
+            set { SetProperty(ref _canEditQuestion, value); }
+        }
+        
+
         /// <summary>
         /// Properties for GUI
         /// </summary>
@@ -157,6 +166,8 @@ namespace EpicQuizGen.ViewModels
         public QuestionViewModel()
         {
             SaveQuestionCommand = new DelegateCommand(SaveQuestion, CanExecuteSave).ObservesProperty(() => MainQuestion).ObservesProperty(()=>QuestionName);
+            NewQuestionCommand = new DelegateCommand(NewQuestion);
+           EditQuestionCommand = new DelegateCommand(EditQuestion, CanExecuteEdit).ObservesProperty(()=>CanEditQuestion);
         }
         public QuestionViewModel(IRegionManager regionManager, IEventAggregator eventAggregator) : this()
         {
@@ -178,10 +189,10 @@ namespace EpicQuizGen.ViewModels
             ClearAnswersAndMultiChoice();
 
             // Build Question Model from parent
-            _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Subscribe(SetQuestion);
+            _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Subscribe(SetEditQuestion);
             //_eventAggregator.GetEvent<SendQuestionFromEditEvent>().Publish(Question);
             _eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion);
-            _eventAggregator.GetEvent<SendQuestionEdit>().Subscribe(SetEditQuestion);
+           // _eventAggregator.GetEvent<SendQuestionEdit>().Subscribe(SetEditQuestion);
 
             //DEBUG
             TestBox_TextChanged = new DelegateCommand(Test);
@@ -212,7 +223,8 @@ namespace EpicQuizGen.ViewModels
 
         private void QuestionViewLoad(string uri)
         {
-            _eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion);
+            CanEditQuestion = false;
+            //_eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion);
             Navigate(uri);
         }
 
@@ -236,6 +248,27 @@ namespace EpicQuizGen.ViewModels
             return !string.IsNullOrWhiteSpace(QuestionName) && !string.IsNullOrWhiteSpace(MainQuestion);
         }
 
+        public DelegateCommand NewQuestionCommand { get; set; }
+        public void NewQuestion()
+        {
+            SetDefaultQuestion();
+            // _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
+        }
+
+        public DelegateCommand EditQuestionCommand { get; set; }
+        public void EditQuestion()
+        {
+            // Set Question
+        }
+        public bool CanExecuteEdit()
+        {
+            if (CanEditQuestion)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
         #endregion
 
         #region Events
@@ -327,6 +360,7 @@ namespace EpicQuizGen.ViewModels
                 ClearAnswersAndMultiChoice();
             }
 
+            
         }
         public void SetEditQuestion(Question obj)
         {
@@ -349,15 +383,24 @@ namespace EpicQuizGen.ViewModels
                 Answer3 = Question.MultiAnswerList[2];
                 Answer4 = Question.MultiAnswerList[3];
             }
+
+            CanEditQuestion = true;
         }
         #endregion
 
         private void SetDefaultQuestion()
         {
             Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, true, }, MultiAnswerList = new List<string>() { "", "", "", "All of the Above" }, TrueAnswer = false, FalseAnswer = true ,CreationDate = DateTime.Now };
+
+            // reset GUI each time we get a new Question
+            ClearAnswersAndMultiChoice();
         }
+
+        // clears all the Properties out on the GUI
         private void ClearAnswersAndMultiChoice()
         {
+            QuestionName = "";
+            MainQuestion = "";
             TrueAnswer = Question.TrueAnswer;
             FalseAnswer = Question.FalseAnswer;
             Answer1 = Question.MultiAnswerList[0];
@@ -367,6 +410,7 @@ namespace EpicQuizGen.ViewModels
             MultichoiceAnswersPositions = Question.MultiAnswerPositions;
             
         }
+        
 
         #region Validation
         string IDataErrorInfo.Error
@@ -449,12 +493,6 @@ namespace EpicQuizGen.ViewModels
                 return "Main Question Cannot be Blank";
             }
             return null;
-        }
-        public DelegateCommand NewQuestionCommand { get; set; }
-        public void NewQuestion()
-        {
-            SetDefaultQuestion();
-            _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
         }
         #endregion
 
