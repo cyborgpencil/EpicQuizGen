@@ -36,6 +36,7 @@ namespace EpicQuizGen.ViewModels
         public QuestionsShowViewModel()
         {
             SetDefaultQuestion();
+            
         }
         public QuestionsShowViewModel(IEventAggregator eventAggregator) : this()
         {
@@ -44,10 +45,6 @@ namespace EpicQuizGen.ViewModels
             QuestionView = new QuestionView();
 
             // Command setup
-           
-           
-            
-            DeleteQuestionCommand = new DelegateCommand(DeleteQuestion);
             QuestionShowLoadCommand = new DelegateCommand(LoadQuestionShow);
 
             Questions = new ObservableCollection<Question>(QuestionIOManager.Instance.LoadQuestionsFromFile());
@@ -67,6 +64,7 @@ namespace EpicQuizGen.ViewModels
             _eventAggregator.GetEvent<SendMultiAnswer3Event>().Subscribe(SetMultiAnswer3);
             _eventAggregator.GetEvent<SendMultiAnswer4Event>().Subscribe(SetMultiAnswer4);
             _eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(UpdateList);
+            _eventAggregator.GetEvent<SendDeleteToUpdateList>().Subscribe(DeleteUpdateList);
         }
 
         #region Commands
@@ -77,23 +75,16 @@ namespace EpicQuizGen.ViewModels
             SendQuestion();
         }
 
-        public DelegateCommand DeleteQuestionCommand { get; set; }
-        public void DeleteQuestion()
-        {
-            //if(!string.IsNullOrWhiteSpace(Question.QuestionName))
-            //{
-                QuestionIOManager.Instance.DeleteQuestionFromFile(Question.QuestionName);
-                
-                Questions = new ObservableCollection<Question>(QuestionIOManager.Instance.LoadQuestionsFromFile());
-            SetDefaultQuestion();
-            // }
-        }
-
         public void UpdateList(object obj)
         {
             Questions = new ObservableCollection<Question>( QuestionIOManager.Instance.LoadQuestionsFromFile());
         }
 
+        public void DeleteUpdateList(bool obj)
+        {
+            if(obj == true)
+             Questions = new ObservableCollection<Question>(QuestionIOManager.Instance.LoadQuestionsFromFile());
+        }
         #endregion
 
         #region Events
@@ -174,10 +165,15 @@ namespace EpicQuizGen.ViewModels
         private void SendEditQuestion()
         {
             //send Question
-            if (!string.IsNullOrWhiteSpace(Question.QuestionName))
+            if (Question != null)
             {
-                _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Publish(Question);
+                if (!string.IsNullOrWhiteSpace(Question.QuestionName))
+                {
+                    _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Publish(Question);
+                }
             }
+            else
+                SetDefaultQuestion();
         }
     }
 }

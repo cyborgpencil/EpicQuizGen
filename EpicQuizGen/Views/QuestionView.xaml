@@ -20,6 +20,15 @@
 
 
     <StackPanel Margin=" 5">
+        <StackPanel Margin="5">
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="New" Margin="2" Command="{Binding Path=NewQuestionCommand}"/>
+                <Button Content="Save" Command="{Binding Path=Parent.DataContext.SaveQuestionCommand, RelativeSource={RelativeSource Self}}" Margin="2"/>
+                <Button Content="Edit" Command="{Binding Path=EditQuestionCommand}" Margin="2"/>
+                <Button Content="Delete" Command="{Binding Path=DeleteQuestionCommand}" Margin="2"/>
+            </StackPanel>
+        </StackPanel>
         <StackPanel Margin="10">
         <TextBlock Text="Question Name:"/>
             <TextBox Text="{Binding Path=QuestionName, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
@@ -50,15 +59,10 @@
                     </ControlTemplate>
                 </Validation.ErrorTemplate>
             </TextBox>
-        </StackPanel>
-        <StackPanel Margin="5">
-            <ContentControl prism:RegionManager.RegionName="AnswerSets" />
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="New" Margin="2" Command="{Binding Path=NewQuestionCommand}"/>
-                <Button Content="Save" Command="{Binding Path=Parent.DataContext.SaveQuestionCommand, RelativeSource={RelativeSource Self}}" Margin="2"/>
-                <Button Content="Edit" Command="{Binding Path=EditQuestionCommand}" Margin="2"/>
-                <Button Content="Delete" Command="{Binding Path=DeleteQuestionCommand}" Margin="2"/>
+            <StackPanel>
+                <ContentControl prism:RegionManager.RegionName="AnswerSets" />
             </StackPanel>
         </StackPanel>
+        
     </StackPanel>
 </UserControl>

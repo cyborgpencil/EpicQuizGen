@@ -36,7 +36,14 @@ namespace EpicQuizGen.ViewModels
             get { return _canEditQuestion; }
             set { SetProperty(ref _canEditQuestion, value); }
         }
-        
+
+        // track if question can be deleted
+        public bool _canDeleteQuestion;
+        public bool CanDeleteQuestion
+        {
+            get { return _canDeleteQuestion; }
+            set { SetProperty(ref _canDeleteQuestion, value); }
+        }
 
         /// <summary>
         /// Properties for GUI
@@ -111,7 +118,7 @@ namespace EpicQuizGen.ViewModels
         public List<bool> MultichoiceAnswersPositions
         {
             get { return _multichoiceAnswersPositions; }
-            set { SetProperty(ref _multichoiceAnswersPositions, value); Debug.Write("Test"); }
+            set { SetProperty(ref _multichoiceAnswersPositions, value);}
         }
         private string _answer1;
         public string Answer1
@@ -168,6 +175,7 @@ namespace EpicQuizGen.ViewModels
             SaveQuestionCommand = new DelegateCommand(SaveQuestion, CanExecuteSave).ObservesProperty(() => MainQuestion).ObservesProperty(()=>QuestionName);
             NewQuestionCommand = new DelegateCommand(NewQuestion);
            EditQuestionCommand = new DelegateCommand(EditQuestion, CanExecuteEdit).ObservesProperty(()=>CanEditQuestion);
+            DeleteQuestionCommand = new DelegateCommand(DeleteQuestion, CanExecuteDelete).ObservesProperty(()=>CanEditQuestion);
         }
         public QuestionViewModel(IRegionManager regionManager, IEventAggregator eventAggregator) : this()
         {
@@ -253,6 +261,7 @@ namespace EpicQuizGen.ViewModels
         {
             SetDefaultQuestion();
             // _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
+            CanEditQuestion = false;
         }
 
         public DelegateCommand EditQuestionCommand { get; set; }
@@ -262,6 +271,30 @@ namespace EpicQuizGen.ViewModels
         }
         public bool CanExecuteEdit()
         {
+            if (CanEditQuestion)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+        public DelegateCommand DeleteQuestionCommand { get; set; }
+        public void DeleteQuestion()
+        {
+            if(!string.IsNullOrWhiteSpace(Question.QuestionName))
+            {
+            QuestionIOManager.Instance.DeleteQuestionFromFile(Question.QuestionName);
+
+            
+            SetDefaultQuestion();
+
+                // Send Delete Message to QuestionShowVM
+                _eventAggregator.GetEvent<SendDeleteToUpdateList>().Publish(true);
+            }
+        }
+        public bool CanExecuteDelete()
+        {
+            // delete base on if a question can be edited
             if (CanEditQuestion)
             {
                 return true;
