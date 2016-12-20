@@ -96,6 +96,7 @@
     <Compile Include="Models\Quiz.cs" />
     <Compile Include="Models\TrueFalseQuizTake.cs" />
     <Compile Include="Models\ViewTypes.cs" />
+    <Compile Include="Utils\CategoriesIOManager.cs" />
     <Compile Include="Utils\DirectoryManager.cs" />
     <Compile Include="Utils\QuestionIOManager.cs" />
     <Compile Include="Utils\QuizIOManager.cs" />

@@ -1,8 +1,5 @@
-﻿using System;
+﻿using Prism.Mvvm;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EpicQuizGen.Models
 {
@@ -11,5 +8,10 @@ namespace EpicQuizGen.Models
         OPHTHALMIC,
         INTFORMATION_TECHNOLOGY,
         MISC
+    }
+    public class QuestionCategories : BindableBase
+    {
+        public List<string> CurrentCategoryList;
+        
     }
 }
