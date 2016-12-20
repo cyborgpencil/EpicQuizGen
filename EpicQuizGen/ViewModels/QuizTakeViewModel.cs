@@ -274,12 +274,12 @@ namespace EpicQuizGen.ViewModels
         #region Events
         internal void QuizTimerEvent(object sender, EventArgs e)
         {
-            //Timer = QuizTimer.SendCurrentSecound();
-            //TimeLeftString = "";
-            //if (Timer == 0)
-            //{
-            //    _regionManager.RequestNavigate("ContentRegion", "QuizzesShowView");
-            //}
+            Timer = QuizTimer.SendCurrentSecound();
+            TimeLeftString = "";
+            if (Timer == 0)
+            {
+               CompleteQuiz();
+            }
         }
         #endregion
 

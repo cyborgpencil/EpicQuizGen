@@ -27,7 +27,7 @@
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="2" >
             <Button Content="Edit a Question" Margin="2" Command="{Binding Path=NavigateCommand}" CommandParameter="QuestionsShowView"/>
             <Button Content="Edit a Quiz" Margin="2" Command="{Binding Path=NavigateCommand}" CommandParameter="QuizzesShowView"/>
-
+            <Button Content="Edit Question Categories" Margin="2" Command="{Binding Path=NavigateCommand}" CommandParameter="QuestionCategoryView"/>
         </StackPanel>
 
         <ContentControl prism:RegionManager.RegionName="ContentRegion" Width="1020" Height="640" Margin="2" DockPanel.Dock="Top"/>
