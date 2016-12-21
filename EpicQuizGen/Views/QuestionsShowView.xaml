@@ -8,7 +8,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="640" d:DesignWidth="1000">
+             d:DesignHeight="640" d:DesignWidth="1000" Margin="10">
     
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -16,7 +16,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     
-    <StackPanel>
+    <StackPanel Margin="10">
         <TextBlock Text="List of Questrions"></TextBlock>
         <DataGrid ItemsSource="{Binding Path=Questions}"
                   IsSynchronizedWithCurrentItem="False" Margin="5" Width="1000"  Height="150" SelectedItem="{Binding Path=Question}" AutoGenerateColumns="True"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" />

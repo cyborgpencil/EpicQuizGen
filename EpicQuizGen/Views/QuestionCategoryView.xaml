@@ -4,12 +4,28 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EpicQuizGen.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             d:DataContext="{d:DesignData IsDesignTimeCreatable=True }">
-    <StackPanel>
-        <ListBox ItemsSource="{Binding Path=CurrentList}"></ListBox>
+             d:DataContext="{d:DesignData IsDesignTimeCreatable=True}" Margin="10">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Path=QuestionCategoryLoadCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
+    <StackPanel Margin="10">
+        <ListBox ItemsSource="{Binding Path=CurrentList}" SelectedItem="{Binding Path=CurrentCategory}"></ListBox>
+        <TextBlock Text="Category Name:"/>
+        <TextBox Text="{Binding Path=CurrentCategoryName, UpdateSourceTrigger=PropertyChanged}"/>
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <Button Content="New" Margin="10" Width="50" Command="{Binding Path=NewCategoryCommand}"/>
+            <Button Content="Save" Margin="10" Width="50" Command="{Binding Path=SaveCategoryCommand}"/>
+            <Button Content="Edit" Margin="10" Width="50" Command="{Binding Path=EditCategoryCommand}"/>
+            <Button Content="Delete" Margin="10" Width="50" Command="{Binding Path=DeleteCategoryCommand}"/>
+        </StackPanel>
     </StackPanel>
 </UserControl>

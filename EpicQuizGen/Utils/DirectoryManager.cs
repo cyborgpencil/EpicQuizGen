@@ -61,7 +61,7 @@ namespace EpicQuizGen.Utils
         // Always check if folder is availible, if not create
         public void CheckDirectories()
         {
-            foreach (var dir in DirectoryList)
+            foreach (string dir in DirectoryList)
             {
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);

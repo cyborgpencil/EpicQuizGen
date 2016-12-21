@@ -11,7 +11,6 @@ namespace EpicQuizGen.Models
     }
     public class QuestionCategories : BindableBase
     {
-        public List<string> CurrentCategoryList;
-        
+        public string CategoryName { get; set; }
     }
 }

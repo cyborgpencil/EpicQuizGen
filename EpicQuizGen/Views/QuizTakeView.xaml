@@ -9,7 +9,7 @@
              xmlns:vm="clr-namespace:EpicQuizGen.ViewModels"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="640" d:DesignWidth="1000" Background="Gray">
+             d:DesignHeight="640" d:DesignWidth="1000" Background="Gray" Margin="10">
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type vm:TrueFalseQuizViewModel}">
             <local:TrueFalseQuizView/>
@@ -25,7 +25,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <StackPanel MaxWidth="1000">
+    <StackPanel MaxWidth="1000" Margin="10">
         
         <TextBlock Text="{Binding Path=TimeLeftString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="2" HorizontalAlignment="Right" Background="White" FontSize="30" TextAlignment="Left"/>
         <StackPanel Orientation="Horizontal" Background="White" Margin="2">
