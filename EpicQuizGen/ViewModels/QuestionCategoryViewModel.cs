@@ -3,6 +3,7 @@ using EpicQuizGen.Utils;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -15,24 +16,31 @@ namespace EpicQuizGen.ViewModels
     public class QuestionCategoryViewModel :BindableBase
     {
         #region Properties
-        private ObservableCollection<string> _currentList;
-        public ObservableCollection<string> CurrentList
+        private ObservableCollection<QuestionCategories> _currentList;
+        public ObservableCollection<QuestionCategories> CurrentList
         {
             get { return _currentList; }
             set { SetProperty(ref _currentList, value); }
         }
-        public QuestionCategories CurrentCategory { get; set; }
+        private QuestionCategories _currentCategory;
+        public QuestionCategories CurrentCategory
+        {
+            get { return _currentCategory; }
+            set { SetProperty(ref _currentCategory, value);
+                if(CurrentCategory !=null)
+                CurrentCategoryName = CurrentCategory.CategoryName; }
+        }
 
         private string _currentCategoryName;
         public string CurrentCategoryName
         {
             get { return _currentCategoryName; }
-            set { SetProperty(ref _currentCategoryName, value); }
+            set { SetProperty(ref _currentCategoryName, value); CurrentCategory.CategoryName = CurrentCategoryName.ToUpper(); }
         }
         #endregion
         public QuestionCategoryViewModel()
         {
-            CurrentList = new ObservableCollection<string>();
+            CurrentList = new ObservableCollection<QuestionCategories>();
             QuestionCategoryLoadCommand = new DelegateCommand(QuestionCategoryLoad);
 
             NewCategoryCommand = new DelegateCommand(NewCategory);
@@ -40,17 +48,20 @@ namespace EpicQuizGen.ViewModels
             EditCategoryCommand = new DelegateCommand(EditCategory);
             DeleteCategoryCommand = new DelegateCommand(DeleteCategory);
 
+            SetCategoryModel();
+
         }
 
         #region Commands
         public DelegateCommand QuestionCategoryLoadCommand { get; set; }
         public void QuestionCategoryLoad()
         {
-            CurrentList = new ObservableCollection<string>(CategoriesIOManager.Instance.LoadCategories());
+            SetCategoryModel();
+            CurrentList = new ObservableCollection<QuestionCategories>(CategoriesIOManager.Instance.LoadCategoriesFromFile());
 
             if (CurrentList.Count == 0)
             {
-                CurrentList.Add("No Categories, Please add a Category");
+                CurrentList.Add(new QuestionCategories { CategoryName = "No Categories, Please add a Category" });
                 Debug.WriteLine("Testing for Current Gategories");
             }
         }
@@ -59,13 +70,16 @@ namespace EpicQuizGen.ViewModels
         public void NewCategory()
         {
             // Clears our Category
-            CurrentCategory = new QuestionCategories();
-            CurrentCategory.CategoryName = "";
+            SetCategoryModel();
         }
         public DelegateCommand SaveCategoryCommand { get; set; }
         public void SaveCategory()
         {
-            //
+            CategoriesIOManager.Instance.CategoryModels = CurrentCategory;
+            CategoriesIOManager.Instance.SaveCategoryModel();
+            SetCategoryModel();
+            CurrentCategoryName = "";
+            QuestionCategoryLoad();
         }
         public bool CanSaveCategegory()
         {
@@ -78,12 +92,23 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand EditCategoryCommand { get; set; }
         public void EditCategory()
         {
+            if(CurrentCategory != null && string.IsNullOrWhiteSpace(CurrentCategoryName))
+            {
 
+            }
         }
         public DelegateCommand DeleteCategoryCommand { get; set; }
         public void DeleteCategory()
         {
 
+        }
+        #endregion
+
+        #region Methods
+        private void SetCategoryModel()
+        {
+            CurrentCategory = new QuestionCategories();
+            CurrentCategory.CategoryName = "";
         }
         #endregion
     }
