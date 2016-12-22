@@ -18,7 +18,7 @@
     </i:Interaction.Triggers>
     
     <StackPanel Margin="10">
-        <DataGrid ColumnWidth="400" ItemsSource="{Binding Path=CurrentList, Mode=TwoWay}" SelectedItem="{Binding Path=CurrentCategory, Mode=TwoWay}"></DataGrid>
+        <DataGrid ColumnWidth="400" IsReadOnly="True" ItemsSource="{Binding Path=CurrentList, Mode=TwoWay}" SelectedItem="{Binding Path=CurrentCategory, Mode=TwoWay}"></DataGrid>
         <TextBlock Text="Category Name:"/>
         <TextBox Text="{Binding Path=CurrentCategoryName, UpdateSourceTrigger=PropertyChanged}"/>
         <StackPanel Orientation="Horizontal" Margin="10">

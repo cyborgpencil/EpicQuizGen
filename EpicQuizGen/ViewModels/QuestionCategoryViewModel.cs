@@ -27,7 +27,7 @@ namespace EpicQuizGen.ViewModels
         {
             get { return _currentCategory; }
             set { SetProperty(ref _currentCategory, value);
-                if(CurrentCategory !=null)
+                if(CurrentCategory !=null && CurrentCategoryName != null)
                 CurrentCategoryName = CurrentCategory.CategoryName; }
         }
 
@@ -35,7 +35,10 @@ namespace EpicQuizGen.ViewModels
         public string CurrentCategoryName
         {
             get { return _currentCategoryName; }
-            set { SetProperty(ref _currentCategoryName, value); CurrentCategory.CategoryName = CurrentCategoryName.ToUpper(); }
+            set { SetProperty(ref _currentCategoryName, value);
+                if (CurrentCategory != null && CurrentCategoryName != null)
+                    CurrentCategory.CategoryName = CurrentCategoryName.ToUpper();
+            }
         }
         #endregion
         public QuestionCategoryViewModel()
@@ -49,7 +52,6 @@ namespace EpicQuizGen.ViewModels
             DeleteCategoryCommand = new DelegateCommand(DeleteCategory);
 
             SetCategoryModel();
-
         }
 
         #region Commands
