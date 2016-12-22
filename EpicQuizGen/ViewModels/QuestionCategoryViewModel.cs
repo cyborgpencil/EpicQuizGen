@@ -27,7 +27,6 @@ namespace EpicQuizGen.ViewModels
         {
             get { return _currentCategory; }
             set { SetProperty(ref _currentCategory, value);
-                if(CurrentCategory !=null && CurrentCategoryName != null)
                 CurrentCategoryName = CurrentCategory.CategoryName; }
         }
 
@@ -35,10 +34,7 @@ namespace EpicQuizGen.ViewModels
         public string CurrentCategoryName
         {
             get { return _currentCategoryName; }
-            set { SetProperty(ref _currentCategoryName, value);
-                if (CurrentCategory != null && CurrentCategoryName != null)
-                    CurrentCategory.CategoryName = CurrentCategoryName.ToUpper();
-            }
+            set { SetProperty(ref _currentCategoryName, value);}
         }
         #endregion
         public QuestionCategoryViewModel()
@@ -49,7 +45,7 @@ namespace EpicQuizGen.ViewModels
             NewCategoryCommand = new DelegateCommand(NewCategory);
             SaveCategoryCommand = new DelegateCommand(SaveCategory, CanSaveCategegory).ObservesProperty(()=> CurrentCategoryName);
             EditCategoryCommand = new DelegateCommand(EditCategory);
-            DeleteCategoryCommand = new DelegateCommand(DeleteCategory);
+            DeleteCategoryCommand = new DelegateCommand(DeleteCategory, CanExecuteDelete).ObservesProperty(()=> CurrentCategory).ObservesProperty(()=>CurrentCategory.CategoryName);
 
             SetCategoryModel();
         }
@@ -77,10 +73,10 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand SaveCategoryCommand { get; set; }
         public void SaveCategory()
         {
+            CurrentCategory.CategoryName = CurrentCategoryName;
             CategoriesIOManager.Instance.CategoryModels = CurrentCategory;
             CategoriesIOManager.Instance.SaveCategoryModel();
             SetCategoryModel();
-            CurrentCategoryName = "";
             QuestionCategoryLoad();
         }
         public bool CanSaveCategegory()
@@ -102,7 +98,19 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand DeleteCategoryCommand { get; set; }
         public void DeleteCategory()
         {
+            CategoriesIOManager.Instance.DeleteCategoriesFromFile(CurrentCategory.CategoryName);
+            SetCategoryModel();
+            QuestionCategoryLoad();
+        }
 
+        public bool CanExecuteDelete()
+        {
+            if (CurrentCategory != null && !string.IsNullOrWhiteSpace(CurrentCategory.CategoryName))
+            {
+                return true;
+            }
+            else
+                return false;
         }
         #endregion
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -79,6 +80,18 @@ namespace EpicQuizGen.Utils
                 StreamWriter.Close();
                 CategoryModels = null;
             }
+        }
+        public void DeleteCategoriesFromFile(string categoryName)
+        {
+            // fresh copy of categories
+            CategoriesFromFile = LoadCategoriesFromFile();
+
+            var CategoryToDelete = from category in LoadCategoriesFromFile()
+                                   where category.CategoryName.Contains(categoryName)
+                                   select categoryName;
+
+            File.Delete($"{DirectoryManager.Instance.CategoryDirectoryPath}\\{CategoryToDelete.FirstOrDefault()}.xml");
+
         }
         void serializer_UnknownNode
             (object sender, XmlNodeEventArgs e)
