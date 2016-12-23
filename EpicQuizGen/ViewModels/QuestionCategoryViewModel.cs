@@ -27,6 +27,7 @@ namespace EpicQuizGen.ViewModels
         {
             get { return _currentCategory; }
             set { SetProperty(ref _currentCategory, value);
+                if(CurrentCategory != null)
                 CurrentCategoryName = CurrentCategory.CategoryName; }
         }
 
@@ -73,7 +74,7 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand SaveCategoryCommand { get; set; }
         public void SaveCategory()
         {
-            CurrentCategory.CategoryName = CurrentCategoryName;
+            CurrentCategory.CategoryName = CurrentCategoryName.ToUpper();
             CategoriesIOManager.Instance.CategoryModels = CurrentCategory;
             CategoriesIOManager.Instance.SaveCategoryModel();
             SetCategoryModel();
@@ -99,7 +100,7 @@ namespace EpicQuizGen.ViewModels
         public void DeleteCategory()
         {
             CategoriesIOManager.Instance.DeleteCategoriesFromFile(CurrentCategory.CategoryName);
-            SetCategoryModel();
+            //SetCategoryModel();
             QuestionCategoryLoad();
         }
 
