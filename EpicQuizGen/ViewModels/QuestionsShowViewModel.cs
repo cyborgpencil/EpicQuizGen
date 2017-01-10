@@ -52,7 +52,7 @@ namespace EpicQuizGen.ViewModels
             //Events Setup
             
             _eventAggregator.GetEvent<SendQuestionNameEvent>().Subscribe(SetQuestionName);
-            _eventAggregator.GetEvent<SendQuestionTypesEvent>().Subscribe(SetQuestionType);
+            
             _eventAggregator.GetEvent<SendQuestionCategoryEvent>().Subscribe(SetQuestionCategory);
             _eventAggregator.GetEvent<SendMainQuestionEvent>().Subscribe(SetMainQuestion);
             _eventAggregator.GetEvent<SendTrueEvent>().Subscribe(SetTrue);
@@ -97,14 +97,10 @@ namespace EpicQuizGen.ViewModels
         {
             Question.MainQuestion = obj;
         }
-        public void SetQuestionType(QuestionTypes obj)
-        {
-            Question.QuestionType = obj.ToString();
-        }
 
         public void SetQuestionCategory(QuestionCategory obj)
         {
-            Question.QuestionCategory = obj.ToString();
+            Question.QuestionCategory.CategoryName = obj.ToString();
         }
 
         public void SetTrue(bool obj)
@@ -159,7 +155,7 @@ namespace EpicQuizGen.ViewModels
 
         private void SetDefaultQuestion()
         {
-            Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, true }, MultiAnswerList = new List<string>() { "", "", "", "All of the Above" }, TrueAnswer = true, FalseAnswer = false ,CreationDate = DateTime.Now };
+            //Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, true }, MultiAnswerList = new List<string>() { "", "", "", "All of the Above" }, TrueAnswer = true, FalseAnswer = false ,CreationDate = DateTime.Now };
         }
 
         private void SendEditQuestion()

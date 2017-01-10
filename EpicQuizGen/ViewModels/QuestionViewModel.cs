@@ -69,8 +69,8 @@ namespace EpicQuizGen.ViewModels
         public string SelectedCategory
         {
             get { return _selectedCategory; }
-            set { SetProperty(ref _selectedCategory, value); Question.QuestionCategory = value;
-                SendCategory();
+            set { SetProperty(ref _selectedCategory, value); Question.QuestionCategory.CategoryName = value;
+                //SendCategory();
             }
         }
 
@@ -150,7 +150,7 @@ namespace EpicQuizGen.ViewModels
         public Question Question
         {
             get { return _question; }
-            set { SetProperty(ref _question, value); _eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion); }
+            set { SetProperty(ref _question, value); /*_eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion); */}
         }
 
         private string _selectedType;
@@ -172,10 +172,14 @@ namespace EpicQuizGen.ViewModels
 
         public QuestionViewModel()
         {
+            // clear question
+            SetDefaultQuestion();
+
             SaveQuestionCommand = new DelegateCommand(SaveQuestion, CanExecuteSave).ObservesProperty(() => MainQuestion).ObservesProperty(()=>QuestionName);
             NewQuestionCommand = new DelegateCommand(NewQuestion);
-           EditQuestionCommand = new DelegateCommand(EditQuestion, CanExecuteEdit).ObservesProperty(()=>CanEditQuestion);
+            EditQuestionCommand = new DelegateCommand(EditQuestion, CanExecuteEdit).ObservesProperty(()=>CanEditQuestion);
             DeleteQuestionCommand = new DelegateCommand(DeleteQuestion, CanExecuteDelete).ObservesProperty(()=>CanEditQuestion);
+            CategoryList = new List<string>();
         }
         public QuestionViewModel(IRegionManager regionManager, IEventAggregator eventAggregator) : this()
         {
@@ -184,11 +188,6 @@ namespace EpicQuizGen.ViewModels
             NavigateCommand = new DelegateCommand<string>(Navigate);
             QuestionViewLoadCommand = new DelegateCommand<string>(QuestionViewLoad);
 
-
-            SetDefaultQuestion();
-
-
-            CategoryList = new List<string>(Enum.GetNames(typeof(QuestionCategory)));
             QuestionTypeList = new ObservableCollection<string>(Enum.GetNames(typeof(QuestionTypes)));
 
 
@@ -199,7 +198,7 @@ namespace EpicQuizGen.ViewModels
             // Build Question Model from parent
             _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Subscribe(SetEditQuestion);
             //_eventAggregator.GetEvent<SendQuestionFromEditEvent>().Publish(Question);
-            _eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion);
+            //_eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion);
            // _eventAggregator.GetEvent<SendQuestionEdit>().Subscribe(SetEditQuestion);
 
             //DEBUG
@@ -231,8 +230,28 @@ namespace EpicQuizGen.ViewModels
 
         private void QuestionViewLoad(string uri)
         {
+            // clear question
+            SetDefaultQuestion();
+
             CanEditQuestion = false;
             //_eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion);
+
+            // load categories
+            if (CategoriesIOManager.Instance.GetCategoriesFromFile())
+            {
+                CategoryList = new List<string>();
+                foreach (var catName in CategoriesIOManager.Instance.LoadCategoriesFromFile())
+                {
+                    CategoryList.Add(catName.CategoryName);
+                }
+            }
+            else
+            {
+                CategoryList = new List<string>();
+                CategoryList.Add("Empty");
+                Debug.WriteLine(CategoryList);
+            }
+
             Navigate(uri);
         }
 
@@ -317,7 +336,7 @@ namespace EpicQuizGen.ViewModels
         }
         public void SendCategory()
         {
-            _eventAggregator.GetEvent<SendQuestionCategoryEvent>().Publish((QuestionCategory)Enum.Parse(typeof(QuestionCategory), Question.QuestionCategory));
+            _eventAggregator.GetEvent<SendQuestionCategoryEvent>().Publish((QuestionCategory)Enum.Parse(typeof(QuestionCategory), Question.QuestionCategory.CategoryName));
         }
 
         public void SendTrue()
@@ -376,7 +395,7 @@ namespace EpicQuizGen.ViewModels
             Question.MultiAnswerList = obj.MultiAnswerList;
             // Navigate
             SelectedQuestionType = Question.QuestionType;
-            SelectedCategory = Question.QuestionCategory;
+            SelectedCategory = Question.QuestionCategory.CategoryName;
             TrueAnswer = Question.TrueAnswer;
             FalseAnswer = Question.FalseAnswer;
             MainQuestion = Question.MainQuestion;
@@ -404,7 +423,7 @@ namespace EpicQuizGen.ViewModels
             Question.MultiAnswerList = Question.MultiAnswerList;
             // Navigate
             SelectedQuestionType = Question.QuestionType;
-            SelectedCategory = Question.QuestionCategory;
+            SelectedCategory = Question.QuestionCategory.CategoryName;
             TrueAnswer = Question.TrueAnswer;
             FalseAnswer = Question.FalseAnswer;
             if (Question.QuestionType == QuestionTypes.MULTICHOICE4.ToString() && Question.QuestionName != "")
@@ -423,7 +442,7 @@ namespace EpicQuizGen.ViewModels
 
         private void SetDefaultQuestion()
         {
-            Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, true, }, MultiAnswerList = new List<string>() { "", "", "", "All of the Above" }, TrueAnswer = false, FalseAnswer = true ,CreationDate = DateTime.Now };
+            Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = new QuestionCategories(), MultiAnswerPositions = new List<bool>() { false, false, false, true, }, MultiAnswerList = new List<string>() { "", "", "", "All of the Above" }, TrueAnswer = false, FalseAnswer = true ,CreationDate = DateTime.Now };
 
             // reset GUI each time we get a new Question
             ClearAnswersAndMultiChoice();

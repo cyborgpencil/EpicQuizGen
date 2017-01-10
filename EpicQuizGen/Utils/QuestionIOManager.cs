@@ -100,7 +100,7 @@ namespace EpicQuizGen.Utils
                 List<Question> catQuestions = new List<Question>();
                 for (int i = 0; i < questionCount; i++)
                 {
-                    if(QuestionsFromFile[i].QuestionCategory == category)
+                    if(QuestionsFromFile[i].QuestionCategory.CategoryName == category)
                     {
                         catQuestions.Add(QuestionsFromFile[i]);
                     }
