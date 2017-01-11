@@ -56,8 +56,8 @@ namespace EpicQuizGen.ViewModels
             set { SetProperty(ref _questionName, value); Question.QuestionName = value; }
         }
 
-        private List<string> _categoryList;
-        public List<string> CategoryList
+        private ObservableCollection<string> _categoryList;
+        public ObservableCollection<string> CategoryList
         {
             get { return _categoryList; }
             set { SetProperty(ref _categoryList, value);
@@ -179,7 +179,7 @@ namespace EpicQuizGen.ViewModels
             NewQuestionCommand = new DelegateCommand(NewQuestion);
             EditQuestionCommand = new DelegateCommand(EditQuestion, CanExecuteEdit).ObservesProperty(()=>CanEditQuestion);
             DeleteQuestionCommand = new DelegateCommand(DeleteQuestion, CanExecuteDelete).ObservesProperty(()=>CanEditQuestion);
-            CategoryList = new List<string>();
+            CategoryList = new ObservableCollection<string>();
         }
         public QuestionViewModel(IRegionManager regionManager, IEventAggregator eventAggregator) : this()
         {
@@ -239,7 +239,7 @@ namespace EpicQuizGen.ViewModels
             // load categories
             if (CategoriesIOManager.Instance.GetCategoriesFromFile())
             {
-                CategoryList = new List<string>();
+                CategoryList = new ObservableCollection<string>();
                 foreach (var catName in CategoriesIOManager.Instance.LoadCategoriesFromFile())
                 {
                     CategoryList.Add(catName.CategoryName);
@@ -247,7 +247,7 @@ namespace EpicQuizGen.ViewModels
             }
             else
             {
-                CategoryList = new List<string>();
+                CategoryList = new ObservableCollection<string>();
                 CategoryList.Add("Empty");
                 Debug.WriteLine(CategoryList);
             }

@@ -45,7 +45,7 @@
         <TextBlock Text="Question Type:" />
         <ComboBox ItemsSource="{Binding Path=QuestionTypeList}" SelectedItem="{ Binding Path=SelectedQuestionType, Mode=TwoWay}"/>
         <TextBlock Text="Question Category:" />
-        <ComboBox ItemsSource="{Binding Path=CategoryList, Mode=TwoWay}" SelectedIndex="0" SelectedItem="{Binding Path=Question.QuestionCategory.CategoryName, Mode=TwoWay}"/>
+        <ComboBox ItemsSource="{Binding Path=CategoryList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="0" SelectedItem="{Binding Path=Question.QuestionCategory.CategoryName, Mode=TwoWay}"/>
         <StackPanel Margin="10">
             <TextBlock Text="Question" />
             <CheckBox Content="Image?"/>

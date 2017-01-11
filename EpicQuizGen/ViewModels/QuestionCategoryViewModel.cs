@@ -61,7 +61,6 @@ namespace EpicQuizGen.ViewModels
             if (CurrentList.Count == 0)
             {
                 CurrentList.Add(new QuestionCategories { CategoryName = "No Categories, Please add a Category" });
-                Debug.WriteLine("Testing for Current Gategories");
             }
         }
 

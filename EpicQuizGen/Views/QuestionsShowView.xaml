@@ -18,8 +18,17 @@
     
     <StackPanel Margin="10">
         <TextBlock Text="List of Questrions"></TextBlock>
-        <DataGrid ItemsSource="{Binding Path=Questions}"
-                  IsSynchronizedWithCurrentItem="False" Margin="5" Width="1000"  Height="150" SelectedItem="{Binding Path=Question}" AutoGenerateColumns="True"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" />
+        <DataGrid AutoGenerateColumns="False"
+            ItemsSource="{Binding Path=Questions}"
+                  IsSynchronizedWithCurrentItem="False" Margin="5" Width="1000"  Height="150" SelectedItem="{Binding Path=Question}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Question Name" Binding="{Binding Path=QuestionName}" />
+                <DataGridTextColumn Header="Category" Binding="{Binding Path=QuestionCategory.CategoryName}" />
+                <DataGridTextColumn Header="Type" Binding="{Binding Path=QuestionType}" />
+                <DataGridTextColumn Header="Question" Binding="{Binding Path=MainQuestion}" />
+                <DataGridTextColumn Header="Creation Date" Binding="{Binding Path=CreationDate}" />
+            </DataGrid.Columns>
+        </DataGrid>
 
         <ContentControl Content="{Binding Path=QuestionView}"/>
     </StackPanel>
