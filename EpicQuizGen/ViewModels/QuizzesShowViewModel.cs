@@ -188,7 +188,7 @@ namespace EpicQuizGen.ViewModels
                 CurrentQuiz = EditQuiz;
                 QuizName = CurrentQuiz.QuizName;
                 QuestionCount = CurrentQuiz.Questions.Count.ToString();
-                SelectedCategory = CurrentQuiz.QuizCategory;
+                SelectedCategory = EditQuiz.QuizCategory;
                 QuizTime = CurrentQuiz.QuizTime;
             }
         }
@@ -207,6 +207,7 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand TakeQuizCommand { get; set; }
         public void TakeQuiz()
         {
+            QuizIOManager.Instance.Quiz = EditQuiz;
             _eventAggregator.GetEvent<TakeQuizEvent>().Publish(CurrentQuiz);
         }
         #endregion

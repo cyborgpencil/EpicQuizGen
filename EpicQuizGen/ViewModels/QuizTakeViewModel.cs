@@ -167,11 +167,7 @@ namespace EpicQuizGen.ViewModels
         public void QuizTakeLoad()
         {
             // Set Main Quiz
-            if (Quiz == null)
-            {
-                // Set main quiz based on Passed in Quiz
-                Quiz = QuizIOManager.Instance.Quiz;
-            }
+            Quiz = QuizIOManager.Instance.Quiz;
 
             // Clear Question list
             QuestionLists = new ObservableCollection<QuizViewModelbase>();
@@ -197,6 +193,7 @@ namespace EpicQuizGen.ViewModels
             CurrentCorrectAnswers = 0;
 
             CurrentWorkingQuestion = QuestionLists[CurrentQuestionIndex];
+            CurrentMainQuestion = Quiz.Questions[CurrentQuestionIndex].MainQuestion;
         }
 
         public DelegateCommand<string> NavigateCommand { get; set; }
@@ -293,7 +290,15 @@ namespace EpicQuizGen.ViewModels
             IsFinalInfoOpen = true;
 
             // Save Quiz Grade
+            QuizIOManager.Instance.Quiz = Quiz;
+            QuizIOManager.Instance.SaveQuiz();
 
+            //Reset Question Counter
+            CurrentQuestionIndex = 0;
+            CurrentMainQuestion = Quiz.Questions[CurrentQuestionIndex].MainQuestion;
+
+            // End Timer
+            Timer = 0;
         }
         private void BuildWorkingQuestions()
         {
@@ -322,13 +327,11 @@ namespace EpicQuizGen.ViewModels
 
         private void CalculateScore()
         {
-
             for(int i = 0; i < Quiz.Questions.Count;++i)
             {
                 
                 if(QuestionLists[i].GetType() == typeof(TrueFalseQuizViewModel) )
                 {
-                    
                     CheckCorrectTrueFalse(Quiz.Questions[i], QuestionLists[i] as TrueFalseQuizViewModel);
                 }
                 if (QuestionLists[i].GetType() == typeof(MultiChoice4QuizViewModel))
@@ -337,7 +340,6 @@ namespace EpicQuizGen.ViewModels
                 }
             }
 
-            //BEBUG
             Quiz.Grade = (100.0f / Quiz.Questions.Count) * CurrentCorrectAnswers;
         }
         private void CheckCorrectTrueFalse(Question quizQuestion, TrueFalseQuizViewModel question)

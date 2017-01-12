@@ -32,8 +32,8 @@
             <TextBlock Text="{Binding Path=Quiz.QuizName}" Margin="2"/>
             <TextBlock Text="{Binding Path=QuestionCounter}" Margin="2"/>
         </StackPanel>
-        <local:QuizMainQuestionText Height="250" Margin="2" />
-        <ContentControl Content="{Binding Path=CurrentWorkingQuestion}"  Height="250" Background="White" Margin="2"/>
+        <local:QuizMainQuestionText Height="200" Margin="2" />
+        <ContentControl Content="{Binding Path=CurrentWorkingQuestion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Height="250" Background="White" Margin="2"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="Previous" Margin="2" Width="100" Command="{Binding Path=PreviousQuestionCommand}"/>
             <Button Content="Next" Margin="2" Width="100" Command="{Binding Path=NextQuestionCommand}"/>
