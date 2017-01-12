@@ -41,7 +41,11 @@ namespace EpicQuizGen.ViewModels
             set { SetProperty(ref _quizList, value); }
         }
 
-        public List<string> QuestionCategoriesSelect { get; set; }
+        private ObservableCollection<string> _questionCategoriesSelect;
+        public ObservableCollection<string> QuestionCategoriesSelect {
+            get { return _questionCategoriesSelect; }
+            set { SetProperty(ref _questionCategoriesSelect, value); }
+        }
 
         private string _questionCount;
         public string QuestionCount
@@ -71,7 +75,18 @@ namespace EpicQuizGen.ViewModels
         }
         #endregion
         private IEventAggregator _eventAggregator;
-        public QuizzesShowViewModel( IEventAggregator eventAggregator)
+
+        public QuizzesShowViewModel()
+        {
+            // Commands
+            NewQuizCommand = new DelegateCommand(NewQuiz);
+            SaveQuizCommand = new DelegateCommand(SaveQuiz);
+            EditCommand = new DelegateCommand(EditExecute, EditCanExecute).ObservesProperty(() => EditQuiz);
+            DeleteCommand = new DelegateCommand(DeleteQuiz);
+            TakeQuizCommand = new DelegateCommand(TakeQuiz);
+            QuizzesShowLoadCommand = new DelegateCommand(QuizzesShowLoad);
+        }
+        public QuizzesShowViewModel( IEventAggregator eventAggregator):this()
         {
             _eventAggregator = eventAggregator;
             BuildNewQuiz();
@@ -85,7 +100,7 @@ namespace EpicQuizGen.ViewModels
 
             SelectedCategory = QuestionCategory.MISC.ToString();
             // Get list of QuestionCategoriesSelect to a string
-            QuestionCategoriesSelect = new List<string>(Enum.GetNames(typeof(QuestionCategory)));
+            QuestionCategoriesSelect = new ObservableCollection<string>();
 
             // Commands
             NewQuizCommand = new DelegateCommand(NewQuiz);
@@ -118,19 +133,25 @@ namespace EpicQuizGen.ViewModels
             SelectedCategory = QuestionCategory.MISC.ToString();
 
             SelectedCategory = QuestionCategory.MISC.ToString();
-            // Get list of QuestionCategoriesSelect to a string
-            QuestionCategoriesSelect = new List<string>(Enum.GetNames(typeof(QuestionCategory)));
 
-            // Commands
-            NewQuizCommand = new DelegateCommand(NewQuiz);
-            SaveQuizCommand = new DelegateCommand(SaveQuiz);
-            EditCommand = new DelegateCommand(EditExecute, EditCanExecute).ObservesProperty(() => EditQuiz);
-            DeleteCommand = new DelegateCommand(DeleteQuiz);
+            // Get list of QuestionCategoriesSelect to a string
+            if (CategoriesIOManager.Instance.GetCategoriesFromFile())
+            {
+                QuestionCategoriesSelect = new ObservableCollection<string>();
+                foreach (var catName in CategoriesIOManager.Instance.LoadCategoriesFromFile())
+                {
+                    QuestionCategoriesSelect.Add(catName.CategoryName);
+                }
+            }
+            else
+            {
+                QuestionCategoriesSelect = new ObservableCollection<string>();
+                QuestionCategoriesSelect.Add("Empty");
+            }
 
             // Load Quizzes
             QuizList = new ObservableCollection<Quiz>(QuizIOManager.Instance.LoadQuizzesFromFile());
-            TakeQuizCommand = new DelegateCommand(TakeQuiz);
-            QuizzesShowLoadCommand = new DelegateCommand(QuizzesShowLoad);
+
         }
 
         public DelegateCommand SaveQuizCommand { get; set; }

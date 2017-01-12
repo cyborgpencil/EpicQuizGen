@@ -197,12 +197,7 @@ namespace EpicQuizGen.ViewModels
 
             // Build Question Model from parent
             _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Subscribe(SetEditQuestion);
-            //_eventAggregator.GetEvent<SendQuestionFromEditEvent>().Publish(Question);
-            //_eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion);
-           // _eventAggregator.GetEvent<SendQuestionEdit>().Subscribe(SetEditQuestion);
-
-            //DEBUG
-            TestBox_TextChanged = new DelegateCommand(Test);
+   
         }
 
         #region Commands

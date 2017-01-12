@@ -14,7 +14,7 @@
         <TextBlock Text="Quiz Time (in Seconds):" />
         <TextBox Text="{Binding Path=QuizTime, Mode=TwoWay}" />
         <TextBlock Text="Question Category" />
-        <ComboBox Width="180" ItemsSource="{Binding Path=QuestionCategoriesSelect}" SelectedItem="{Binding Path=SelectedCategory}" HorizontalAlignment="Left" Margin="2"/>
+        <ComboBox Width="180" ItemsSource="{Binding Path=QuestionCategoriesSelect, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Path=SelectedCategory}" HorizontalAlignment="Left" Margin="2"/>
 
         <Button Content="Save" Width="100" HorizontalAlignment="Left" Command="{Binding Path=SaveQuizCommand}"/>
     </StackPanel>
