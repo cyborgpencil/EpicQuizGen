@@ -88,6 +88,8 @@ namespace EpicQuizGen.ViewModels
 
             QuestionCategoriesSelect = new ObservableCollection<string>();
             SelectedCategory = "";
+            QuizName = "";
+            QuestionCount = "1";
         }
         public QuizzesShowViewModel( IEventAggregator eventAggregator):this()
         {
@@ -95,9 +97,8 @@ namespace EpicQuizGen.ViewModels
             BuildNewQuiz();
 
             QuizList = new ObservableCollection<Quiz>();
-            QuizName = "";
-            QuestionCount = "1";
-            QuizTime = "30";
+            
+            
 
             // Get list of QuestionCategoriesSelect to a string
             QuestionCategoriesSelect = new ObservableCollection<string>();
@@ -228,7 +229,7 @@ namespace EpicQuizGen.ViewModels
 
         private int ConvertQuestionCount(string count)
         {
-            int result;
+            int result = 0;
             int.TryParse(count, out result);
             return result;
         }
