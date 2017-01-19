@@ -85,6 +85,9 @@ namespace EpicQuizGen.ViewModels
             DeleteCommand = new DelegateCommand(DeleteQuiz);
             TakeQuizCommand = new DelegateCommand(TakeQuiz);
             QuizzesShowLoadCommand = new DelegateCommand(QuizzesShowLoad);
+
+            QuestionCategoriesSelect = new ObservableCollection<string>();
+            SelectedCategory = "";
         }
         public QuizzesShowViewModel( IEventAggregator eventAggregator):this()
         {
@@ -95,10 +98,7 @@ namespace EpicQuizGen.ViewModels
             QuizName = "";
             QuestionCount = "1";
             QuizTime = "30";
-            SelectedCategory = QuestionCategory.MISC.ToString();
 
-
-            SelectedCategory = QuestionCategory.MISC.ToString();
             // Get list of QuestionCategoriesSelect to a string
             QuestionCategoriesSelect = new ObservableCollection<string>();
 
@@ -120,6 +120,9 @@ namespace EpicQuizGen.ViewModels
         public void NewQuiz()
         {
             BuildNewQuiz();
+
+            // Clear GUI
+            ClearGUI();
         }
 
         public DelegateCommand QuizzesShowLoadCommand { get; set; }
@@ -130,24 +133,10 @@ namespace EpicQuizGen.ViewModels
             QuizName = "";
             QuestionCount = "1";
             QuizTime = "30";
-            SelectedCategory = QuestionCategory.MISC.ToString();
-
-            SelectedCategory = QuestionCategory.MISC.ToString();
+            LoadCategories();
 
             // Get list of QuestionCategoriesSelect to a string
-            if (CategoriesIOManager.Instance.GetCategoriesFromFile())
-            {
-                QuestionCategoriesSelect = new ObservableCollection<string>();
-                foreach (var catName in CategoriesIOManager.Instance.LoadCategoriesFromFile())
-                {
-                    QuestionCategoriesSelect.Add(catName.CategoryName);
-                }
-            }
-            else
-            {
-                QuestionCategoriesSelect = new ObservableCollection<string>();
-                QuestionCategoriesSelect.Add("Empty");
-            }
+            LoadCategories();
 
             // Load Quizzes
             QuizList = new ObservableCollection<Quiz>(QuizIOManager.Instance.LoadQuizzesFromFile());
@@ -200,6 +189,8 @@ namespace EpicQuizGen.ViewModels
                 QuizIOManager.Instance.Quiz = EditQuiz;
                 QuizIOManager.Instance.DeleteQuestionFromFile(EditQuiz.QuizName);
 
+                // Clear GUI
+                ClearGUI();
             }
             QuizList = new ObservableCollection<Quiz>(QuizIOManager.Instance.LoadQuizzesFromFile());
         }
@@ -242,7 +233,28 @@ namespace EpicQuizGen.ViewModels
             return result;
         }
 
-        
+        void ClearGUI()
+        {
+            QuizName = "";
+            QuestionCount = "";
+            QuizTime = "";
+            SelectedCategory = "";
+        }
+
+        void LoadCategories()
+        {
+            // Clear current Categories
+            QuestionCategoriesSelect = new ObservableCollection<string>();
+            if (CategoriesIOManager.Instance.GetCategoriesFromFile())
+            {
+                foreach (var name in CategoriesIOManager.Instance.LoadCategoriesFromFile())
+                {
+                    QuestionCategoriesSelect.Add(name.CategoryName);
+                };
+            }
+            else
+                QuestionCategoriesSelect.Add("No Current Categories");
+        }
         #endregion
     }
 }

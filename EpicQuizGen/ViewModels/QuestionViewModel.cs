@@ -150,7 +150,7 @@ namespace EpicQuizGen.ViewModels
         public Question Question
         {
             get { return _question; }
-            set { SetProperty(ref _question, value); /*_eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion); */}
+            set { SetProperty(ref _question, value);}
         }
 
         private string _selectedType;
@@ -189,9 +189,6 @@ namespace EpicQuizGen.ViewModels
             QuestionViewLoadCommand = new DelegateCommand<string>(QuestionViewLoad);
 
             QuestionTypeList = new ObservableCollection<string>(Enum.GetNames(typeof(QuestionTypes)));
-
-
-            UpdateMultiAnswerPositionsCommand = new DelegateCommand(UpdateMultiAnswerPosition);
 
             ClearAnswersAndMultiChoice();
 
@@ -297,10 +294,9 @@ namespace EpicQuizGen.ViewModels
         {
             if(!string.IsNullOrWhiteSpace(Question.QuestionName))
             {
-            QuestionIOManager.Instance.DeleteQuestionFromFile(Question.QuestionName);
-
-            
-            SetDefaultQuestion();
+                // Delete Question
+                QuestionIOManager.Instance.DeleteQuestionFromFile(Question.QuestionName);
+                NewQuestion();
 
                 // Send Delete Message to QuestionShowVM
                 _eventAggregator.GetEvent<SendDeleteToUpdateList>().Publish(true);
@@ -344,12 +340,6 @@ namespace EpicQuizGen.ViewModels
         }
 
         public void SendMultiAnswerPositions()
-        {
-            _eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Publish(MultichoiceAnswersPositions);
-        }
-
-        public DelegateCommand UpdateMultiAnswerPositionsCommand { get; set; }
-        public void UpdateMultiAnswerPosition()
         {
             _eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Publish(MultichoiceAnswersPositions);
         }
@@ -540,18 +530,6 @@ namespace EpicQuizGen.ViewModels
                 return "Main Question Cannot be Blank";
             }
             return null;
-        }
-        #endregion
-
-        #region DEBUG
-        public DelegateCommand TestBox_TextChanged { get; set; }
-        public void Test()
-        {
-            foreach (var a in AnswerList)
-            {
-                Debug.WriteLine(a);
-            }
-            
         }
         #endregion
     }

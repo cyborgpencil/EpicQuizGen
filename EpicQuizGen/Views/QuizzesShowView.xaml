@@ -22,12 +22,12 @@
                   Height="200" ItemsSource="{Binding Path=QuizList, Mode=TwoWay}" SelectedItem="{Binding Path=EditQuiz, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
                   IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Quiz Name" Binding="{Binding Path=QuizName}" />
+                <DataGridTextColumn Header="Quiz Name" Width="200" Binding="{Binding Path=QuizName}" />
                 <DataGridTextColumn Header="Creation Date" Binding="{Binding Path=CreationDate}" />
                 <DataGridTextColumn Header="Question Count" Binding="{Binding Path=Questions.Count}" />
-                <DataGridTextColumn Header="Grade" Binding="{Binding Path=Grade}" />
+                <DataGridTextColumn Header="Grade" Width="100" Binding="{Binding Path=Grade}" />
                 <DataGridTextColumn Header="QuizTime (Seconds)" Binding="{Binding Path=QuizTime}" />
-                <DataGridTextColumn Header="Quiz Category" Binding="{Binding Path=QuizCategory}" />
+                <DataGridTextColumn Header="Quiz Category" Width="250" Binding="{Binding Path=QuizCategory}" />
             </DataGrid.Columns>
         </DataGrid>
         <Button Content="Take Quiz" Width="100" HorizontalAlignment="Left" Margin="2" Command="{Binding Path=TakeQuizCommand}"/>

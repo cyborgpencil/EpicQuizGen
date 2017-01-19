@@ -35,8 +35,6 @@ namespace EpicQuizGen.ViewModels
         private readonly IEventAggregator _eventAggregator;
         public QuestionsShowViewModel()
         {
-            SetDefaultQuestion();
-            
         }
         public QuestionsShowViewModel(IEventAggregator eventAggregator) : this()
         {
@@ -57,7 +55,7 @@ namespace EpicQuizGen.ViewModels
             _eventAggregator.GetEvent<SendMainQuestionEvent>().Subscribe(SetMainQuestion);
             _eventAggregator.GetEvent<SendTrueEvent>().Subscribe(SetTrue);
             _eventAggregator.GetEvent<SendFalseEvent>().Subscribe(SetFalse);
-            _eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Subscribe(SetMuliAnswerPositions);
+
             _eventAggregator.GetEvent<SendMultiAnswerListEvent>().Subscribe(SetMultiAnswerList);
             _eventAggregator.GetEvent<SendMultiAnswer1Event>().Subscribe(SetMultiAnswer1);
             _eventAggregator.GetEvent<SendMultiAnswer2Event>().Subscribe(SetMultiAnswer2);
@@ -71,7 +69,6 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand QuestionShowLoadCommand { get; set; }
         public void LoadQuestionShow()
         {
-            SetDefaultQuestion();
             SendQuestion();
         }
 
@@ -111,10 +108,6 @@ namespace EpicQuizGen.ViewModels
         {
             Question.FalseAnswer = obj;
         }
-        public void SetMuliAnswerPositions(List<bool> obj)
-        {
-            Question.MultiAnswerPositions = obj;
-        }
 
         public void SetMultiAnswerList(List<string> obj)
         {
@@ -138,8 +131,6 @@ namespace EpicQuizGen.ViewModels
         }
         public void SendQuestion()
         {
-            if (Question == null)
-                SetDefaultQuestion();
             _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
         }
         public void SetQuestion(Question obj)
@@ -153,10 +144,6 @@ namespace EpicQuizGen.ViewModels
             _eventAggregator.GetEvent<SendQuestionFromEditEvent>().Publish(Question);
         }
 
-        private void SetDefaultQuestion()
-        {
-            //Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, true }, MultiAnswerList = new List<string>() { "", "", "", "All of the Above" }, TrueAnswer = true, FalseAnswer = false ,CreationDate = DateTime.Now };
-        }
 
         private void SendEditQuestion()
         {
@@ -168,8 +155,7 @@ namespace EpicQuizGen.ViewModels
                     _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Publish(Question);
                 }
             }
-            else
-                SetDefaultQuestion();
+            
         }
     }
 }
