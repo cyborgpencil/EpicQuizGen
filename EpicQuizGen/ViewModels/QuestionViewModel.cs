@@ -29,6 +29,22 @@ namespace EpicQuizGen.ViewModels
             set { SetProperty(ref _bindQuestionName, value); }
         }
 
+        // tracks if a question can be edited
+        public bool _canEditQuestion;
+        public bool CanEditQuestion
+        {
+            get { return _canEditQuestion; }
+            set { SetProperty(ref _canEditQuestion, value); }
+        }
+
+        // track if question can be deleted
+        public bool _canDeleteQuestion;
+        public bool CanDeleteQuestion
+        {
+            get { return _canDeleteQuestion; }
+            set { SetProperty(ref _canDeleteQuestion, value); }
+        }
+
         /// <summary>
         /// Properties for GUI
         /// </summary>
@@ -40,8 +56,8 @@ namespace EpicQuizGen.ViewModels
             set { SetProperty(ref _questionName, value); Question.QuestionName = value; }
         }
 
-        private List<string> _categoryList;
-        public List<string> CategoryList
+        private ObservableCollection<string> _categoryList;
+        public ObservableCollection<string> CategoryList
         {
             get { return _categoryList; }
             set { SetProperty(ref _categoryList, value);
@@ -53,8 +69,8 @@ namespace EpicQuizGen.ViewModels
         public string SelectedCategory
         {
             get { return _selectedCategory; }
-            set { SetProperty(ref _selectedCategory, value); Question.QuestionCategory = value;
-                SendCategory();
+            set { SetProperty(ref _selectedCategory, value); Question.QuestionCategory.CategoryName = value;
+                //SendCategory();
             }
         }
 
@@ -102,7 +118,7 @@ namespace EpicQuizGen.ViewModels
         public List<bool> MultichoiceAnswersPositions
         {
             get { return _multichoiceAnswersPositions; }
-            set { SetProperty(ref _multichoiceAnswersPositions, value); Debug.Write("Test"); }
+            set { SetProperty(ref _multichoiceAnswersPositions, value);}
         }
         private string _answer1;
         public string Answer1
@@ -134,7 +150,7 @@ namespace EpicQuizGen.ViewModels
         public Question Question
         {
             get { return _question; }
-            set { SetProperty(ref _question, value); _eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion); }
+            set { SetProperty(ref _question, value);}
         }
 
         private string _selectedType;
@@ -156,7 +172,14 @@ namespace EpicQuizGen.ViewModels
 
         public QuestionViewModel()
         {
+            // clear question
+            SetDefaultQuestion();
+
             SaveQuestionCommand = new DelegateCommand(SaveQuestion, CanExecuteSave).ObservesProperty(() => MainQuestion).ObservesProperty(()=>QuestionName);
+            NewQuestionCommand = new DelegateCommand(NewQuestion);
+            EditQuestionCommand = new DelegateCommand(EditQuestion, CanExecuteEdit).ObservesProperty(()=>CanEditQuestion);
+            DeleteQuestionCommand = new DelegateCommand(DeleteQuestion, CanExecuteDelete).ObservesProperty(()=>CanEditQuestion);
+            CategoryList = new ObservableCollection<string>();
         }
         public QuestionViewModel(IRegionManager regionManager, IEventAggregator eventAggregator) : this()
         {
@@ -165,26 +188,13 @@ namespace EpicQuizGen.ViewModels
             NavigateCommand = new DelegateCommand<string>(Navigate);
             QuestionViewLoadCommand = new DelegateCommand<string>(QuestionViewLoad);
 
-
-            SetDefaultQuestion();
-
-
-            CategoryList = new List<string>(Enum.GetNames(typeof(QuestionCategory)));
             QuestionTypeList = new ObservableCollection<string>(Enum.GetNames(typeof(QuestionTypes)));
-
-
-            UpdateMultiAnswerPositionsCommand = new DelegateCommand(UpdateMultiAnswerPosition);
 
             ClearAnswersAndMultiChoice();
 
             // Build Question Model from parent
-            _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Subscribe(SetQuestion);
-            //_eventAggregator.GetEvent<SendQuestionFromEditEvent>().Publish(Question);
-            _eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion);
-            _eventAggregator.GetEvent<SendQuestionEdit>().Subscribe(SetEditQuestion);
-
-            //DEBUG
-            TestBox_TextChanged = new DelegateCommand(Test);
+            _eventAggregator.GetEvent<SendSelectedQuestionEvent>().Subscribe(SetEditQuestion);
+   
         }
 
         #region Commands
@@ -212,7 +222,28 @@ namespace EpicQuizGen.ViewModels
 
         private void QuestionViewLoad(string uri)
         {
-            _eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion);
+            // clear question
+            SetDefaultQuestion();
+
+            CanEditQuestion = false;
+            //_eventAggregator.GetEvent<SendQuestionEvent>().Subscribe(SetQuestion);
+
+            // load categories
+            if (CategoriesIOManager.Instance.GetCategoriesFromFile())
+            {
+                CategoryList = new ObservableCollection<string>();
+                foreach (var catName in CategoriesIOManager.Instance.LoadCategoriesFromFile())
+                {
+                    CategoryList.Add(catName.CategoryName);
+                }
+            }
+            else
+            {
+                CategoryList = new ObservableCollection<string>();
+                CategoryList.Add("Empty");
+                Debug.WriteLine(CategoryList);
+            }
+
             Navigate(uri);
         }
 
@@ -236,6 +267,51 @@ namespace EpicQuizGen.ViewModels
             return !string.IsNullOrWhiteSpace(QuestionName) && !string.IsNullOrWhiteSpace(MainQuestion);
         }
 
+        public DelegateCommand NewQuestionCommand { get; set; }
+        public void NewQuestion()
+        {
+            SetDefaultQuestion();
+            // _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
+            CanEditQuestion = false;
+        }
+
+        public DelegateCommand EditQuestionCommand { get; set; }
+        public void EditQuestion()
+        {
+            // Set Question
+        }
+        public bool CanExecuteEdit()
+        {
+            if (CanEditQuestion)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+        public DelegateCommand DeleteQuestionCommand { get; set; }
+        public void DeleteQuestion()
+        {
+            if(!string.IsNullOrWhiteSpace(Question.QuestionName))
+            {
+                // Delete Question
+                QuestionIOManager.Instance.DeleteQuestionFromFile(Question.QuestionName);
+                NewQuestion();
+
+                // Send Delete Message to QuestionShowVM
+                _eventAggregator.GetEvent<SendDeleteToUpdateList>().Publish(true);
+            }
+        }
+        public bool CanExecuteDelete()
+        {
+            // delete base on if a question can be edited
+            if (CanEditQuestion)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
         #endregion
 
         #region Events
@@ -251,7 +327,7 @@ namespace EpicQuizGen.ViewModels
         }
         public void SendCategory()
         {
-            _eventAggregator.GetEvent<SendQuestionCategoryEvent>().Publish((QuestionCategory)Enum.Parse(typeof(QuestionCategory), Question.QuestionCategory));
+            _eventAggregator.GetEvent<SendQuestionCategoryEvent>().Publish((QuestionCategory)Enum.Parse(typeof(QuestionCategory), Question.QuestionCategory.CategoryName));
         }
 
         public void SendTrue()
@@ -264,12 +340,6 @@ namespace EpicQuizGen.ViewModels
         }
 
         public void SendMultiAnswerPositions()
-        {
-            _eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Publish(MultichoiceAnswersPositions);
-        }
-
-        public DelegateCommand UpdateMultiAnswerPositionsCommand { get; set; }
-        public void UpdateMultiAnswerPosition()
         {
             _eventAggregator.GetEvent<SendMultiAnswerPositionsEvent>().Publish(MultichoiceAnswersPositions);
         }
@@ -310,7 +380,7 @@ namespace EpicQuizGen.ViewModels
             Question.MultiAnswerList = obj.MultiAnswerList;
             // Navigate
             SelectedQuestionType = Question.QuestionType;
-            SelectedCategory = Question.QuestionCategory;
+            SelectedCategory = Question.QuestionCategory.CategoryName;
             TrueAnswer = Question.TrueAnswer;
             FalseAnswer = Question.FalseAnswer;
             MainQuestion = Question.MainQuestion;
@@ -327,6 +397,7 @@ namespace EpicQuizGen.ViewModels
                 ClearAnswersAndMultiChoice();
             }
 
+            
         }
         public void SetEditQuestion(Question obj)
         {
@@ -337,7 +408,7 @@ namespace EpicQuizGen.ViewModels
             Question.MultiAnswerList = Question.MultiAnswerList;
             // Navigate
             SelectedQuestionType = Question.QuestionType;
-            SelectedCategory = Question.QuestionCategory;
+            SelectedCategory = Question.QuestionCategory.CategoryName;
             TrueAnswer = Question.TrueAnswer;
             FalseAnswer = Question.FalseAnswer;
             if (Question.QuestionType == QuestionTypes.MULTICHOICE4.ToString() && Question.QuestionName != "")
@@ -349,15 +420,24 @@ namespace EpicQuizGen.ViewModels
                 Answer3 = Question.MultiAnswerList[2];
                 Answer4 = Question.MultiAnswerList[3];
             }
+
+            CanEditQuestion = true;
         }
         #endregion
 
         private void SetDefaultQuestion()
         {
-            Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = QuestionCategory.MISC.ToString(), MultiAnswerPositions = new List<bool>() { false, false, false, true, }, MultiAnswerList = new List<string>() { "", "", "", "All of the Above" }, TrueAnswer = false, FalseAnswer = true ,CreationDate = DateTime.Now };
+            Question = new Question() { QuestionName = "", MainQuestion = "", QuestionType = QuestionTypes.TRUEFALSE.ToString(), QuestionCategory = new QuestionCategories(), MultiAnswerPositions = new List<bool>() { false, false, false, true, }, MultiAnswerList = new List<string>() { "", "", "", "All of the Above" }, TrueAnswer = false, FalseAnswer = true ,CreationDate = DateTime.Now };
+
+            // reset GUI each time we get a new Question
+            ClearAnswersAndMultiChoice();
         }
+
+        // clears all the Properties out on the GUI
         private void ClearAnswersAndMultiChoice()
         {
+            QuestionName = "";
+            MainQuestion = "";
             TrueAnswer = Question.TrueAnswer;
             FalseAnswer = Question.FalseAnswer;
             Answer1 = Question.MultiAnswerList[0];
@@ -367,6 +447,7 @@ namespace EpicQuizGen.ViewModels
             MultichoiceAnswersPositions = Question.MultiAnswerPositions;
             
         }
+        
 
         #region Validation
         string IDataErrorInfo.Error
@@ -449,24 +530,6 @@ namespace EpicQuizGen.ViewModels
                 return "Main Question Cannot be Blank";
             }
             return null;
-        }
-        public DelegateCommand NewQuestionCommand { get; set; }
-        public void NewQuestion()
-        {
-            SetDefaultQuestion();
-            _eventAggregator.GetEvent<SendQuestionEvent>().Publish(Question);
-        }
-        #endregion
-
-        #region DEBUG
-        public DelegateCommand TestBox_TextChanged { get; set; }
-        public void Test()
-        {
-            foreach (var a in AnswerList)
-            {
-                Debug.WriteLine(a);
-            }
-            
         }
         #endregion
     }

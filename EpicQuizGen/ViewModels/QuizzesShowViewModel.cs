@@ -41,7 +41,11 @@ namespace EpicQuizGen.ViewModels
             set { SetProperty(ref _quizList, value); }
         }
 
-        public List<string> QuestionCategoriesSelect { get; set; }
+        private ObservableCollection<string> _questionCategoriesSelect;
+        public ObservableCollection<string> QuestionCategoriesSelect {
+            get { return _questionCategoriesSelect; }
+            set { SetProperty(ref _questionCategoriesSelect, value); }
+        }
 
         private string _questionCount;
         public string QuestionCount
@@ -71,21 +75,33 @@ namespace EpicQuizGen.ViewModels
         }
         #endregion
         private IEventAggregator _eventAggregator;
-        public QuizzesShowViewModel( IEventAggregator eventAggregator)
+
+        public QuizzesShowViewModel()
+        {
+            // Commands
+            NewQuizCommand = new DelegateCommand(NewQuiz);
+            SaveQuizCommand = new DelegateCommand(SaveQuiz);
+            EditCommand = new DelegateCommand(EditExecute, EditCanExecute).ObservesProperty(() => EditQuiz);
+            DeleteCommand = new DelegateCommand(DeleteQuiz);
+            TakeQuizCommand = new DelegateCommand(TakeQuiz);
+            QuizzesShowLoadCommand = new DelegateCommand(QuizzesShowLoad);
+
+            QuestionCategoriesSelect = new ObservableCollection<string>();
+            SelectedCategory = "";
+            QuizName = "";
+            QuestionCount = "1";
+        }
+        public QuizzesShowViewModel( IEventAggregator eventAggregator):this()
         {
             _eventAggregator = eventAggregator;
             BuildNewQuiz();
 
             QuizList = new ObservableCollection<Quiz>();
-            QuizName = "";
-            QuestionCount = "1";
-            QuizTime = "30";
-            SelectedCategory = QuestionCategory.MISC.ToString();
+            
+            
 
-
-            SelectedCategory = QuestionCategory.MISC.ToString();
             // Get list of QuestionCategoriesSelect to a string
-            QuestionCategoriesSelect = new List<string>(Enum.GetNames(typeof(QuestionCategory)));
+            QuestionCategoriesSelect = new ObservableCollection<string>();
 
             // Commands
             NewQuizCommand = new DelegateCommand(NewQuiz);
@@ -105,6 +121,9 @@ namespace EpicQuizGen.ViewModels
         public void NewQuiz()
         {
             BuildNewQuiz();
+
+            // Clear GUI
+            ClearGUI();
         }
 
         public DelegateCommand QuizzesShowLoadCommand { get; set; }
@@ -115,22 +134,14 @@ namespace EpicQuizGen.ViewModels
             QuizName = "";
             QuestionCount = "1";
             QuizTime = "30";
-            SelectedCategory = QuestionCategory.MISC.ToString();
+            LoadCategories();
 
-            SelectedCategory = QuestionCategory.MISC.ToString();
             // Get list of QuestionCategoriesSelect to a string
-            QuestionCategoriesSelect = new List<string>(Enum.GetNames(typeof(QuestionCategory)));
-
-            // Commands
-            NewQuizCommand = new DelegateCommand(NewQuiz);
-            SaveQuizCommand = new DelegateCommand(SaveQuiz);
-            EditCommand = new DelegateCommand(EditExecute, EditCanExecute).ObservesProperty(() => EditQuiz);
-            DeleteCommand = new DelegateCommand(DeleteQuiz);
+            LoadCategories();
 
             // Load Quizzes
             QuizList = new ObservableCollection<Quiz>(QuizIOManager.Instance.LoadQuizzesFromFile());
-            TakeQuizCommand = new DelegateCommand(TakeQuiz);
-            QuizzesShowLoadCommand = new DelegateCommand(QuizzesShowLoad);
+
         }
 
         public DelegateCommand SaveQuizCommand { get; set; }
@@ -167,7 +178,7 @@ namespace EpicQuizGen.ViewModels
                 CurrentQuiz = EditQuiz;
                 QuizName = CurrentQuiz.QuizName;
                 QuestionCount = CurrentQuiz.Questions.Count.ToString();
-                SelectedCategory = CurrentQuiz.QuizCategory;
+                SelectedCategory = EditQuiz.QuizCategory;
                 QuizTime = CurrentQuiz.QuizTime;
             }
         }
@@ -179,6 +190,8 @@ namespace EpicQuizGen.ViewModels
                 QuizIOManager.Instance.Quiz = EditQuiz;
                 QuizIOManager.Instance.DeleteQuestionFromFile(EditQuiz.QuizName);
 
+                // Clear GUI
+                ClearGUI();
             }
             QuizList = new ObservableCollection<Quiz>(QuizIOManager.Instance.LoadQuizzesFromFile());
         }
@@ -186,6 +199,7 @@ namespace EpicQuizGen.ViewModels
         public DelegateCommand TakeQuizCommand { get; set; }
         public void TakeQuiz()
         {
+            QuizIOManager.Instance.Quiz = EditQuiz;
             _eventAggregator.GetEvent<TakeQuizEvent>().Publish(CurrentQuiz);
         }
         #endregion
@@ -215,12 +229,33 @@ namespace EpicQuizGen.ViewModels
 
         private int ConvertQuestionCount(string count)
         {
-            int result;
+            int result = 0;
             int.TryParse(count, out result);
             return result;
         }
 
-        
+        void ClearGUI()
+        {
+            QuizName = "";
+            QuestionCount = "";
+            QuizTime = "";
+            SelectedCategory = "";
+        }
+
+        void LoadCategories()
+        {
+            // Clear current Categories
+            QuestionCategoriesSelect = new ObservableCollection<string>();
+            if (CategoriesIOManager.Instance.GetCategoriesFromFile())
+            {
+                foreach (var name in CategoriesIOManager.Instance.LoadCategoriesFromFile())
+                {
+                    QuestionCategoriesSelect.Add(name.CategoryName);
+                };
+            }
+            else
+                QuestionCategoriesSelect.Add("No Current Categories");
+        }
         #endregion
     }
 }

@@ -10,13 +10,15 @@ namespace EpicQuizGen
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            // Create Directories
+            DirectoryManager.Instance.CreateDirectory();
+
             base.OnStartup(e);
 
             var bs = new Bootstrapper();
             bs.Run();
 
-            // Create Directories
-            DirectoryManager.Instance.CreateDirectory();
+            
         }
     }
 }

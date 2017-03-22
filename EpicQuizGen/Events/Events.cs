@@ -25,4 +25,5 @@ namespace EpicQuizGen.Events
     public class SendMainWindow : PubSubEvent<MainWindow> { }
     public class SendQuizTakeTrueAnswer : PubSubEvent<bool> { }
     public class SendQuizTakeFalseAnswer : PubSubEvent<bool> { }
+    public class SendDeleteToUpdateList : PubSubEvent<bool> { }
 }

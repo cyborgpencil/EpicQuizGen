@@ -18,8 +18,8 @@ namespace EpicQuizGen.ViewModels
         #region RegionManager
         private readonly IRegionManager _regionManager;
         public DelegateCommand<string> NavigateCommand { get; set; }
-
         public DelegateCommand LoadQuizzesCommand { get; set; }
+
         private IEventAggregator _evenAggregator;
         public MainWindowViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {

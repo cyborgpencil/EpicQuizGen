@@ -98,11 +98,19 @@ namespace EpicQuizGen.Utils
             if (GetQuestionsFromFile())
             {
                 List<Question> catQuestions = new List<Question>();
-                for (int i = 0; i < questionCount; i++)
+                catQuestions = new List<Question>();
+                for (int i = 0; i < QuestionsFromFile.Count; i++)
                 {
-                    if(QuestionsFromFile[i].QuestionCategory == category)
+                    if (catQuestions.Count == questionCount)
                     {
-                        catQuestions.Add(QuestionsFromFile[i]);
+                        return catQuestions;
+                    }
+                    else
+                    {
+                        if (QuestionsFromFile[i].QuestionCategory.CategoryName.Equals(category.ToUpper()))
+                        {
+                            catQuestions.Add(QuestionsFromFile[i]);
+                        }
                     }
                 }
 

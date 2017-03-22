@@ -33,8 +33,14 @@ namespace EpicQuizGen.Models
             get { return _creationDate; }
             set { SetProperty(ref _creationDate, value); }
         }
-        private string _questionCategory;
-        public string QuestionCategory
+        //private string _questionCategory;
+        //public string QuestionCategory
+        //{
+        //    get { return _questionCategory; }
+        //    set { SetProperty(ref _questionCategory, value); }
+        //}
+        private QuestionCategories _questionCategory;
+        public QuestionCategories QuestionCategory
         {
             get { return _questionCategory; }
             set { SetProperty(ref _questionCategory, value); }
