@@ -1,5 +1,6 @@
-﻿using System.Windows;
-
+﻿using System;
+using System.Windows;
+using System.Windows.Forms;
 
 namespace TechTool.Views
 {
@@ -10,5 +11,6 @@ namespace TechTool.Views
         {
             InitializeComponent();
         }
+
     }
 }
