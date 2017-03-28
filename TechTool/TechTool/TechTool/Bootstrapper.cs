@@ -16,5 +16,12 @@ namespace TechTool
         {
             Application.Current.MainWindow.Show();
         }
+
+        protected override void ConfigureContainer()
+        {
+            base.ConfigureContainer();
+
+            Container.RegisterTypeForNavigation<PingView>();
+        }
     }
 }

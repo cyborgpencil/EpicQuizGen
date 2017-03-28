@@ -5,24 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
-        xmlns:local="clr-namespace:TechTool"
-        xmlns:model="clr-namespace:TechTool.Models"
         mc:Ignorable="d"
-        Title="TechTool" Height="200" Width="128"
-        WindowState="{Binding Path=WindowsStateBind}"
-        ShowInTaskbar="{Binding Path=ShowInTaskBarBind}">
+        Title="TechTool" Height="768" Width="1024"
+        WindowStartupLocation="CenterScreen">
 
-    <Window.Resources>
-        <model:TaskbarItem x:Key="TBI"></model:TaskbarItem>
-    </Window.Resources>
-    <StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Logged in as:"/>
-            <Button Content="Log In"/>
-        </StackPanel>
-        <ListBox>
-            <Button Content="Ping A System" />
-            <Button Content="What is my IP" />
-        </ListBox>
+    <StackPanel Background="LightSalmon">
+        <Menu Margin="5" Height="20">
+            <MenuItem Header="File">
+                <MenuItem Header="Exit" Command="{Binding Path=ExitCommand}"/>
+            </MenuItem>
+
+            <MenuItem Header="Tools">
+                <MenuItem Header="Ping" Command="{Binding Path=NavigateCommand}" CommandParameter="PingView"/>
+            </MenuItem>
+        </Menu>
+
+        <ContentControl prism:RegionManager.RegionName="MainContentRegion" Margin="5"/> 
     </StackPanel>
 </Window>

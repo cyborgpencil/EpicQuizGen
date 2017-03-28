@@ -16,7 +16,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -85,6 +85,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\PingViewModel.cs" />
+    <Compile Include="Views\PingView.xaml.cs">
+      <DependentUpon>PingView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Resources\ToolResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -99,6 +103,7 @@
     </Compile>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Converters\BoolToWindowsStateConverter.cs" />
+    <Compile Include="Events\Events.cs" />
     <Compile Include="Models\TaskbarItem.cs" />
     <Compile Include="Models\ToolSelectorModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
@@ -106,6 +111,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\PingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
