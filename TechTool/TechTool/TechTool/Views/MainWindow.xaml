@@ -17,6 +17,7 @@
 
             <MenuItem Header="Tools">
                 <MenuItem Header="Ping" Command="{Binding Path=NavigateCommand}" CommandParameter="PingView"/>
+                <MenuItem Header="Generate Email" Command="{Binding Path=NavigateCommand}" CommandParameter="EmailGeneratorView"/>
             </MenuItem>
         </Menu>
 

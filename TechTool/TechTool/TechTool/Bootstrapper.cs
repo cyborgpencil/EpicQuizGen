@@ -22,6 +22,7 @@ namespace TechTool
             base.ConfigureContainer();
 
             Container.RegisterTypeForNavigation<PingView>();
+            Container.RegisterTypeForNavigation<EmailGeneratorView>();
         }
     }
 }

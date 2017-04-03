@@ -61,6 +61,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -85,11 +87,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Utils\UsersControl.cs" />
+    <Compile Include="ViewModels\BackButtonViewModel.cs" />
+    <Compile Include="ViewModels\EmailGeneratorViewModel.cs" />
     <Compile Include="ViewModels\PingViewModel.cs" />
+    <Compile Include="Views\BackButtonView.xaml.cs">
+      <DependentUpon>BackButtonView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EmailGeneratorView.xaml.cs">
+      <DependentUpon>EmailGeneratorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PingView.xaml.cs">
       <DependentUpon>PingView.xaml</DependentUpon>
     </Compile>
     <Page Include="Resources\ToolResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BackButtonView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EmailGeneratorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

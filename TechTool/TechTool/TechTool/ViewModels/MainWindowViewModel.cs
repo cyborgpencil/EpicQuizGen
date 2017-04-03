@@ -34,10 +34,6 @@ namespace TechTool.ViewModels
             _regionManager.RequestNavigate("MainContentRegion", uri);
         }
 
-        public void Ping()
-        {
-            
-        }
         
     }
 }
