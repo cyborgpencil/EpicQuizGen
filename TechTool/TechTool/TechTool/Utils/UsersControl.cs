@@ -4,56 +4,73 @@
 /// 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.DirectoryServices;
+using System.DirectoryServices.AccountManagement;
 using System.IO;
+using System.Threading.Tasks;
+using TechTool.Models;
 
 namespace TechTool.Utils
 {
     public class UsersControl
     {
-        public List<string> UsersName { get; set; }
+        public ObservableCollection<User> UserList { get; set; }
+        public int MyProperty { get; set; }
         private string DomainPath { get; set; }
         DirectoryEntry searchRoot;
         DirectorySearcher search;
-        SearchResult result;
-        SearchResultCollection resultCol;
+        public User CurrentUser { get; set; }
 
         public UsersControl()
         {
-            DomainPath = "LDAP://CN=NM0142INFWGC01,DC=US.chs.net";
+            CurrentUser = new User();
+            DomainPath = @"us.chs.net";
             searchRoot = new DirectoryEntry(DomainPath, "elmorrow", "0132Ermo1");
             
             search = new DirectorySearcher(searchRoot);
         }
 
-        public List<string> GetADUserNames()
+        public ObservableCollection<User> ReturnADUsers()
         {
-            try
-            {
-                UsersName = new List<string>();
-                search.Filter = "(&(objectCategory=person)(objectClass=user))";
-                resultCol = search.FindAll();
-                if (resultCol != null)
-                {
-                    for (int i = 0; i < resultCol.Count; i++)
-                    {
-                        result = resultCol[i];
-                        if (result.Properties.Contains("sameaccountname"))
-                        {
-                            UsersName.Add((string)result.Properties["samaccountname"][0]);
-                        }
+            UserList = new ObservableCollection<User>();
 
+            using (var context = new PrincipalContext(ContextType.Domain, DomainPath, "OU=Users,OU=Deming,OU=NM,DC=US,DC=chs,DC=net"))
+            {
+                using (var searcher = new PrincipalSearcher(new UserPrincipal(context)))
+                {
+                    foreach (var result in searcher.FindAll())
+                    {
+                        CurrentUser = new User();
+                        DirectoryEntry de = result.GetUnderlyingObject() as DirectoryEntry;
+                        CurrentUser.Username = de.Properties["samAccountName"].Value.ToString();
+                        if (de.Properties["givenName"].Value != null)
+                        {
+                            CurrentUser.FirstName = de.Properties["givenName"].Value.ToString();
+                        }
+                        if (de.Properties["sn"].Value != null)
+                        {
+                            CurrentUser.LastName = de.Properties["sn"].Value.ToString();
+                        }
+                        if (de.Properties["mailAddress"].Value != null)
+                        {
+                            CurrentUser.Email = de.Properties["mailAddress"].Value.ToString();
+                        }
+                        if (de.Properties["displayName"].Value != null)
+                        {
+                            CurrentUser.DisplayName = de.Properties["displayName"].Value.ToString();
+                        }
+                        UserList.Add(CurrentUser);
                     }
                 }
-
-            }
-            catch (Exception e)
-            {
-
-                return null;
             }
 
-            return UsersName;
+            return UserList;
+        }
+
+        public Task<ObservableCollection<User>> ReturnADUsersAsync()
+        {
+            return Task.Factory.StartNew(() => ReturnADUsers());
         }
     }
 }

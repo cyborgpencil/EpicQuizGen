@@ -16,10 +16,14 @@
             <TextBlock Text="Users" Margin="100,0,80,0"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <TextBox Width="170" Height="20" VerticalAlignment="Top" Margin="30,0,30,0"/>
-            <TextBox Width="170" Height="20" VerticalAlignment="Top" Margin="30,0,30,0"/>
-            <TextBox Width="170" Height="20" VerticalAlignment="Top" Margin="30,0,30,0"/>
-            <ListView Width="200" Height="180" Margin="30,0,30,0"/>
+            <StackPanel Orientation="Horizontal">
+            <TextBox Width="170" Height="20" VerticalAlignment="Top" Margin="30,0,30,0" Text="{Binding Path=FirstName}"/>
+                <TextBox Width="170" Height="20" VerticalAlignment="Top" Margin="30,0,30,0" Text="{Binding Path=LasttName}"/>
+                <TextBox Width="170" Height="20" VerticalAlignment="Top" Margin="30,0,30,0" Text="{Binding Path=UserNameName}"/>
+            </StackPanel>
+            <StackPanel>
+                <ListView Width="200" Height="180" Margin="30,0,30,0" ItemsSource="{Binding Path=UserListBind, Mode=TwoWay}" SelectedItem="{Binding Path=SelectedUser, Mode=TwoWay}"/>
+            </StackPanel>
         </StackPanel>
         <StackPanel>
             <Button Content="Generate" Width="100" HorizontalAlignment="Left" Margin="5"/>
