@@ -17,12 +17,12 @@
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <StackPanel Orientation="Horizontal">
-            <TextBox Width="170" Height="20" VerticalAlignment="Top" Margin="30,0,30,0" Text="{Binding Path=FirstName}"/>
-                <TextBox Width="170" Height="20" VerticalAlignment="Top" Margin="30,0,30,0" Text="{Binding Path=LasttName}"/>
-                <TextBox Width="170" Height="20" VerticalAlignment="Top" Margin="30,0,30,0" Text="{Binding Path=UserNameName}"/>
+            <TextBox Width="170" Height="20" VerticalAlignment="Top" Margin="30,0,30,0" Text="{Binding Path=FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Width="170" Height="20" VerticalAlignment="Top" Margin="30,0,30,0" Text="{Binding Path=LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Width="170" Height="20" VerticalAlignment="Top" Margin="30,0,30,0" Text="{Binding Path=UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
             <StackPanel>
-                <ListView Width="200" Height="180" Margin="30,0,30,0" ItemsSource="{Binding Path=UserListBind, Mode=TwoWay}" SelectedItem="{Binding Path=SelectedUser, Mode=TwoWay}"/>
+                <ListView Width="200" Height="180" Margin="30,0,30,0" ItemsSource="{Binding Path=UserListBind, Mode=TwoWay}" SelectedItem="{Binding Path=SelectedUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
         </StackPanel>
         <StackPanel>
