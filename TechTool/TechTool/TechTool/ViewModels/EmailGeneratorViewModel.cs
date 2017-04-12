@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using TechTool.Models;
 using TechTool.Utils;
 
@@ -57,6 +58,7 @@ namespace TechTool.ViewModels
             get { return _sortedUsers; }
             set { SetProperty(ref _sortedUsers, value); }
         }
+        List<string> unsortedUserList = new List<string>();
 
         public EmailGeneratorViewModel()
         {
@@ -87,7 +89,7 @@ namespace TechTool.ViewModels
             // Get AD users
             UserList = await userControl.ReturnADUsersAsync();
             UserListBind.Clear();
-            List<string> unsortedUserList = new List<string>();
+            
             char[] charArray = new char[UserList.Count];
             for (int i = 0; i < UserList.Count; i++)
             {
@@ -110,30 +112,32 @@ namespace TechTool.ViewModels
             }
         }
 
-        private void SortByFirstName(string name)
+        private List<string> SortByFirstName(string name, List<string> currentList, List<string> sortingList)
         {
             // Check status of Users
             if(UserList != null && UserList.Count > 0 && !string.IsNullOrWhiteSpace(name))
             {
-                // get current list
-                ObservableCollection<string> templist = UserListBind;
-
-                // clear bind list
                 UserListBind.Clear();
-
-                // get count for amount of chars typed
-                int charCounts = name.Length;
-
-                // compare index 
-                for (int i = 0; i < templist.Count; i++)
+                // get current list
+                for (int i = 0; i < UserList.Count; i++)
                 {
-                    
+                    if (!string.IsNullOrWhiteSpace(currentList[i]))
+                    {
+                       if(currentList[i].StartsWith(name,true, System.Globalization.CultureInfo.CurrentCulture))
+                        {
+                            sortingList.Add(UserList[i].DisplayName);
+                        }
+                    }
                 }
+
             }
-            else
-            {
-                
-            }
+
+            return sortingList;
+        }
+
+        private void SortByFirstName()
+        {
+
         }
 
         private string AlphabetString(string unordered)
