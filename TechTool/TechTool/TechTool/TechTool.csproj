@@ -88,6 +88,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\User.cs" />
+    <Compile Include="Utils\FileControls.cs" />
     <Compile Include="Utils\UsersControl.cs" />
     <Compile Include="ViewModels\BackButtonViewModel.cs" />
     <Compile Include="ViewModels\EmailGeneratorViewModel.cs" />

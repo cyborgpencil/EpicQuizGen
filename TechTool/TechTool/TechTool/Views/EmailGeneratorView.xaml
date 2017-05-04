@@ -25,11 +25,16 @@
                 <ListView Width="200" Height="180" Margin="30,0,30,0" ItemsSource="{Binding Path=UserListBind, Mode=TwoWay}" SelectedItem="{Binding Path=SelectedUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
         </StackPanel>
-        <StackPanel>
-            <Button Content="Generate" Width="100" HorizontalAlignment="Left" Margin="5"/>
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Margin="2">
+                <Button Content="Browse" Command="{Binding Path=LoadDefaultSigCommand}" Width="100" HorizontalAlignment="Left" Margin="5"/>
+                <TextBlock Text="Current Signature:" Margin="5"/>
+            </StackPanel>
+            
         </StackPanel>
         <StackPanel  Margin="10">
-            <TextBox Height="250" />
+            <TextBox Height="180" Text="{Binding Path=SigTextBind}"/>
+            <Button Content="Generate" Width="100" HorizontalAlignment="Left" Margin="5"/>
         </StackPanel>
     </StackPanel>
 </UserControl>
