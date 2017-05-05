@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using TechTool.Converters;
 using TechTool.Models;
 using TechTool.Utils;
 
@@ -46,7 +47,9 @@ namespace TechTool.ViewModels
         public User SelectedUser
         {
             get { return _selectedUser; }
-            set { SetProperty(ref _selectedUser, value);
+            set {
+                SetProperty(ref _selectedUser, value);
+                SetSelectedUser();
             }
         }
         private ObservableCollection<User> _userList;
@@ -103,8 +106,6 @@ namespace TechTool.ViewModels
                 UserListBind.Add("getting AD users...");
             }
 
-            SelectedUser = new User();
-
             // File stuff
             _fileControls = new FileControls();
             LoadDefaultSigCommand = new DelegateCommand(LoadDefaultSig);
@@ -123,8 +124,10 @@ namespace TechTool.ViewModels
             if (result == true)
             {
                 // save file to App Sig Folder
-                File.Copy(_fileControls.dialogHandler.FileName, $"{_fileControls.EmainSigsFolder}/{_fileControls.dialogHandler.SafeFileName}");
-
+                if (File.Exists($"{_fileControls.EmainSigsFolder}/{_fileControls.dialogHandler.FileName}"))
+                {
+                    File.Copy(_fileControls.dialogHandler.FileName, $"{_fileControls.EmainSigsFolder}/{_fileControls.dialogHandler.FileName}");
+                }
                 // Set text of file to display for editing
                 SigTextBind =  File.ReadAllText($"{ _fileControls.EmainSigsFolder}/{ _fileControls.dialogHandler.SafeFileName}");
             }
@@ -146,16 +149,6 @@ namespace TechTool.ViewModels
             }
             unsortedUserList.Sort();
             UserListBind = new ObservableCollection<string>(unsortedUserList);
-        }
-
-        private void ShowSelectedUser()
-        {
-            if (SelectedUser != null)
-            {
-                FirstName = SelectedUser.FirstName;
-                LastName = SelectedUser.LastName;
-                UserName = SelectedUser.Username;
-            }
         }
 
         //Compare string with strings in a list, then display based on a matching display
@@ -221,6 +214,18 @@ namespace TechTool.ViewModels
                 UserListBind = new ObservableCollection<string>(SortByInput(UserName, workingUsernameList, displayByList));
             }
 
+        }
+
+        private void SetSelectedUser()
+        {
+
+            if (SelectedUser != null )
+            {
+                if (!string.IsNullOrWhiteSpace(SigTextBind))
+                {
+                    SigTextBind = SigTextBind.Replace("(name)", SelectedUser.FirstName);
+                }
+            }
         }
 
         private void SortByInput()

@@ -87,6 +87,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\StringToUserConverter.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Utils\FileControls.cs" />
     <Compile Include="Utils\UsersControl.cs" />
